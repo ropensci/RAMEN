@@ -173,7 +173,7 @@ findVML <- function(methylation_data,
                     var_threshold_percentile = 0.99,
                     max_distance = 1000) {
   #### Binding of variables used within the tidyverse framework ####
-  Methyl450_Loci <- epicv2_probes <- TargetID <- chr <- pos <- strand <- NULL
+  Methyl450_Loci <- TargetID <- chr <- pos <- strand <- NULL
   var_score <- probes <- . <- median_correlation <- n_VMPs <- VML_index <- NULL
   type <- seqnames <- start <- end <- width <- NULL
   #### Argument checks ####
