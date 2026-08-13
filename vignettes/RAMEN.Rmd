@@ -1041,7 +1041,7 @@ the package's function can help users in other DNAme analyses, such as:
 
 # Frequently Asked Questions
 
-**How can I save the RAMEN data frames that have columns with lists as observations?**
+## How can I save the RAMEN data frames that have columns with lists as observations?
 
 Saving the data frames produced by RAMEN might seem difficult because it has 
 lists as observations in several columns, which is not supported by some 
@@ -1072,6 +1072,61 @@ saveRDS(selected_variables, file = "path/selected_variables.Rds")
 
 # Load the object
 readRDS(file = "path/selected_variables.Rds")
+```
+
+## How can I set up the parallel backend?
+
+Most functions in RAMEN are compatible with parallel computing (`findVML()`, 
+`medCorVMR()`, `summarizeVML()`, `selectVariables()`, `lmGE()`, `nullDistGE()`). 
+You can run these functions sequentially, which is the default in a fresh R 
+session. This will trigger the following warning, which is just a message: 
+
+```{r}
+#> Warning: executing %dopar% sequentially: no parallel backend registered
+```
+
+To silence it, you can explicitly set up a sequential evaluation before running
+any of the above functions:
+
+```{r eval=FALSE}
+foreach::registerDoSEQ()
+
+# Run RAMEN functions here
+```
+
+To run the function in parallel, you just need to specify the parallel backend
+of your preference. Just to provide examples, you can use the `doParallel` 
+package:
+
+```{r eval=FALSE}
+library(parallel)
+library(doParallel)
+# Find the number of CPU cores to use (leaving one core free is common practice)
+num_cores <- detectCores() - 1
+#Create the cluster object
+cl <- makePSOCKcluster(num_cores)
+# Register the parallel backend
+registerDoParallel(cl)
+
+# Run RAMEN functions here
+
+#Stop the cluster and return to sequential processing when finished:
+stopCluster(cl)
+registerDoSEQ()
+```
+
+You can also use the future framework:
+
+```{r, eval=FALSE}
+library(future)
+
+# Set the backend to use multiple background R sessions
+plan(multisession) 
+
+# Explicitly limit the number of worker cores (optional)
+plan(multisession, workers = 4) 
+
+# Run RAMEN functions here
 ```
 
 # Session info
