@@ -33,9 +33,6 @@ Suggests:
     knitr,
     magick,
     rmarkdown,
-    IlluminaHumanMethylation450kanno.ilmn12.hg19,
-    IlluminaHumanMethylationEPICanno.ilm10b4.hg19,
-    IlluminaHumanMethylationEPICv2anno.20a1.hg38,
     ggplot2,
     tidyr,
     doParallel,
@@ -51,6 +48,9 @@ Imports:
     methods,
     relaimpo,
     S4Vectors,
+    IlluminaHumanMethylation450kanno.ilmn12.hg19,
+    IlluminaHumanMethylationEPICanno.ilm10b4.hg19,
+    IlluminaHumanMethylationEPICv2anno.20a1.hg38,
     stats
 VignetteBuilder: knitr
 Depends: 
