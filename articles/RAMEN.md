@@ -505,10 +505,6 @@ VML <- RAMEN::findVML(
   max_distance = 1000
 )
 #> Identifying Highly Variable Probes...
-#> Warning: replacing previous import 'S4Arrays::makeNindexFromArrayViewport' by
-#> 'DelayedArray::makeNindexFromArrayViewport' when loading 'SummarizedExperiment'
-#> Warning: replacing previous import 'S4Arrays::makeNindexFromArrayViewport' by
-#> 'DelayedArray::makeNindexFromArrayViewport' when loading 'HDF5Array'
 #> Setting options('download.file.method.GEOquery'='auto')
 #> Setting options('GEOquery.inmemory.gpl'=FALSE)
 #> Identifying sparse Variable Methylated Probes
@@ -1473,7 +1469,7 @@ sessionInfo()
 #>  [23] rhdf5_2.56.0                                       
 #>  [24] sass_0.4.10                                        
 #>  [25] nor1mix_1.3-3                                      
-#>  [26] bslib_0.11.0                                       
+#>  [26] bslib_0.12.0                                       
 #>  [27] desc_1.4.3                                         
 #>  [28] plyr_1.8.9                                         
 #>  [29] cachem_1.1.0                                       
@@ -1514,7 +1510,7 @@ sessionInfo()
 #>  [64] h5mread_1.4.0                                      
 #>  [65] restfulr_0.0.17                                    
 #>  [66] nlme_3.1-169                                       
-#>  [67] rhdf5filters_1.24.0                                
+#>  [67] rhdf5filters_1.24.1                                
 #>  [68] grid_4.6.1                                         
 #>  [69] gtable_0.3.6                                       
 #>  [70] tzdb_0.5.0                                         
@@ -1524,7 +1520,7 @@ sessionInfo()
 #>  [74] xml2_1.6.0                                         
 #>  [75] XVector_0.52.0                                     
 #>  [76] pillar_1.11.1                                      
-#>  [77] limma_3.68.4                                       
+#>  [77] limma_3.68.5                                       
 #>  [78] genefilter_1.94.0                                  
 #>  [79] splines_4.6.1                                      
 #>  [80] lattice_0.22-9                                     
@@ -1563,7 +1559,7 @@ sessionInfo()
 #> [113] blob_1.3.0                                         
 #> [114] mclust_6.1.3                                       
 #> [115] sparseMatrixStats_1.24.0                           
-#> [116] bitops_1.0-9                                       
+#> [116] bitops_1.1-0                                       
 #> [117] scales_1.4.0                                       
 #> [118] illuminaio_0.54.0                                  
 #> [119] purrr_1.2.2                                        
