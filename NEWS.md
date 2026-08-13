@@ -2,7 +2,24 @@
 
 This patch fixes some minor bugs in RAMEN including: 
 
-  - 
+  - Improved argument check - empty objects now throw errors, and all functions
+  check for matched IDs across all objects. 
+  - Fixed bug in `nullDistGE()` where the seed was fixed to 1 during the 
+  `selectVariables()` step instead of using the seed argument provided. 
+  - Fixed a bug in `selectVariables()` where the function would throw an error 
+  when, in the absence of covariates, a VML had only 1 SNP. In that case, the 
+  variable selection for G is now not conducted and the same SNP is returned.
+  - Fixed a bug in `lmGE()` where the function would throw an error when no 
+  covariates were fed into the function. 
+
+In addition to that, we added a section on the vignette explaining how to set
+up a parallel backend, and expanding on the data assumptions/expectations
+from RAMEN.
+
+Finally, the Illumina annotation packages are now a dependency, rather than a 
+suggestion, as they are needed during the package tests. 
+
+This patch presents no changes on the user's end. 
 
 # RAMEN 2.1.0 - July 14, 2026
 
