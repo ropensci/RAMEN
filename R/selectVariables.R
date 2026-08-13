@@ -222,7 +222,7 @@ selectVariables <- function(VML_wSNPs,
     ### Run variable selection
     #### Genotype only model ####
     # Get coefficients with the optimal lambda found by k-fold cross-validation
-    if (any_snp) { # Catch cases when VML dont have surrounding genotyped SNPs
+    if (any_snp && ncol(genot_VMLi) >= 2) { # glmnet requires 2+ predictor columns
       coef_genot <- stats::coef(
         glmnet::cv.glmnet(
           x = genot_VMLi, # Variables
@@ -243,7 +243,11 @@ selectVariables <- function(VML_wSNPs,
       selected_vars_genot <- names(coef_genot)[-1]
       # Remove covariates from selected variables
       selected_vars_genot <- selected_vars_genot[!selected_vars_genot %in% colnames(covariates)]
-    } else {
+    } else if (any_snp) {
+      # Only one SNP and no covariates: glmnet needs 2+ columns to run, and
+      # with a single candidate there is nothing to select against, so keep it
+      selected_vars_genot <- colnames(genot_VMLi)
+    } else { # Catch cases when VML dont have surrounding genotyped SNPs
       selected_vars_genot <- character(0)
     }
 
