@@ -166,7 +166,7 @@ nullDistGE <- function(VML_wSNPs,
       environmental_matrix = permutated_environment,
       covariates = covariates,
       summarized_methyl_VML = summarized_methyl_VML,
-      seed = 1
+      seed = seed
     )
 
     message("Starting lmGE in permutation ", i, " of ", permutations)
