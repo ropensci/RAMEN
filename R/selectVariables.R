@@ -160,10 +160,16 @@ selectVariables <- function(VML_wSNPs,
   argument_check(VML_wSNPs$SNP, "list")
   argument_check(VML_wSNPs$VML_index, "character")
   # Check that IDs match across data sets
-  vectors_match(rownames(summarized_methyl_VML), colnames(genotype_matrix))
-  vectors_match(rownames(summarized_methyl_VML), rownames(environmental_matrix))
+  vectors_match(rownames(summarized_methyl_VML), colnames(genotype_matrix),
+               object_1_name = "rownames(summarized_methyl_VML)",
+               object_2_name = "colnames(genotype_matrix)")
+  vectors_match(rownames(summarized_methyl_VML), rownames(environmental_matrix),
+               object_1_name = "rownames(summarized_methyl_VML)",
+               object_2_name = "rownames(environmental_matrix)")
   if (!is.null(covariates)) {
-    vectors_match(rownames(summarized_methyl_VML), rownames(covariates))
+    vectors_match(rownames(summarized_methyl_VML), rownames(covariates),
+                 object_1_name = "rownames(summarized_methyl_VML)",
+                 object_2_name = "rownames(covariates)")
   }
   ## Check that genotype_matrix, environmental_matrix, and covariates (in case
   ## it is provided) have only numeric values and no NA, NaN, Inf

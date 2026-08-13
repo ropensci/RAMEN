@@ -194,10 +194,16 @@ lmGE <- function(selected_variables,
   if (!is.null(covariates)) argument_check(covariates, "matrix")
   argument_char_options(object = model_selection, options = c("AIC", "BIC"))
   # All objects have matching IDs
-  vectors_match(rownames(summarized_methyl_VML), colnames(genotype_matrix))
-  vectors_match(rownames(summarized_methyl_VML), rownames(environmental_matrix))
+  vectors_match(rownames(summarized_methyl_VML), colnames(genotype_matrix),
+               object_1_name = "rownames(summarized_methyl_VML)",
+               object_2_name = "colnames(genotype_matrix)")
+  vectors_match(rownames(summarized_methyl_VML), rownames(environmental_matrix),
+               object_1_name = "rownames(summarized_methyl_VML)",
+               object_2_name = "rownames(environmental_matrix)")
   if (!is.null(covariates)) {
-    vectors_match(rownames(summarized_methyl_VML), rownames(covariates))
+    vectors_match(rownames(summarized_methyl_VML), rownames(covariates),
+                 object_1_name = "rownames(summarized_methyl_VML)",
+                 object_2_name = "rownames(covariates)")
   }
   # Matrices have only finite numeric values
   finite_numeric_check(genotype_matrix)
