@@ -54,8 +54,8 @@
 #' @importFrom foreach %do%
 #' @export
 #' @examples
-#' # Set the parallel backend to use 2 workers
-#' doParallel::registerDoParallel(2)
+#' # Evaluate sequentially
+#' foreach::registerDoSEQ()
 #' ## Find VML in test data
 #' VML <- findVML(
 #'   methylation_data = test_methylation_data,
@@ -166,7 +166,7 @@ nullDistGE <- function(VML_wSNPs,
       environmental_matrix = permutated_environment,
       covariates = covariates,
       summarized_methyl_VML = summarized_methyl_VML,
-      seed = 1
+      seed = seed
     )
 
     message("Starting lmGE in permutation ", i, " of ", permutations)
