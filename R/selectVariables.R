@@ -107,8 +107,8 @@
 #'
 #' @examples
 #' ## Find VML in test data
-#' # Set the parallel backend to use 2 workers
-#' doParallel::registerDoParallel(2)
+#' # Evaluate sequentially
+#' foreach::registerDoSEQ()
 #' VML <- RAMEN::findVML(
 #'   methylation_data = RAMEN::test_methylation_data,
 #'   array_manifest = "IlluminaHumanMethylationEPICv1",
@@ -176,7 +176,12 @@ selectVariables <- function(VML_wSNPs,
   i <- NULL # To avoid R CMD check note about undefined global variable
   #### Run LASSO ####
   lasso_results <- foreach::foreach(i = VML_wSNPs$VML_index,
-                                    .combine = "rbind") %dorng% {
+                                    .combine = "rbind",
+                                    .packages = c("GenomicRanges",
+                                                  "S4Vectors",
+                                                  "IRanges",
+                                                  "glmnet"),
+                                    .export = "empty_lists") %dorng% {
     #### Prepare data sets ####
     VML_i <- VML_wSNPs[VML_wSNPs$VML_index == i]
     # Select summarized VML information
