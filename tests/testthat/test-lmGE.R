@@ -28,6 +28,28 @@ test_that("lmGE works with BIC", {
   expect_equal(nrow(lmge_res), 5)
 })
 
+test_that("lmGE works when there are no covariates", {
+  foreach::registerDoSEQ()
+  lmge_res <- RAMEN::lmGE(
+    selected_variables = selected_variables_test[1:5, ],
+    summarized_methyl_VML = summarized_methyl_VML_test,
+    genotype_matrix = RAMEN::test_genotype_matrix,
+    environmental_matrix = RAMEN::test_environmental_matrix,
+    covariates = NULL,
+    model_selection = "AIC"
+  )
+  expect_true(is.data.frame(lmge_res))
+  expect_equal(nrow(lmge_res), 5)
+  expect_false(any(is.na(lmge_res$tot_r_squared)))
+
+  # VML4's winning model only involves one variable (E). With no covariates
+  # to pad out the model, this used to break relaimpo::calc.relimp.lm(),
+  # which requires a model with 2+ regressors
+  vml_e <- lmge_res[lmge_res$model_group == "E", ][1,]
+  expect_false(is.na(vml_e$e_r_squared))
+  expect_true(is.na(vml_e$g_r_squared))
+})
+
 test_that("lmGE throws errors when expected", {
   expect_error(
     RAMEN::lmGE(

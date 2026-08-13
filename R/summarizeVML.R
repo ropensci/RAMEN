@@ -48,7 +48,7 @@ summarizeVML <- function(VML,
   argument_check(methylation_data, "data.frame")
   # Add a VML index to each region if not already existing
   if (!"VML_index" %in% colnames(S4Vectors::mcols(VML))) {
-    S4Vectors::mcols(VML)$VML_index <- paste0("VML", seq_len(length(VML)))
+    S4Vectors::mcols(VML)$VML_index <- paste0("VML", seq_along(VML))
   }
   if (!all(unique(unlist(VML$probes)) %in% rownames(methylation_data))) {
     warning(paste("Some probes listed in the VML data frame are not found in",
@@ -61,7 +61,7 @@ summarizeVML <- function(VML,
     stop("Please make sure the 'probes' column in the VML object is a list")
   }
   mcols_vml <- S4Vectors::mcols(VML)
-  VML_1 <- i <- NULL # To avoid R CMD check notes
+  i <- NULL # To avoid R CMD check notes
   #### Summarize VML ####
   summarized_VML <- foreach::foreach(i = mcols_vml$VML_index,
                                      .combine = "cbind") %dopar% {
