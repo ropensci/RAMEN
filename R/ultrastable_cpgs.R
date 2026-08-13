@@ -13,5 +13,8 @@
 #' A vector with the name of the 15,224 ultrastable probes identified by Edgar
 #' et al. (2014). The name of the probes are based on the Illumina 450k manifest.
 #'
+#' @examples
+#' head(ultrastable_cpgs)
+#'
 #' @source https://static-content.springer.com/esm/art%3A10.1186%2F1756-8935-7-28/MediaObjects/13072_2014_333_MOESM2_ESM.txt
 "ultrastable_cpgs"

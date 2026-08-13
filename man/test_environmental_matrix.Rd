@@ -22,4 +22,8 @@ test_environmental_matrix
 One hundred environmental exposure variables drawn from a normal distribution
 with mean=0 and sd=1 for 30 individuals.
 }
+\examples{
+summary(test_environmental_matrix)
+
+}
 \keyword{datasets}

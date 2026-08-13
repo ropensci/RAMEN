@@ -23,4 +23,8 @@ Simulated M values of the 3000 probes selected in \emph{test_array_manifest} for
 30 individuals. Values were converted from beta values, which were drawn from
 a bimodal Beta distribution.
 }
+\examples{
+summary(test_methylation_data)
+
+}
 \keyword{datasets}
