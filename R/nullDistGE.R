@@ -126,19 +126,10 @@ nullDistGE <- function(VML_wSNPs,
   # Set shuffle order
   if (!is.null(seed)) set.seed(seed)
   # Initialize permutation object
-  permutation_order <- data.frame(sample(rownames(summarized_methyl_VML),
-                                         size = length(rownames(summarized_methyl_VML))
-  ))
-  if (permutations > 1) {
-    # Append order of other permutations
-    for (i in 1:(permutations - 1)) {
-      permutation_order <- cbind(
-        permutation_order,
-        data.frame(sample(rownames(summarized_methyl_VML),
-                          size = length(rownames(summarized_methyl_VML))
-        )))
-    }
-  }
+  permutation_order <- replicate(permutations,
+                                 sample(rownames(summarized_methyl_VML)),
+                                 simplify = FALSE) |>
+    as.data.frame()
   colnames(permutation_order) <- 1:permutations
 
   # Put the environmental and genotype matrix in the same order to the
