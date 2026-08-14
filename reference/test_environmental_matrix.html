@@ -9,7 +9,7 @@ with mean=0 and sd=1 for 30 individuals."><meta property="og:image" content="htt
 
     <a class="navbar-brand me-2" href="../index.html">RAMEN</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.1.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -64,6 +64,187 @@ to exposure IDs</p></dd>
 
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">test_environmental_matrix</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        E1                 E2                 E3                 E4          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   :-1.96662   Min.   :-1.54875   Min.   :-2.30917   Min.   :-1.66794  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.:-0.67140   1st Qu.:-0.30324   1st Qu.:-0.46094   1st Qu.:-0.69298  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Median :-0.07373   Median : 0.04765   Median : 0.02938   Median :-0.24120  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   :-0.04710   Mean   : 0.17834   Mean   : 0.02442   Mean   :-0.09389  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.: 0.48862   3rd Qu.: 0.75713   3rd Qu.: 0.44495   3rd Qu.: 0.46484  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   : 1.78691   Max.   : 2.16896   Max.   : 2.05008   Max.   : 2.18733  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        E5                E6                 E7                 E8          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   :-2.0532   Min.   :-1.26016   Min.   :-1.31080   Min.   :-1.31702  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.:-1.2057   1st Qu.:-0.40629   1st Qu.:-0.60703   1st Qu.:-0.72160  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Median :-0.2591   Median : 0.05154   Median :-0.25071   Median :-0.27329  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   :-0.1836   Mean   : 0.15372   Mean   : 0.01471   Mean   :-0.08965  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.: 0.6288   3rd Qu.: 0.55146   3rd Qu.: 0.58633   3rd Qu.: 0.39531  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   : 2.1001   Max.   : 3.24104   Max.   : 2.19881   Max.   : 1.95529  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        E9                E10                E11               E12          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   :-1.75653   Min.   :-1.66748   Min.   :-2.0142   Min.   :-2.46590  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.:-0.51639   1st Qu.: 0.02191   1st Qu.:-0.6868   1st Qu.:-0.85031  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Median :-0.12340   Median : 0.19791   Median : 0.1096   Median :-0.04251  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   : 0.05077   Mean   : 0.33669   Mean   : 0.0691   Mean   :-0.11114  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.: 0.59443   3rd Qu.: 0.93431   3rd Qu.: 0.7435   3rd Qu.: 0.57100  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   : 2.29308   Max.   : 2.00248   Max.   : 2.0376   Max.   : 2.57146  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       E13               E14               E15                E16         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   :-1.7903   Min.   :-2.6431   Min.   :-2.22499   Min.   :-2.6609  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.:-0.4633   1st Qu.:-0.6440   1st Qu.:-0.70013   1st Qu.:-0.2917  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Median : 0.1596   Median :-0.2362   Median : 0.14582   Median : 0.3018  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   : 0.0334   Mean   :-0.2534   Mean   : 0.03197   Mean   : 0.2823  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.: 0.5016   3rd Qu.: 0.4767   3rd Qu.: 0.69950   3rd Qu.: 1.0143  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   : 2.4168   Max.   : 1.5039   Max.   : 2.39745   Max.   : 1.9754  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       E17                E18               E19               E20         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   :-2.07075   Min.   :-1.4206   Min.   :-1.4590   Min.   :-2.8098  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.:-0.59502   1st Qu.:-0.4487   1st Qu.:-0.6115   1st Qu.:-0.9751  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Median : 0.13572   Median : 0.1335   Median : 0.0141   Median :-0.1147  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   : 0.03595   Mean   : 0.1284   Mean   : 0.0658   Mean   :-0.1913  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.: 0.74151   3rd Qu.: 0.5915   3rd Qu.: 0.6880   3rd Qu.: 0.5028  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   : 1.62688   Max.   : 1.9459   Max.   : 2.4302   Max.   : 1.8599  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       E21               E22               E23               E24          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   :-2.6017   Min.   :-1.9430   Min.   :-2.2491   Min.   :-1.61404  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.:-1.0164   1st Qu.:-0.7908   1st Qu.:-0.8221   1st Qu.:-0.59166  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Median :-0.2552   Median : 0.1390   Median :-0.2666   Median : 0.01607  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   :-0.1872   Mean   :-0.1032   Mean   :-0.2402   Mean   : 0.07518  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.: 0.6724   3rd Qu.: 0.6245   3rd Qu.: 0.3940   3rd Qu.: 0.70856  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   : 2.0867   Max.   : 1.1394   Max.   : 1.9662   Max.   : 2.45806  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       E25                E26                E27                E28         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   :-2.21063   Min.   :-2.03768   Min.   :-1.95821   Min.   :-2.5079  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.:-0.09133   1st Qu.:-0.26508   1st Qu.:-0.55623   1st Qu.:-1.1076  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Median : 0.44978   Median : 0.10495   Median : 0.25369   Median :-0.1930  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   : 0.31065   Mean   : 0.09554   Mean   : 0.04775   Mean   :-0.2929  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.: 0.96007   3rd Qu.: 0.59729   3rd Qu.: 0.75991   3rd Qu.: 0.2953  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   : 2.69171   Max.   : 1.87786   Max.   : 2.16142   Max.   : 1.5165  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       E29                E30               E31               E32         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   :-1.86023   Min.   :-1.1392   Min.   :-1.9251   Min.   :-1.6859  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.:-0.58446   1st Qu.:-0.6769   1st Qu.:-0.1830   1st Qu.:-0.7123  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Median : 0.01911   Median : 0.3073   Median : 0.3005   Median :-0.2179  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   : 0.25811   Mean   : 0.2024   Mean   : 0.3187   Mean   :-0.2169  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.: 1.03809   3rd Qu.: 0.7387   3rd Qu.: 1.0199   3rd Qu.: 0.2127  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   : 2.68486   Max.   : 1.9507   Max.   : 2.5754   Max.   : 2.0067  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       E33                E34                E35               E36           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   :-2.11121   Min.   :-2.54934   Min.   :-1.6485   Min.   :-1.089145  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.:-0.99382   1st Qu.:-0.50370   1st Qu.:-0.4854   1st Qu.:-0.549535  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Median :-0.07981   Median : 0.08454   Median : 0.1422   Median :-0.008287  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   :-0.13290   Mean   : 0.13598   Mean   : 0.1166   Mean   : 0.089201  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.: 0.15413   3rd Qu.: 0.62408   3rd Qu.: 0.6924   3rd Qu.: 0.552083  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   : 2.30506   Max.   : 2.83223   Max.   : 1.8222   Max.   : 1.779103  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       E37                E38                E39                E40          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   :-2.37741   Min.   :-2.00546   Min.   :-2.01869   Min.   :-2.19892  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.:-0.92531   1st Qu.:-0.68086   1st Qu.:-0.62504   1st Qu.:-0.69293  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Median : 0.16075   Median :-0.12653   Median :-0.06147   Median :-0.02683  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   :-0.06805   Mean   : 0.09695   Mean   :-0.10170   Mean   : 0.03400  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.: 0.63805   3rd Qu.: 0.92416   3rd Qu.: 0.29979   3rd Qu.: 0.55149  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   : 1.90504   Max.   : 3.18404   Max.   : 1.48240   Max.   : 2.19359  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       E41               E42               E43                E44          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   :-2.1741   Min.   :-1.9344   Min.   :-2.31374   Min.   :-1.70296  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.:-0.9918   1st Qu.:-0.5949   1st Qu.:-0.27623   1st Qu.:-0.63522  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Median :-0.2634   Median : 0.2846   Median :-0.06957   Median : 0.09513  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   :-0.2462   Mean   : 0.1133   Mean   :-0.02196   Mean   : 0.05174  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.: 0.5698   3rd Qu.: 0.6741   3rd Qu.: 0.56557   3rd Qu.: 0.59594  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   : 1.1613   Max.   : 1.9537   Max.   : 1.43301   Max.   : 1.77324  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       E45               E46                E47               E48          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   :-1.9941   Min.   :-1.49583   Min.   :-1.9687   Min.   :-2.69533  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.:-0.8000   1st Qu.:-0.90182   1st Qu.:-0.5495   1st Qu.:-0.24727  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Median :-0.3210   Median : 0.05321   Median : 0.3247   Median : 0.29997  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   :-0.1799   Mean   : 0.02146   Mean   : 0.0529   Mean   : 0.04023  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.: 0.3820   3rd Qu.: 0.84909   3rd Qu.: 0.6960   3rd Qu.: 0.65691  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   : 3.3904   Max.   : 2.00557   Max.   : 1.3647   Max.   : 1.58043  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       E49               E50                E51                E52         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   :-1.9926   Min.   :-1.85169   Min.   :-1.55785   Min.   :-1.5461  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.:-0.1706   1st Qu.:-0.78255   1st Qu.:-0.31377   1st Qu.:-0.1660  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Median : 0.4620   Median :-0.05605   Median :-0.06272   Median : 0.1907  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   : 0.2148   Mean   : 0.05447   Mean   : 0.10906   Mean   : 0.1692  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.: 0.7190   3rd Qu.: 0.95022   3rd Qu.: 0.66962   3rd Qu.: 0.7004  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   : 1.8506   Max.   : 2.28412   Max.   : 2.12721   Max.   : 1.7620  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       E53                 E54                E55               E56          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   :-1.584991   Min.   :-2.24869   Min.   :-2.0948   Min.   :-2.16261  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.:-0.695131   1st Qu.:-0.51320   1st Qu.:-0.5375   1st Qu.:-0.62884  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Median :-0.002412   Median : 0.11077   Median :-0.1012   Median : 0.01999  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   :-0.058816   Mean   : 0.07507   Mean   : 0.1792   Mean   : 0.06055  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.: 0.512186   3rd Qu.: 0.90200   3rd Qu.: 1.1123   3rd Qu.: 0.99025  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   : 1.769366   Max.   : 2.47875   Max.   : 3.2905   Max.   : 1.60421  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       E57                E58               E59                E60          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   :-3.04786   Min.   :-2.0936   Min.   :-1.65315   Min.   :-2.04448  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.:-0.73830   1st Qu.:-1.0517   1st Qu.:-0.63110   1st Qu.:-0.43051  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Median :-0.07857   Median :-0.1367   Median :-0.02266   Median : 0.13675  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   :-0.04153   Mean   :-0.1371   Mean   : 0.09726   Mean   : 0.06568  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.: 0.86959   3rd Qu.: 0.2956   3rd Qu.: 0.74589   3rd Qu.: 0.50259  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   : 1.86866   Max.   : 2.5773   Max.   : 2.36506   Max.   : 1.93976  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       E61                E62                E63               E64          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   :-1.40455   Min.   :-2.62933   Min.   :-1.9650   Min.   :-2.60404  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.:-0.49339   1st Qu.:-1.01927   1st Qu.:-0.5758   1st Qu.:-0.46675  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Median : 0.10371   Median :-0.02442   Median : 0.3895   Median :-0.06319  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   : 0.07279   Mean   :-0.10449   Mean   : 0.2144   Mean   : 0.13754  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.: 0.41977   3rd Qu.: 0.81117   3rd Qu.: 1.0761   3rd Qu.: 0.96315  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   : 1.69011   Max.   : 2.27347   Max.   : 2.4136   Max.   : 2.44800  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       E65                E66                E67                E68          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   :-2.33595   Min.   :-1.99918   Min.   :-1.80689   Min.   :-1.17261  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.:-0.77390   1st Qu.:-0.60883   1st Qu.:-0.60691   1st Qu.:-0.50295  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Median :-0.07316   Median : 0.07314   Median : 0.09849   Median : 0.04207  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   :-0.03468   Mean   : 0.11868   Mean   : 0.02254   Mean   : 0.14254  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.: 0.78449   3rd Qu.: 0.92995   3rd Qu.: 0.47200   3rd Qu.: 0.73391  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   : 2.81608   Max.   : 2.01129   Max.   : 2.04602   Max.   : 2.05850  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       E69                E70               E71                E72         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   :-2.06371   Min.   :-2.3208   Min.   :-1.14557   Min.   :-2.5082  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.:-0.47918   1st Qu.:-0.9425   1st Qu.:-0.45344   1st Qu.:-0.9851  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Median :-0.01646   Median :-0.4860   Median : 0.03699   Median :-0.2433  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   :-0.02450   Mean   :-0.4794   Mean   : 0.05474   Mean   :-0.3008  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.: 0.39243   3rd Qu.: 0.1187   3rd Qu.: 0.43881   3rd Qu.: 0.4362  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   : 1.52988   Max.   : 1.0495   Max.   : 1.35684   Max.   : 1.7148  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       E73               E74               E75               E76         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   :-1.9488   Min.   :-1.2145   Min.   :-2.2980   Min.   :-1.9830  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.:-0.6557   1st Qu.:-0.4414   1st Qu.:-0.8679   1st Qu.:-0.8875  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Median :-0.2175   Median : 0.1362   Median :-0.2054   Median :-0.2065  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   :-0.2219   Mean   : 0.2088   Mean   :-0.1807   Mean   :-0.2909  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.: 0.3210   3rd Qu.: 0.6934   3rd Qu.: 0.5182   3rd Qu.: 0.3866  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   : 1.0913   Max.   : 2.2820   Max.   : 1.4466   Max.   : 1.1440  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       E77                E78                E79                 E80         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   :-2.54193   Min.   :-2.01252   Min.   :-1.918952   Min.   :-2.8485  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.:-0.47397   1st Qu.:-0.51142   1st Qu.:-0.533046   1st Qu.:-0.5073  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Median : 0.05170   Median : 0.15862   Median :-0.161912   Median : 0.3261  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   : 0.01599   Mean   : 0.05853   Mean   :-0.003628   Mean   : 0.1142  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.: 0.53925   3rd Qu.: 0.74010   3rd Qu.: 0.712935   3rd Qu.: 0.8230  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   : 2.20076   Max.   : 1.77904   Max.   : 3.022104   Max.   : 2.0717  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       E81               E82                E83                 E84         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   :-2.3075   Min.   :-1.56374   Min.   :-1.637292   Min.   :-1.2056  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.:-1.0143   1st Qu.:-0.40387   1st Qu.:-0.501236   1st Qu.:-0.5006  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Median :-0.5072   Median :-0.02709   Median :-0.055406   Median : 0.4564  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   :-0.4576   Mean   : 0.13812   Mean   : 0.003471   Mean   : 0.3223  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.: 0.1315   3rd Qu.: 0.59218   3rd Qu.: 0.642959   3rd Qu.: 0.7849  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   : 1.6229   Max.   : 2.73521   Max.   : 2.008240   Max.   : 2.1261  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       E85               E86               E87                E88          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   :-2.3737   Min.   :-1.3952   Min.   :-1.71490   Min.   :-2.63251  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.:-0.7154   1st Qu.:-0.2676   1st Qu.:-0.84321   1st Qu.:-0.45367  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Median :-0.1927   Median : 0.3482   Median : 0.23005   Median : 0.16860  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   :-0.1386   Mean   : 0.2863   Mean   : 0.07639   Mean   : 0.05663  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.: 0.8088   3rd Qu.: 0.8567   3rd Qu.: 0.73086   3rd Qu.: 0.99862  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   : 1.9822   Max.   : 1.7387   Max.   : 2.15648   Max.   : 1.72701  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       E89                E90               E91               E92          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   :-1.94007   Min.   :-2.5617   Min.   :-2.0061   Min.   :-2.32925  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.:-0.61489   1st Qu.:-0.9400   1st Qu.:-0.8343   1st Qu.:-0.44199  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Median : 0.10708   Median :-0.5505   Median :-0.3699   Median :-0.02532  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   :-0.01767   Mean   :-0.4258   Mean   :-0.2806   Mean   : 0.11479  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.: 0.48102   3rd Qu.: 0.1453   3rd Qu.: 0.3326   3rd Qu.: 0.86681  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   : 1.49297   Max.   : 1.6346   Max.   : 1.4758   Max.   : 1.86901  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       E93                E94                E95                 E96         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   :-2.15330   Min.   :-1.43096   Min.   :-2.329003   Min.   :-2.0581  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.:-0.39746   1st Qu.:-0.37712   1st Qu.:-0.715786   1st Qu.:-0.4879  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Median : 0.06573   Median :-0.09687   Median :-0.181119   Median : 0.1255  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   : 0.12425   Mean   :-0.01253   Mean   :-0.007984   Mean   : 0.1728  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.: 0.62176   3rd Qu.: 0.37765   3rd Qu.: 0.404414   3rd Qu.: 0.7213  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   : 2.47561   Max.   : 1.89201   Max.   : 2.708959   Max.   : 2.4590  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       E97                E98               E99               E100        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   :-1.94601   Min.   :-2.0232   Min.   :-1.4325   Min.   :-2.2039  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.:-0.83010   1st Qu.:-0.9476   1st Qu.:-0.2178   1st Qu.:-0.4800  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Median :-0.15720   Median :-0.2187   Median : 0.3225   Median : 0.1239  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   :-0.07505   Mean   :-0.2884   Mean   : 0.3359   Mean   : 0.3435  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.: 0.57300   3rd Qu.: 0.4908   3rd Qu.: 0.9639   3rd Qu.: 1.2856  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   : 1.58626   Max.   : 1.1631   Max.   : 2.0548   Max.   : 3.4211  </span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 

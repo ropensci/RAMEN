@@ -26,3 +26,11 @@ Edgar et al. (2014). The name of the probes are based on the Illumina
 ## Source
 
 https://static-content.springer.com/esm/art%3A10.1186%2F1756-8935-7-28/MediaObjects/13072_2014_333_MOESM2_ESM.txt
+
+## Examples
+
+``` r
+head(ultrastable_cpgs)
+#> [1] "cg11733071" "cg16389252" "cg15153791" "cg22482746" "cg25177113"
+#> [6] "cg10046671"
+```

@@ -11,7 +11,7 @@ a bimodal Beta distribution."><meta property="og:image" content="https://erickna
 
     <a class="navbar-brand me-2" href="../index.html">RAMEN</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.1.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -67,6 +67,68 @@ a bimodal Beta distribution.</p>
 
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">test_methylation_data</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       ID1              ID2              ID3              ID4        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   :-1.895   Min.   :-1.708   Min.   :-1.626   Min.   :-3.679  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.: 1.673   1st Qu.: 1.691   1st Qu.: 1.624   1st Qu.: 1.602  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Median : 2.766   Median : 2.724   Median : 2.773   Median : 2.716  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   : 3.030   Mean   : 3.011   Mean   : 3.026   Mean   : 2.957  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.: 4.098   3rd Qu.: 4.125   3rd Qu.: 4.109   3rd Qu.: 4.042  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   :13.968   Max.   :15.591   Max.   :16.356   Max.   :13.406  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       ID5              ID6              ID7              ID8        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   :-2.359   Min.   :-1.954   Min.   :-2.066   Min.   :-2.088  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.: 1.577   1st Qu.: 1.587   1st Qu.: 1.615   1st Qu.: 1.616  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Median : 2.680   Median : 2.759   Median : 2.694   Median : 2.713  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   : 2.973   Mean   : 3.001   Mean   : 2.970   Mean   : 2.994  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.: 4.019   3rd Qu.: 4.124   3rd Qu.: 4.071   3rd Qu.: 4.136  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   :15.837   Max.   :19.309   Max.   :13.942   Max.   :14.721  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       ID9              ID10             ID11             ID12       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   :-1.377   Min.   :-2.583   Min.   :-2.194   Min.   :-1.935  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.: 1.631   1st Qu.: 1.745   1st Qu.: 1.667   1st Qu.: 1.693  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Median : 2.774   Median : 2.855   Median : 2.784   Median : 2.806  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   : 3.006   Mean   : 3.079   Mean   : 3.024   Mean   : 3.065  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.: 4.055   3rd Qu.: 4.131   3rd Qu.: 4.036   3rd Qu.: 4.174  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   :16.020   Max.   :13.898   Max.   :13.906   Max.   :14.932  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       ID13             ID14             ID15             ID16       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   :-1.788   Min.   :-2.870   Min.   :-2.341   Min.   :-2.691  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.: 1.679   1st Qu.: 1.616   1st Qu.: 1.646   1st Qu.: 1.673  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Median : 2.819   Median : 2.727   Median : 2.820   Median : 2.769  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   : 3.063   Mean   : 2.968   Mean   : 3.056   Mean   : 3.037  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.: 4.044   3rd Qu.: 4.045   3rd Qu.: 4.107   3rd Qu.: 4.099  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   :14.722   Max.   :16.234   Max.   :15.453   Max.   :16.481  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       ID17             ID18             ID19             ID20       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   :-2.215   Min.   :-2.289   Min.   :-2.208   Min.   :-2.209  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.: 1.648   1st Qu.: 1.640   1st Qu.: 1.651   1st Qu.: 1.591  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Median : 2.723   Median : 2.776   Median : 2.780   Median : 2.771  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   : 2.983   Mean   : 3.013   Mean   : 3.054   Mean   : 3.004  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.: 4.029   3rd Qu.: 4.051   3rd Qu.: 4.099   3rd Qu.: 4.074  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   :11.995   Max.   :15.660   Max.   :16.406   Max.   :12.814  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       ID21              ID22              ID23             ID24        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   :-8.0482   Min.   :-8.6276   Min.   :-9.369   Min.   :-8.5430  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.:-3.3710   1st Qu.:-3.3573   1st Qu.:-3.371   1st Qu.:-3.3773  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Median :-2.5229   Median :-2.4975   Median :-2.543   Median :-2.5046  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   :-2.6163   Mean   :-2.5975   Mean   :-2.659   Mean   :-2.6449  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.:-1.7383   3rd Qu.:-1.7104   3rd Qu.:-1.808   3rd Qu.:-1.7757  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   : 0.8294   Max.   : 0.5153   Max.   : 1.023   Max.   : 0.6307  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       ID25             ID26              ID27              ID28       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   :-8.019   Min.   :-9.5781   Min.   :-10.931   Min.   :-9.204  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.:-3.356   1st Qu.:-3.3971   1st Qu.: -3.390   1st Qu.:-3.289  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Median :-2.529   Median :-2.5561   Median : -2.491   Median :-2.475  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   :-2.621   Mean   :-2.6450   Mean   : -2.627   Mean   :-2.581  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.:-1.761   3rd Qu.:-1.7877   3rd Qu.: -1.759   3rd Qu.:-1.731  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   : 1.152   Max.   : 0.9988   Max.   :  1.066   Max.   : 1.296  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       ID29              ID30        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   :-8.5215   Min.   :-8.1865  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.:-3.4093   1st Qu.:-3.3412  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Median :-2.5437   Median :-2.5153  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   :-2.6430   Mean   :-2.6377  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.:-1.7914   3rd Qu.:-1.7777  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   : 0.6812   Max.   : 0.7559  </span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 

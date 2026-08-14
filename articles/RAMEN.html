@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">RAMEN</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.1.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -204,6 +204,52 @@ normalization when required. The choice of methods to do so is beyond
 the scope of this vignette, but we provide some broad recommendations
 and resources here.</p>
 <div class="section level4">
+<h4 id="ramens-underlying-assumptions">RAMEN’s underlying assumptions<a class="anchor" aria-label="anchor" href="#ramens-underlying-assumptions"></a>
+</h4>
+<p>Beyond general QC, there are assumptions specific to how RAMEN models
+the data internally that pre-processing choices should be made
+compatible with:</p>
+<ul>
+<li>Variance stability in DNAme data: <code><a href="../reference/findVML.html">RAMEN::findVML()</a></code>
+identifies variably methylated loci (VML) by comparing each probe’s
+variance (or MAD) against a percentile threshold derived from a
+reference distribution of probes expected to show little biological
+variability (<code><a href="../reference/ultrastable_cpgs.html">RAMEN::ultrastable_cpgs</a></code>). This comparison
+assumes that variance is on a comparable scale across probes and
+samples, so pre-processing steps must not compress or inflate variance
+differently for the ultrastable (i.e. noise variance) probes versus the
+rest of the probes. Therefore, as noted below, we recommend users to:
+<ul>
+<li>Use M-values over Beta-values, since the former are unbounded and
+roughly homoscedastic, while Beta-values are bounded (0-1) and
+compressed near the extremes.</li>
+<li>Avoid methods relying solely on quantile normalization, since the
+rank-based mapping compresses variance more for probes with more extreme
+values.</li>
+</ul>
+</li>
+<li>Normality: <code><a href="../reference/lmGE.html">RAMEN::lmGE()</a></code> relies on
+<code><a href="https://rdrr.io/r/stats/lm.html" class="external-link">stats::lm()</a></code> to compare candidate models via AIC/BIC; this
+comparison is most valid when residuals are approximately normally
+distributed, so strongly skewed or zero-inflated input variables
+(genomic, methylomic or exposomic) should be transformed to reduce skew
+(e.g. log, Box-Cox or Yeo-Johnson transforms) beforehand.</li>
+<li>No missing values: RAMEN performs no internal handling of missing
+data. Every function checks that its numeric inputs (genotype, DNAme,
+environmental and covariate matrices) are complete and finite, and will
+throw an error if any <code>NA</code>, <code>NaN</code> or
+<code>Inf</code> value is found. If you use RAMEN with data types or
+platforms that can produce missing values, you must resolve them through
+imputation or complete-case filtering. Along those lines, please choose
+your imputation strategy carefully, and keep in mind that zero has a
+meaning across all data modalities, and should not be used as a
+placeholder (e.g. a homozygous reference genotype dosage, a methylation
+value for a CpG, or no exposure).</li>
+</ul>
+<p>With these assumptions in mind, the following sections provide
+general guidance on pre-processing steps for each data type.</p>
+</div>
+<div class="section level4">
 <h4 id="genomic-data">Genomic data<a class="anchor" aria-label="anchor" href="#genomic-data"></a>
 </h4>
 <p>The QC of genotyping data is a crucial step in any genetic study, as
@@ -309,10 +355,17 @@ variables.</li>
 <li>Missing values are very likely to be present. Consider <a href="https://stefvanbuuren.name/fimd/" class="external-link">imputation methods</a> or
 complete case analyses.</li>
 </ul>
-<p>RAMEN standardizes all exposome variables, so there is no need to do
-so before. We also make use of LASSO during the variable selection
-stage, so the method can handle correlation in the data set, which is
-expected.</p>
+<p>There is no need to standardize exposome variables before providing
+them to RAMEN, even though they typically come in very different scales.
+During variable selection, <code><a href="../reference/selectVariables.html">RAMEN::selectVariables()</a></code> uses
+<code>glmnet</code> for its LASSO-based selection, which by default
+(<code>standardize = TRUE</code>) z-scores all predictors before fitting
+and un-standardizes the resulting coefficients, so scale differences
+across variables do not bias which ones get selected. Model comparison
+in <code><a href="../reference/lmGE.html">RAMEN::lmGE()</a></code> does not require standardization either,
+since AIC/BIC/R2 are invariant to a linear rescaling of a predictor.</p>
+<p>We also make use of LASSO during the variable selection stage, so the
+method can handle correlation in the data set, which is expected.</p>
 </div>
 <div class="section level4">
 <h4 id="covariates-to-include">Covariates to include<a class="anchor" aria-label="anchor" href="#covariates-to-include"></a>
@@ -582,6 +635,10 @@ works, we can start our analysis! Let’s give it a try.</p>
 <span>  max_distance <span class="op">=</span> <span class="fl">1000</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; Identifying Highly Variable Probes...</span></span>
+<span><span class="co">#&gt; Warning: replacing previous import 'S4Arrays::makeNindexFromArrayViewport' by</span></span>
+<span><span class="co">#&gt; 'DelayedArray::makeNindexFromArrayViewport' when loading 'SummarizedExperiment'</span></span>
+<span><span class="co">#&gt; Warning: replacing previous import 'S4Arrays::makeNindexFromArrayViewport' by</span></span>
+<span><span class="co">#&gt; 'DelayedArray::makeNindexFromArrayViewport' when loading 'HDF5Array'</span></span>
 <span><span class="co">#&gt; Setting options('download.file.method.GEOquery'='auto')</span></span>
 <span><span class="co">#&gt; Setting options('GEOquery.inmemory.gpl'=FALSE)</span></span>
 <span><span class="co">#&gt; Identifying sparse Variable Methylated Probes</span></span>
@@ -1393,8 +1450,10 @@ epistasis effects).</li>
 <div class="section level2">
 <h2 id="frequently-asked-questions">Frequently Asked Questions<a class="anchor" aria-label="anchor" href="#frequently-asked-questions"></a>
 </h2>
-<p><strong>How can I save the RAMEN data frames that have columns with
-lists as observations?</strong></p>
+<div class="section level3">
+<h3 id="how-can-i-save-the-ramen-data-frames-that-have-columns-with-lists-as-observations">How can I save the RAMEN data frames that have columns with lists as
+observations?<a class="anchor" aria-label="anchor" href="#how-can-i-save-the-ramen-data-frames-that-have-columns-with-lists-as-observations"></a>
+</h3>
 <p>Saving the data frames produced by RAMEN might seem difficult because
 it has lists as observations in several columns, which is not supported
 by some read/write functions. We suggest two options:</p>
@@ -1424,10 +1483,58 @@ package (recommended because of time and storage space).</li>
 <span><span class="co"># Load the object</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span>file <span class="op">=</span> <span class="st">"path/selected_variables.Rds"</span><span class="op">)</span></span></code></pre></div>
 </div>
+<div class="section level3">
+<h3 id="how-can-i-set-up-the-parallel-backend">How can I set up the parallel backend?<a class="anchor" aria-label="anchor" href="#how-can-i-set-up-the-parallel-backend"></a>
+</h3>
+<p>Most functions in RAMEN are compatible with parallel computing
+(<code><a href="../reference/findVML.html">findVML()</a></code>, <code><a href="../reference/medCorVMR.html">medCorVMR()</a></code>,
+<code><a href="../reference/summarizeVML.html">summarizeVML()</a></code>, <code><a href="../reference/selectVariables.html">selectVariables()</a></code>,
+<code><a href="../reference/lmGE.html">lmGE()</a></code>, <code><a href="../reference/nullDistGE.html">nullDistGE()</a></code>). You can run these
+functions sequentially, which is the default in a fresh R session. This
+will trigger the following warning, which is just a message:</p>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">#&gt; Warning: executing %dopar% sequentially: no parallel backend registered</span></span></code></pre></div>
+<p>To silence it, you can explicitly set up a sequential evaluation
+before running any of the above functions:</p>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">foreach</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/foreach/man/registerDoSEQ.html" class="external-link">registerDoSEQ</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Run RAMEN functions here</span></span></code></pre></div>
+<p>To run the function in parallel, you just need to specify the
+parallel backend of your preference. Just to provide examples, you can
+use the <code>doParallel</code> package:</p>
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">parallel</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/RevolutionAnalytics/doparallel" class="external-link">doParallel</a></span><span class="op">)</span></span>
+<span><span class="co"># Find the number of CPU cores to use (leaving one core free is common practice)</span></span>
+<span><span class="va">num_cores</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/parallel/detectCores.html" class="external-link">detectCores</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span></span>
+<span><span class="co">#Create the cluster object</span></span>
+<span><span class="va">cl</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/parallel/makeCluster.html" class="external-link">makePSOCKcluster</a></span><span class="op">(</span><span class="va">num_cores</span><span class="op">)</span></span>
+<span><span class="co"># Register the parallel backend</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/doParallel/man/registerDoParallel.html" class="external-link">registerDoParallel</a></span><span class="op">(</span><span class="va">cl</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Run RAMEN functions here</span></span>
+<span></span>
+<span><span class="co">#Stop the cluster and return to sequential processing when finished:</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/parallel/makeCluster.html" class="external-link">stopCluster</a></span><span class="op">(</span><span class="va">cl</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/foreach/man/registerDoSEQ.html" class="external-link">registerDoSEQ</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p>You can also use the future framework:</p>
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://future.futureverse.org" class="external-link">future</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Set the backend to use multiple background R sessions</span></span>
+<span><span class="fu">plan</span><span class="op">(</span><span class="va">multisession</span><span class="op">)</span> </span>
+<span></span>
+<span><span class="co"># Explicitly limit the number of worker cores (optional)</span></span>
+<span><span class="fu">plan</span><span class="op">(</span><span class="va">multisession</span>, workers <span class="op">=</span> <span class="fl">4</span><span class="op">)</span> </span>
+<span></span>
+<span><span class="co"># Run RAMEN functions here</span></span></code></pre></div>
+</div>
+</div>
 <div class="section level2">
 <h2 id="session-info">Session info<a class="anchor" aria-label="anchor" href="#session-info"></a>
 </h2>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; R version 4.6.1 (2026-06-24)</span></span>
 <span><span class="co">#&gt; Platform: x86_64-pc-linux-gnu</span></span>
@@ -1456,7 +1563,7 @@ package (recommended because of time and storage space).</li>
 <span><span class="co">#&gt;  [7] IRanges_2.46.0       S4Vectors_0.50.1     BiocGenerics_0.58.1 </span></span>
 <span><span class="co">#&gt; [10] generics_0.1.4       doParallel_1.0.17    iterators_1.0.14    </span></span>
 <span><span class="co">#&gt; [13] foreach_1.5.2        tidyr_1.3.2          ggplot2_4.0.3       </span></span>
-<span><span class="co">#&gt; [16] dplyr_1.2.1          RAMEN_2.1.0          knitr_1.51          </span></span>
+<span><span class="co">#&gt; [16] dplyr_1.2.1          RAMEN_2.1.1          knitr_1.51          </span></span>
 <span><span class="co">#&gt; [19] BiocStyle_2.40.0    </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>

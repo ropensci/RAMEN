@@ -13,7 +13,7 @@ probability 0.5."><meta property="og:image" content="https://ericknavarrod.githu
 
     <a class="navbar-brand me-2" href="../index.html">RAMEN</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.1.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -70,6 +70,68 @@ probability 0.5.</p>
 
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">test_genotype_matrix</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       ID1              ID2             ID3             ID4      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   :0.0000   Min.   :0.000   Min.   :0.000   Min.   :0.00  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.:1.0000   1st Qu.:0.000   1st Qu.:0.000   1st Qu.:0.00  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Median :1.0000   Median :1.000   Median :1.000   Median :1.00  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   :0.9966   Mean   :1.001   Mean   :1.001   Mean   :0.99  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.:1.0000   3rd Qu.:2.000   3rd Qu.:2.000   3rd Qu.:1.00  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   :2.0000   Max.   :2.000   Max.   :2.000   Max.   :2.00  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       ID5              ID6              ID7             ID8       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   :0.0000   Min.   :0.0000   Min.   :0.000   Min.   :0.000  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.:0.0000   1st Qu.:0.0000   1st Qu.:1.000   1st Qu.:1.000  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Median :1.0000   Median :1.0000   Median :1.000   Median :1.000  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   :0.9861   Mean   :0.9977   Mean   :1.006   Mean   :1.004  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.:1.0000   3rd Qu.:2.0000   3rd Qu.:2.000   3rd Qu.:1.000  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   :2.0000   Max.   :2.0000   Max.   :2.000   Max.   :2.000  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       ID9              ID10            ID11            ID12      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   :0.0000   Min.   :0.000   Min.   :0.000   Min.   :0.000  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.:0.0000   1st Qu.:1.000   1st Qu.:1.000   1st Qu.:0.000  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Median :1.0000   Median :1.000   Median :1.000   Median :1.000  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   :0.9916   Mean   :1.014   Mean   :1.003   Mean   :0.998  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.:1.0000   3rd Qu.:2.000   3rd Qu.:2.000   3rd Qu.:1.000  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   :2.0000   Max.   :2.000   Max.   :2.000   Max.   :2.000  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       ID13             ID14            ID15            ID16      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   :0.0000   Min.   :0.000   Min.   :0.000   Min.   :0.000  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.:0.0000   1st Qu.:1.000   1st Qu.:1.000   1st Qu.:1.000  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Median :1.0000   Median :1.000   Median :1.000   Median :1.000  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   :0.9987   Mean   :1.006   Mean   :1.001   Mean   :1.004  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.:2.0000   3rd Qu.:2.000   3rd Qu.:1.000   3rd Qu.:2.000  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   :2.0000   Max.   :2.000   Max.   :2.000   Max.   :2.000  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       ID17            ID18            ID19             ID20      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   :0.000   Min.   :0.000   Min.   :0.0000   Min.   :0.000  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.:1.000   1st Qu.:1.000   1st Qu.:0.0000   1st Qu.:0.000  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Median :1.000   Median :1.000   Median :1.0000   Median :1.000  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   :1.004   Mean   :1.008   Mean   :0.9967   Mean   :1.002  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.:2.000   3rd Qu.:2.000   3rd Qu.:2.0000   3rd Qu.:2.000  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   :2.000   Max.   :2.000   Max.   :2.0000   Max.   :2.000  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       ID21            ID22             ID23             ID24       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   :0.000   Min.   :0.0000   Min.   :0.0000   Min.   :0.0000  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.:1.000   1st Qu.:0.0000   1st Qu.:0.0000   1st Qu.:0.0000  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Median :1.000   Median :1.0000   Median :1.0000   Median :1.0000  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   :1.002   Mean   :0.9938   Mean   :0.9855   Mean   :0.9961  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.:1.000   3rd Qu.:1.0000   3rd Qu.:1.0000   3rd Qu.:1.0000  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   :2.000   Max.   :2.0000   Max.   :2.0000   Max.   :2.0000  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       ID25            ID26            ID27            ID28      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   :0.000   Min.   :0.000   Min.   :0.000   Min.   :0.000  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.:0.000   1st Qu.:1.000   1st Qu.:1.000   1st Qu.:1.000  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Median :1.000   Median :1.000   Median :1.000   Median :1.000  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   :1.007   Mean   :1.007   Mean   :1.007   Mean   :1.013  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.:2.000   3rd Qu.:1.000   3rd Qu.:2.000   3rd Qu.:2.000  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   :2.000   Max.   :2.000   Max.   :2.000   Max.   :2.000  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       ID29            ID30      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   :0.000   Min.   :0.000  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.:0.000   1st Qu.:1.000  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Median :1.000   Median :1.000  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   :1.002   Mean   :1.012  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.:2.000   3rd Qu.:2.000  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   :2.000   Max.   :2.000  </span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 

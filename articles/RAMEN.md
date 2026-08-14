@@ -111,6 +111,53 @@ to have undergone quality control, pre-processing and normalization when
 required. The choice of methods to do so is beyond the scope of this
 vignette, but we provide some broad recommendations and resources here.
 
+#### RAMEN’s underlying assumptions
+
+Beyond general QC, there are assumptions specific to how RAMEN models
+the data internally that pre-processing choices should be made
+compatible with:
+
+- Variance stability in DNAme data:
+  [`RAMEN::findVML()`](https://ericknavarrod.github.io/RAMEN/reference/findVML.md)
+  identifies variably methylated loci (VML) by comparing each probe’s
+  variance (or MAD) against a percentile threshold derived from a
+  reference distribution of probes expected to show little biological
+  variability
+  ([`RAMEN::ultrastable_cpgs`](https://ericknavarrod.github.io/RAMEN/reference/ultrastable_cpgs.md)).
+  This comparison assumes that variance is on a comparable scale across
+  probes and samples, so pre-processing steps must not compress or
+  inflate variance differently for the ultrastable (i.e. noise variance)
+  probes versus the rest of the probes. Therefore, as noted below, we
+  recommend users to:
+  - Use M-values over Beta-values, since the former are unbounded and
+    roughly homoscedastic, while Beta-values are bounded (0-1) and
+    compressed near the extremes.
+  - Avoid methods relying solely on quantile normalization, since the
+    rank-based mapping compresses variance more for probes with more
+    extreme values.
+- Normality:
+  [`RAMEN::lmGE()`](https://ericknavarrod.github.io/RAMEN/reference/lmGE.md)
+  relies on [`stats::lm()`](https://rdrr.io/r/stats/lm.html) to compare
+  candidate models via AIC/BIC; this comparison is most valid when
+  residuals are approximately normally distributed, so strongly skewed
+  or zero-inflated input variables (genomic, methylomic or exposomic)
+  should be transformed to reduce skew (e.g. log, Box-Cox or Yeo-Johnson
+  transforms) beforehand.
+- No missing values: RAMEN performs no internal handling of missing
+  data. Every function checks that its numeric inputs (genotype, DNAme,
+  environmental and covariate matrices) are complete and finite, and
+  will throw an error if any `NA`, `NaN` or `Inf` value is found. If you
+  use RAMEN with data types or platforms that can produce missing
+  values, you must resolve them through imputation or complete-case
+  filtering. Along those lines, please choose your imputation strategy
+  carefully, and keep in mind that zero has a meaning across all data
+  modalities, and should not be used as a placeholder (e.g. a homozygous
+  reference genotype dosage, a methylation value for a CpG, or no
+  exposure).
+
+With these assumptions in mind, the following sections provide general
+guidance on pre-processing steps for each data type.
+
 #### Genomic data
 
 The QC of genotyping data is a crucial step in any genetic study, as it
@@ -223,9 +270,20 @@ following into account:
 - Missing values are very likely to be present. Consider [imputation
   methods](https://stefvanbuuren.name/fimd/) or complete case analyses.
 
-RAMEN standardizes all exposome variables, so there is no need to do so
-before. We also make use of LASSO during the variable selection stage,
-so the method can handle correlation in the data set, which is expected.
+There is no need to standardize exposome variables before providing them
+to RAMEN, even though they typically come in very different scales.
+During variable selection,
+[`RAMEN::selectVariables()`](https://ericknavarrod.github.io/RAMEN/reference/selectVariables.md)
+uses `glmnet` for its LASSO-based selection, which by default
+(`standardize = TRUE`) z-scores all predictors before fitting and
+un-standardizes the resulting coefficients, so scale differences across
+variables do not bias which ones get selected. Model comparison in
+[`RAMEN::lmGE()`](https://ericknavarrod.github.io/RAMEN/reference/lmGE.md)
+does not require standardization either, since AIC/BIC/R2 are invariant
+to a linear rescaling of a predictor.
+
+We also make use of LASSO during the variable selection stage, so the
+method can handle correlation in the data set, which is expected.
 
 #### Covariates to include
 
@@ -505,6 +563,10 @@ VML <- RAMEN::findVML(
   max_distance = 1000
 )
 #> Identifying Highly Variable Probes...
+#> Warning: replacing previous import 'S4Arrays::makeNindexFromArrayViewport' by
+#> 'DelayedArray::makeNindexFromArrayViewport' when loading 'SummarizedExperiment'
+#> Warning: replacing previous import 'S4Arrays::makeNindexFromArrayViewport' by
+#> 'DelayedArray::makeNindexFromArrayViewport' when loading 'HDF5Array'
 #> Setting options('download.file.method.GEOquery'='auto')
 #> Setting options('GEOquery.inmemory.gpl'=FALSE)
 #> Identifying sparse Variable Methylated Probes
@@ -1371,8 +1433,7 @@ analyses, such as:
 
 ## Frequently Asked Questions
 
-**How can I save the RAMEN data frames that have columns with lists as
-observations?**
+### How can I save the RAMEN data frames that have columns with lists as observations?
 
 Saving the data frames produced by RAMEN might seem difficult because it
 has lists as observations in several columns, which is not supported by
@@ -1408,6 +1469,71 @@ saveRDS(selected_variables, file = "path/selected_variables.Rds")
 readRDS(file = "path/selected_variables.Rds")
 ```
 
+### How can I set up the parallel backend?
+
+Most functions in RAMEN are compatible with parallel computing
+([`findVML()`](https://ericknavarrod.github.io/RAMEN/reference/findVML.md),
+[`medCorVMR()`](https://ericknavarrod.github.io/RAMEN/reference/medCorVMR.md),
+[`summarizeVML()`](https://ericknavarrod.github.io/RAMEN/reference/summarizeVML.md),
+[`selectVariables()`](https://ericknavarrod.github.io/RAMEN/reference/selectVariables.md),
+[`lmGE()`](https://ericknavarrod.github.io/RAMEN/reference/lmGE.md),
+[`nullDistGE()`](https://ericknavarrod.github.io/RAMEN/reference/nullDistGE.md)).
+You can run these functions sequentially, which is the default in a
+fresh R session. This will trigger the following warning, which is just
+a message:
+
+``` r
+
+#> Warning: executing %dopar% sequentially: no parallel backend registered
+```
+
+To silence it, you can explicitly set up a sequential evaluation before
+running any of the above functions:
+
+``` r
+
+foreach::registerDoSEQ()
+
+# Run RAMEN functions here
+```
+
+To run the function in parallel, you just need to specify the parallel
+backend of your preference. Just to provide examples, you can use the
+`doParallel` package:
+
+``` r
+
+library(parallel)
+library(doParallel)
+# Find the number of CPU cores to use (leaving one core free is common practice)
+num_cores <- detectCores() - 1
+#Create the cluster object
+cl <- makePSOCKcluster(num_cores)
+# Register the parallel backend
+registerDoParallel(cl)
+
+# Run RAMEN functions here
+
+#Stop the cluster and return to sequential processing when finished:
+stopCluster(cl)
+registerDoSEQ()
+```
+
+You can also use the future framework:
+
+``` r
+
+library(future)
+
+# Set the backend to use multiple background R sessions
+plan(multisession) 
+
+# Explicitly limit the number of worker cores (optional)
+plan(multisession, workers = 4) 
+
+# Run RAMEN functions here
+```
+
 ## Session info
 
 ``` r
@@ -1440,7 +1566,7 @@ sessionInfo()
 #>  [7] IRanges_2.46.0       S4Vectors_0.50.1     BiocGenerics_0.58.1 
 #> [10] generics_0.1.4       doParallel_1.0.17    iterators_1.0.14    
 #> [13] foreach_1.5.2        tidyr_1.3.2          ggplot2_4.0.3       
-#> [16] dplyr_1.2.1          RAMEN_2.1.0          knitr_1.51          
+#> [16] dplyr_1.2.1          RAMEN_2.1.1          knitr_1.51          
 #> [19] BiocStyle_2.40.0    
 #> 
 #> loaded via a namespace (and not attached):
