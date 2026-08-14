@@ -9,4 +9,6 @@
 #'   \item{covar1}{Concomitant variable drawn from a normal distribution with
 #'   mean = 0 and sd = 1}
 #' }
+#' @examples
+#' summary(test_covariates)
 "test_covariates"

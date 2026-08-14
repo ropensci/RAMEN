@@ -11,7 +11,6 @@
 # @return a vector with the names of the probes that conform one reduced region
 
 # @examples
-# \dontrun{
 # target <- data.frame(row.names = c("a", "b", "c", "d"),
 #                      values = c(1, 1, 1, 1))
 # query <- c(2, 1)
@@ -173,9 +172,8 @@ findVML <- function(methylation_data,
                     var_threshold_percentile = 0.99,
                     max_distance = 1000) {
   #### Binding of variables used within the tidyverse framework ####
-  Methyl450_Loci <- epicv2_probes <- TargetID <- chr <- pos <- strand <- NULL
-  var_score <- probes <- . <- median_correlation <- n_VMPs <- VML_index <- NULL
-  type <- seqnames <- start <- end <- width <- NULL
+  Methyl450_Loci <- TargetID <- chr <- pos <- strand <- NULL
+  var_score <- NULL
   #### Argument checks ####
   # methylation_data
   argument_check(methylation_data, "data.frame")
@@ -469,7 +467,7 @@ findVML <- function(methylation_data,
   VML <- c(VMRs, sVMPs)
   S4Vectors::mcols(VML)$type <- c(rep("VMR", length(VMRs)),
                        rep("sVMP", length(sVMPs)))
-  S4Vectors::mcols(VML)$VML_index <- paste0("VML", seq_len(length(VML)))
+  S4Vectors::mcols(VML)$VML_index <- paste0("VML", seq_along(VML))
 
   return(list(
     var_score_threshold = var_threshold,

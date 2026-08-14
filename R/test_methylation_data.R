@@ -11,4 +11,7 @@
 #'   \item{ID1:30}{DNAme profile of individuals 1 to 30; column names correspond to individual IDs}
 #'   ...
 #' }
+#' @examples
+#' summary(test_methylation_data)
+#'
 "test_methylation_data"

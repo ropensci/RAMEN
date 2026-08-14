@@ -172,3 +172,30 @@ test_that("selectVariables throws errors when expected", {
     fixed = TRUE
   )
 })
+
+# Test that a VML with a single candidate SNP does not throw an error
+test_that("selectVariables does not error when a VML has only one candidate SNP", {
+  # glmnet::cv.glmnet() requires a predictor matrix with 2+ columns. VML1 in
+  # the test fixture has exactly one candidate SNP, so running it without
+  # covariates (which would otherwise pad genot_VMLi to 2+ columns) used to
+  # throw "x should be a matrix with 2 or more columns".
+  VML_one_snp <- VML_cis_snps_test[VML_cis_snps_test$VML_index == "VML1"]
+  expect_equal(length(VML_one_snp$SNP[[1]]), 1)
+
+  result <- expect_no_error(
+    suppressWarnings(RAMEN::selectVariables(
+      VML_wSNPs = VML_one_snp,
+      genotype_matrix = RAMEN::test_genotype_matrix,
+      environmental_matrix = RAMEN::test_environmental_matrix,
+      covariates = NULL,
+      summarized_methyl_VML = summarized_methyl_VML_test,
+      seed = 1
+    ))
+  )
+
+  # The lone candidate SNP has nothing to be selected against, so it should
+  # be kept as-is
+  expect_true(
+    VML_one_snp$SNP[[1]] %in% result$selected_genot[[1]]
+  )
+})

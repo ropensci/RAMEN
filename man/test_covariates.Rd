@@ -21,4 +21,7 @@ test_covariates
 \description{
 Concomitant variable drawn from a normal distribution
 }
+\examples{
+summary(test_covariates)
+}
 \keyword{datasets}

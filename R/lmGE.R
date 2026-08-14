@@ -194,10 +194,16 @@ lmGE <- function(selected_variables,
   if (!is.null(covariates)) argument_check(covariates, "matrix")
   argument_char_options(object = model_selection, options = c("AIC", "BIC"))
   # All objects have matching IDs
-  vectors_match(rownames(summarized_methyl_VML), colnames(genotype_matrix))
-  vectors_match(rownames(summarized_methyl_VML), rownames(environmental_matrix))
+  vectors_match(rownames(summarized_methyl_VML), colnames(genotype_matrix),
+               object_1_name = "rownames(summarized_methyl_VML)",
+               object_2_name = "colnames(genotype_matrix)")
+  vectors_match(rownames(summarized_methyl_VML), rownames(environmental_matrix),
+               object_1_name = "rownames(summarized_methyl_VML)",
+               object_2_name = "rownames(environmental_matrix)")
   if (!is.null(covariates)) {
-    vectors_match(rownames(summarized_methyl_VML), rownames(covariates))
+    vectors_match(rownames(summarized_methyl_VML), rownames(covariates),
+                 object_1_name = "rownames(summarized_methyl_VML)",
+                 object_2_name = "rownames(covariates)")
   }
   # Matrices have only finite numeric values
   finite_numeric_check(genotype_matrix)
@@ -237,15 +243,22 @@ lmGE <- function(selected_variables,
       } else {
         genot_i <- NULL
       }
-    if (!is.null(covariates)) {
+    if (is.null(covariates)) {
+      covariates_i <- NULL
+    } else {
       covariates_i <- covariates[rownames(summarized_methyl_VML), , drop = FALSE]
     }
     full_data_vml_i <- cbind(summ_vml_i, env_i, genot_i, covariates_i)
     colnames(full_data_vml_i) <- make.names(colnames(full_data_vml_i))
-    # Set the basal model (only covariates)
-    basal_model_formula <- colnames(covariates) |>
-      make.names() |>
-      paste(collapse = " + ")
+    # Set the basal model (only covariates, or the intercept-only model if
+    # there are no covariates)
+    if (!is.null(covariates)) {
+      basal_model_formula <- colnames(covariates) |>
+        make.names() |>
+        paste(collapse = " + ")
+    } else {
+      basal_model_formula <- "1"
+    }
     #### Fit G Models ####
     ## Fit models involving G if G has selected variables
     if (!VML_i$selected_genot %in% empty_lists) {
@@ -433,12 +446,20 @@ lmGE <- function(selected_variables,
                                               "+",
                                               basal_model_formula)
                               )
-      r_decomp <- relaimpo::calc.relimp.lm(
-        object = winning_lm,
-        rela = FALSE,
-        type = "last"
-      ) # This would be the equivalent to using lmg and setting always = covariates.
-      winning_model_VML_i$g_r_squared <- r_decomp$last[make.names(unlist(winning_model_VML_i$variables))[1]]
+      if (is.null(covariates)) {
+        # With no covariates, this model has a single predictor (the SNP), so
+        # its unique contribution to R^2 is simply the model's own R^2.
+        # relaimpo::calc.relimp.lm() requires 2+ regressors and errors out
+        # otherwise.
+        winning_model_VML_i$g_r_squared <- summary(winning_lm)$r.squared
+      } else {
+        r_decomp <- relaimpo::calc.relimp.lm(
+          object = winning_lm,
+          rela = FALSE,
+          type = "last"
+        ) # This would be the equivalent to using lmg and setting always = covariates.
+        winning_model_VML_i$g_r_squared <- r_decomp$last[make.names(unlist(winning_model_VML_i$variables))[1]]
+      }
       winning_model_VML_i$e_r_squared <- NA_real_
       winning_model_VML_i$gxe_r_squared <- NA_real_
     } else if (winning_model_VML_i$model_group == "E") {
@@ -448,13 +469,21 @@ lmGE <- function(selected_variables,
                                               "+",
                                               basal_model_formula)
                               )
-      r_decomp <- relaimpo::calc.relimp.lm(
-        object = winning_lm,
-        rela = FALSE,
-        type = "last"
-      ) # This would be the equivalent to using lmg and setting always = covariates.
+      if (is.null(covariates)) {
+        # With no covariates, this model has a single predictor (the env.
+        # variable), so its unique contribution to R^2 is simply the model's
+        # own R^2. relaimpo::calc.relimp.lm() requires 2+ regressors and
+        # errors out otherwise.
+        winning_model_VML_i$e_r_squared <- summary(winning_lm)$r.squared
+      } else {
+        r_decomp <- relaimpo::calc.relimp.lm(
+          object = winning_lm,
+          rela = FALSE,
+          type = "last"
+        ) # This would be the equivalent to using lmg and setting always = covariates.
+        winning_model_VML_i$e_r_squared <- r_decomp$last[make.names(unlist(winning_model_VML_i$variables))[1]]
+      }
       winning_model_VML_i$g_r_squared <- NA_real_
-      winning_model_VML_i$e_r_squared <- r_decomp$last[make.names(unlist(winning_model_VML_i$variables))[1]]
       winning_model_VML_i$gxe_r_squared <- NA_real_
     } else if (winning_model_VML_i$model_group == "G+E") {
       winning_lm <- stats::lm(data = as.data.frame(full_data_vml_i),

@@ -27,4 +27,8 @@ from 30 publically available studies). These CpGs are used to create a "null
 DNAme variance" distribution in the RAMEN package, from which a threshold is
 taken to identify Highly Variable Probes.
 }
+\examples{
+head(ultrastable_cpgs)
+
+}
 \keyword{datasets}

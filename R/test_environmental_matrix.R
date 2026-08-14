@@ -10,4 +10,7 @@
 #'   \item{E1:100}{100 example environmental exposures; column names correspond
 #'   to exposure IDs}
 #' }
+#' @examples
+#' summary(test_environmental_matrix)
+#'
 "test_environmental_matrix"

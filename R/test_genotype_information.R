@@ -10,4 +10,7 @@
 #'   \item{POS}{Probe genomic position (h19)}
 #'   \item{ID}{SNP ID}
 #' }
+#' @examples
+#' summary(test_genotype_information)
+#'
 "test_genotype_information"

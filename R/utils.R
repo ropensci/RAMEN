@@ -16,6 +16,21 @@ argument_check <- function(object, data_type, extra_msg = NULL,
                "class.",
                extra_msg))
   }
+
+  is_empty <- switch(data_type,
+                 list = length(object) == 0,
+                 data.frame = nrow(object) == 0 || ncol(object) == 0,
+                 character = length(object) == 0,
+                 matrix = nrow(object) == 0 || ncol(object) == 0,
+                 numeric = length(object) == 0,
+                 GRanges = length(object) == 0
+                 )
+  if (is_empty) {
+    stop(paste("Please make sure the input",
+               obj_name,
+               "is not empty.",
+               extra_msg))
+  }
 }
 
 argument_char_options <- function(object, options, extra_msg = NULL) {
@@ -47,12 +62,15 @@ columns_exist <- function(data.frame, columns, extra_msg = NULL) {
   }
 }
 
-vectors_match <- function(object_1, object_2, extra_msg = NULL) {
-  if (!all(object_1 %in% object_2)) {
+vectors_match <- function(object_1, object_2,
+                          object_1_name = "object_1",
+                          object_2_name = "object_2",
+                          extra_msg = NULL) {
+  if (!setequal(object_1, object_2)) {
     stop(paste("The objects",
-               deparse(substitute(object_1)),
+               object_1_name,
                "and",
-               deparse(substitute(object_2)),
+               object_2_name,
                "must match.",
                extra_msg))
   }

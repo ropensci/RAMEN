@@ -160,10 +160,16 @@ selectVariables <- function(VML_wSNPs,
   argument_check(VML_wSNPs$SNP, "list")
   argument_check(VML_wSNPs$VML_index, "character")
   # Check that IDs match across data sets
-  vectors_match(rownames(summarized_methyl_VML), colnames(genotype_matrix))
-  vectors_match(rownames(summarized_methyl_VML), rownames(environmental_matrix))
+  vectors_match(rownames(summarized_methyl_VML), colnames(genotype_matrix),
+               object_1_name = "rownames(summarized_methyl_VML)",
+               object_2_name = "colnames(genotype_matrix)")
+  vectors_match(rownames(summarized_methyl_VML), rownames(environmental_matrix),
+               object_1_name = "rownames(summarized_methyl_VML)",
+               object_2_name = "rownames(environmental_matrix)")
   if (!is.null(covariates)) {
-    vectors_match(rownames(summarized_methyl_VML), rownames(covariates))
+    vectors_match(rownames(summarized_methyl_VML), rownames(covariates),
+                 object_1_name = "rownames(summarized_methyl_VML)",
+                 object_2_name = "rownames(covariates)")
   }
   ## Check that genotype_matrix, environmental_matrix, and covariates (in case
   ## it is provided) have only numeric values and no NA, NaN, Inf
@@ -216,7 +222,7 @@ selectVariables <- function(VML_wSNPs,
     ### Run variable selection
     #### Genotype only model ####
     # Get coefficients with the optimal lambda found by k-fold cross-validation
-    if (any_snp) { # Catch cases when VML dont have surrounding genotyped SNPs
+    if (any_snp && ncol(genot_VMLi) >= 2) { # glmnet requires 2+ predictor columns
       coef_genot <- stats::coef(
         glmnet::cv.glmnet(
           x = genot_VMLi, # Variables
@@ -237,7 +243,11 @@ selectVariables <- function(VML_wSNPs,
       selected_vars_genot <- names(coef_genot)[-1]
       # Remove covariates from selected variables
       selected_vars_genot <- selected_vars_genot[!selected_vars_genot %in% colnames(covariates)]
-    } else {
+    } else if (any_snp) {
+      # Only one SNP and no covariates: glmnet needs 2+ columns to run, and
+      # with a single candidate there is nothing to select against, so keep it
+      selected_vars_genot <- colnames(genot_VMLi)
+    } else { # Catch cases when VML dont have surrounding genotyped SNPs
       selected_vars_genot <- character(0)
     }
 

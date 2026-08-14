@@ -22,4 +22,8 @@ test_genotype_information
 Genotype chromosome 21 position metadata obtained from a private genotyping
 data set.
 }
+\examples{
+summary(test_genotype_information)
+
+}
 \keyword{datasets}

@@ -24,4 +24,8 @@ ordinally depending on the genotype allele charge, such as 2 (AA), 1 (AB) and
 0 (BB). Valus were drawn from a binomial distribution with size 2 and
 probability 0.5.
 }
+\examples{
+summary(test_genotype_matrix)
+
+}
 \keyword{datasets}

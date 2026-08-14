@@ -12,4 +12,7 @@
 #'   \item{ID1:30}{Individual's 1 to 30 genotypes; column names correspond to individual IDs}
 #'   ...
 #' }
+#' @examples
+#' summary(test_genotype_matrix)
+#'
 "test_genotype_matrix"
