@@ -44,7 +44,6 @@ You can install the latest version of RAMEN from
 # BiocManager::install("S4Vectors")
 # BiocManager::install("IRanges")
 # BiocManager::install("GenomicRanges")
-## If using any of these Illumina microarrays, pick one: 
 # BiocManager::install("IlluminaHumanMethylation450kanno.ilmn12.hg19")
 # BiocManager::install("IlluminaHumanMethylationEPICanno.ilm10b4.hg19")
 # BiocManager::install("IlluminaHumanMethylationEPICv2anno.20a1.hg38")
