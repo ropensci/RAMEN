@@ -78,10 +78,9 @@ vectors_match <- function(object_1, object_2,
 
 finite_numeric_check <- function(object, extra_msg = NULL) {
   if (
-    sum(vapply(object, is.na, FUN.VALUE = logical(1))) > 0 ||
-    sum(vapply(object, is.nan, FUN.VALUE = logical(1))) > 0 ||
-    sum(!vapply(object, is.numeric, FUN.VALUE = logical(1))) > 0 ||
-    sum(vapply(object, is.infinite, FUN.VALUE = logical(1))) > 0
+    !is.numeric(object) ||
+    anyNA(object) ||
+    any(is.infinite(object))
   ) {
     stop(paste("Please make sure the object",
                deparse(substitute(object)),
