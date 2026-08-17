@@ -39,9 +39,12 @@
 <li>Fixed bug in <code><a href="../reference/nullDistGE.html">nullDistGE()</a></code> where the seed was fixed to 1 during the <code><a href="../reference/selectVariables.html">selectVariables()</a></code> step instead of using the seed argument provided.</li>
 <li>Fixed a bug in <code><a href="../reference/selectVariables.html">selectVariables()</a></code> where the function would throw an error when, in the absence of covariates, a VML had only 1 SNP. In that case, the variable selection for G is now not conducted and the same SNP is returned.</li>
 <li>Fixed a bug in <code><a href="../reference/lmGE.html">lmGE()</a></code> where the function would throw an error when no covariates were fed into the function.</li>
+<li>
+<code><a href="../reference/summarizeVML.html">summarizeVML()</a></code> now explicitly errors if the <code>VML</code> object has duplicate <code>VML_index</code> values, instead of silently merging them.</li>
 </ul><p>In addition to that, we added a section on the vignette explaining how to set up a parallel backend, and expanding on the data assumptions/expectations from RAMEN.</p>
-<p>Finally, the Illumina annotation packages are now a dependency, rather than a suggestion, as they are needed during the package tests.</p>
-<p>This patch presents no changes on the user’s end.</p>
+<p>The <code>IlluminaHumanMethylation450kanno.ilmn12.hg19</code> and <code>IlluminaHumanMethylationEPICv2anno.20a1.hg38</code> annotation packages have been moved Suggests to lighten the default installation, since most users only work with one microarray platform at a time.</p>
+<p>This version also includes several internal performance improvements (faster argument validation, VMR correlation computation, probe variability scoring, and VML summarization), with no change in output.</p>
+<p>This patch presents no changes on the user’s end, other than the dependency change and the <code><a href="../reference/summarizeVML.html">summarizeVML()</a></code> duplicate-index check noted above.</p>
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.1.0" id="ramen-210---july-14-2026">RAMEN 2.1.0 - July 14, 2026<a class="anchor" aria-label="anchor" href="#ramen-210---july-14-2026"></a></h2>

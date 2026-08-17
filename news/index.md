@@ -20,15 +20,27 @@ This patch fixes some minor bugs in RAMEN including:
   [`lmGE()`](https://ericknavarrod.github.io/RAMEN/reference/lmGE.md)
   where the function would throw an error when no covariates were fed
   into the function.
+- [`summarizeVML()`](https://ericknavarrod.github.io/RAMEN/reference/summarizeVML.md)
+  now explicitly errors if the `VML` object has duplicate `VML_index`
+  values, instead of silently merging them.
 
 In addition to that, we added a section on the vignette explaining how
 to set up a parallel backend, and expanding on the data
 assumptions/expectations from RAMEN.
 
-Finally, the Illumina annotation packages are now a dependency, rather
-than a suggestion, as they are needed during the package tests.
+The `IlluminaHumanMethylation450kanno.ilmn12.hg19` and
+`IlluminaHumanMethylationEPICv2anno.20a1.hg38` annotation packages have
+been moved Suggests to lighten the default installation, since most
+users only work with one microarray platform at a time.
 
-This patch presents no changes on the user’s end.
+This version also includes several internal performance improvements
+(faster argument validation, VMR correlation computation, probe
+variability scoring, and VML summarization), with no change in output.
+
+This patch presents no changes on the user’s end, other than the
+dependency change and the
+[`summarizeVML()`](https://ericknavarrod.github.io/RAMEN/reference/summarizeVML.md)
+duplicate-index check noted above.
 
 ## RAMEN 2.1.0 - July 14, 2026
 
