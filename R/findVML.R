@@ -234,11 +234,11 @@ findVML <- function(methylation_data,
 
   #### Compute variation metric ####
   if (var_method == "mad") {
-    var_scores <- apply(methylation_data, 1, stats::mad) |>
+    var_scores <- matrixStats::rowMads(as.matrix(methylation_data)) |>
       as.data.frame() |>
       dplyr::rename("var_score" = 1)
   } else if (var_method == "variance") {
-    var_scores <- apply(methylation_data, 1, stats::var) |>
+    var_scores <- matrixStats::rowVars(as.matrix(methylation_data)) |>
       as.data.frame() |>
       dplyr::rename("var_score" = 1)
   }
