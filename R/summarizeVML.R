@@ -50,6 +50,10 @@ summarizeVML <- function(VML,
   if (!"VML_index" %in% colnames(S4Vectors::mcols(VML))) {
     S4Vectors::mcols(VML)$VML_index <- paste0("VML", seq_along(VML))
   }
+  if (anyDuplicated(S4Vectors::mcols(VML)$VML_index) != 0) {
+    stop(paste("Please make sure the 'VML_index' column in the VML object",
+               "contains unique values."))
+  }
   if (!all(unique(unlist(VML$probes)) %in% rownames(methylation_data))) {
     warning(paste("Some probes listed in the VML data frame are not found in",
     "the methylation data. Please check that all probes listed in the 'probes'",
@@ -61,11 +65,12 @@ summarizeVML <- function(VML,
     stop("Please make sure the 'probes' column in the VML object is a list")
   }
   mcols_vml <- S4Vectors::mcols(VML)
-  i <- NULL # To avoid R CMD check notes
+  idx <- NULL # To avoid R CMD check notes
   #### Summarize VML ####
-  summarized_VML <- foreach::foreach(i = mcols_vml$VML_index,
+  summarized_VML <- foreach::foreach(idx = seq_along(mcols_vml$VML_index),
                                      .combine = "cbind") %dopar% {
-    probes <- unlist(mcols_vml$probes[mcols_vml$VML_index == i])
+    i <- mcols_vml$VML_index[idx]
+    probes <- unlist(mcols_vml$probes[[idx]])
     subset_meth <-  methylation_data[probes, , drop = FALSE]
     median <- apply(subset_meth, 2, median, na.rm = TRUE)
     matrix(median, ncol = 1, dimnames = list(NULL, i))
