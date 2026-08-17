@@ -73,4 +73,15 @@ test_that("summarizeVML throws errors when expected", {
       suppressWarnings(),
     "Please make sure the 'probes' column in the VML object is a list"
   )
+  # Duplicated VML_index values
+  VML_test_dup_index <- VML_test$VML[1:4, ]
+  VML_test_dup_index$VML_index <- c("VMLdup", "VMLdup", "VML3", "VML4")
+  expect_error(
+    RAMEN::summarizeVML(
+      VML = VML_test_dup_index,
+      methylation_data = test_methylation_data
+    ),
+    "Please make sure the 'VML_index' column in the VML object contains unique values.",
+    fixed = TRUE
+  )
 })

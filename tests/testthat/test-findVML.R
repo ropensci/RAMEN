@@ -52,6 +52,20 @@ test_that("findVML throws errors when expected", {
       suppressMessages(),
     "Please make sure the input methylation_data belongs to the data.frame class."
   )
+  expect_error(
+    RAMEN::findVML(
+      methylation_data = data.frame(),
+      array_manifest = "IlluminaHumanMethylationEPICv1",
+      cor_threshold = 0,
+      var_method = "variance",
+      var_distribution = "ultrastable",
+      var_threshold_percentile = 0.99,
+      max_distance = 1000
+    ) |>
+      suppressMessages(),
+    "Please make sure the input methylation_data is not empty.",
+    fixed = TRUE
+  )
   #### array_manifest ####
   expect_error(
     RAMEN::findVML(
