@@ -56,24 +56,9 @@ medCorVMR <- function(VML, methylation_data) {
     if (length(VMR_probes[[i]]) == 1) {
       NA
     } else {
-      VMR_correlation <- c()
-      # For each probe except the last one
-      for (probe_x_i in 1:(length(VMR_probes[[i]]) - 1)) {
-        primary_probe <- VMR_probes[[i]][probe_x_i]
-        # compute the pairwise correlation with the downstream probes
-        for (probe_y_i in (probe_x_i + 1):length(VMR_probes[[i]])) {
-          secondary_probe <- VMR_probes[[i]][probe_y_i]
-          VMR_correlation <- c(
-            VMR_correlation,
-            # unlist added to make the subset df a vector
-            stats::cor(unlist(methylation_data[primary_probe, ]),
-              unlist(methylation_data[secondary_probe, ]),
-              method = "pearson"
-            )
-          )
-        }
-      }
-      median_correlation <- stats::median(VMR_correlation)
+      cor_matrix <- stats::cor(t(methylation_data[VMR_probes[[i]], ]),
+                               method = "pearson")
+      median_correlation <- stats::median(cor_matrix[upper.tri(cor_matrix)])
     }
   }
 
