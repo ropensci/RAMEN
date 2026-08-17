@@ -321,6 +321,14 @@ findVML <- function(methylation_data,
       }
       manifest <- data.frame(IlluminaHumanMethylationEPICanno.ilm10b4.hg19::Locations)
     } else if (array_manifest == "IlluminaHumanMethylationEPICv2") {
+      if (!requireNamespace("IlluminaHumanMethylationEPICv2anno.20a1.hg38",
+        quietly = TRUE
+      )) {
+        stop(paste("Package \'IlluminaHumanMethylationEPICv2anno.20a1.hg38\'",
+                   "must be installed to use this function."),
+          call. = FALSE
+        )
+      }
       manifest <- data.frame(IlluminaHumanMethylationEPICv2anno.20a1.hg38::Locations)
     }
   } else {

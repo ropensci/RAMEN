@@ -232,6 +232,7 @@ test_that("findVML throws errors when expected", {
 })
 
 test_that("findVML works with EPICv2 probes", {
+  testthat::skip_if_not_installed("IlluminaHumanMethylationEPICv2anno.20a1.hg38")
   # Set the parallel backend to use 2 workers
   doParallel::registerDoParallel(2)
   epic2_methylation_data <- RAMEN::test_methylation_data

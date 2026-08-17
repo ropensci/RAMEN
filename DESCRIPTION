@@ -28,7 +28,7 @@ License: GPL (>= 3)
 Encoding: UTF-8
 biocViews: Software
 Roxygen: list(markdown = TRUE)
-Suggests: 
+Suggests:
     BiocStyle,
     knitr,
     magick,
@@ -36,9 +36,11 @@ Suggests:
     ggplot2,
     tidyr,
     doParallel,
+    IlluminaHumanMethylation450kanno.ilmn12.hg19,
+    IlluminaHumanMethylationEPICv2anno.20a1.hg38,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
-Imports: 
+Imports:
     doRNG,
     dplyr,
     foreach,
@@ -48,9 +50,7 @@ Imports:
     methods,
     relaimpo,
     S4Vectors,
-    IlluminaHumanMethylation450kanno.ilmn12.hg19,
     IlluminaHumanMethylationEPICanno.ilm10b4.hg19,
-    IlluminaHumanMethylationEPICv2anno.20a1.hg38,
     stats
 VignetteBuilder: knitr
 Depends: 
