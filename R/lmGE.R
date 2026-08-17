@@ -250,6 +250,9 @@ lmGE <- function(selected_variables,
     }
     full_data_vml_i <- cbind(summ_vml_i, env_i, genot_i, covariates_i)
     colnames(full_data_vml_i) <- make.names(colnames(full_data_vml_i))
+    # Converted once and reused across every lm() call below, instead of
+    # re-converting the same matrix on every single model fit
+    full_data_vml_i_df <- as.data.frame(full_data_vml_i)
     # Set the basal model (only covariates, or the intercept-only model if
     # there are no covariates)
     if (!is.null(covariates)) {
@@ -267,7 +270,7 @@ lmGE <- function(selected_variables,
         .combine = "rbind"
       ) %do% { # For each SNP
         ### Fit G models
-        model_g <- stats::lm(data = as.data.frame(full_data_vml_i),
+        model_g <- stats::lm(data = full_data_vml_i_df,
                              formula = paste("DNAme ~",
                                              make.names(SNP),
                                              "+",
@@ -290,7 +293,7 @@ lmGE <- function(selected_variables,
             .combine = "rbind"
           ) %do% {
             # Fit G + E
-            model_ge <- stats::lm(data = as.data.frame(full_data_vml_i),
+            model_ge <- stats::lm(data = full_data_vml_i_df,
                                   formula = paste("DNAme ~",
                                                   make.names(SNP),
                                                   "+",
@@ -309,7 +312,7 @@ lmGE <- function(selected_variables,
             }
             model_ge_df$tot_r_squared <- summary(model_ge)$r.squared
             # Fit GxE
-            model_gxe <- stats::lm(data = as.data.frame(full_data_vml_i),
+            model_gxe <- stats::lm(data = full_data_vml_i_df,
                                    formula = paste0("DNAme ~ ",
                                                    make.names(SNP),
                                                    " + ",
@@ -353,7 +356,7 @@ lmGE <- function(selected_variables,
         .combine = "rbind"
       ) %do% {
         # Fit E models
-        model_e <- stats::lm(data = as.data.frame(full_data_vml_i),
+        model_e <- stats::lm(data = full_data_vml_i_df,
                              formula = paste("DNAme ~",
                                              make.names(env),
                                              "+",
@@ -429,7 +432,7 @@ lmGE <- function(selected_variables,
 
     # Test the winning model against the basal one and decompose variance for
     # the G, E and GxE components
-    model_basal <- stats::lm(data = as.data.frame(full_data_vml_i),
+    model_basal <- stats::lm(data = full_data_vml_i_df,
                              formula = paste("DNAme ~",
                                              basal_model_formula)
                              ) # set the basal model for comparing the rest
@@ -440,7 +443,7 @@ lmGE <- function(selected_variables,
     }
     winning_model_VML_i$basal_rsquared <- summary(model_basal)$r.squared
     if (winning_model_VML_i$model_group == "G") {
-      winning_lm <- stats::lm(data = as.data.frame(full_data_vml_i),
+      winning_lm <- stats::lm(data = full_data_vml_i_df,
                               formula = paste("DNAme ~",
                                               make.names(unlist(winning_model_VML_i$variables)),
                                               "+",
@@ -463,7 +466,7 @@ lmGE <- function(selected_variables,
       winning_model_VML_i$e_r_squared <- NA_real_
       winning_model_VML_i$gxe_r_squared <- NA_real_
     } else if (winning_model_VML_i$model_group == "E") {
-      winning_lm <- stats::lm(data = as.data.frame(full_data_vml_i),
+      winning_lm <- stats::lm(data = full_data_vml_i_df,
                               formula = paste("DNAme ~",
                                               make.names(unlist(winning_model_VML_i$variables))[1],
                                               "+",
@@ -486,7 +489,7 @@ lmGE <- function(selected_variables,
       winning_model_VML_i$g_r_squared <- NA_real_
       winning_model_VML_i$gxe_r_squared <- NA_real_
     } else if (winning_model_VML_i$model_group == "G+E") {
-      winning_lm <- stats::lm(data = as.data.frame(full_data_vml_i),
+      winning_lm <- stats::lm(data = full_data_vml_i_df,
                               formula = paste("DNAme ~",
                                               make.names(unlist(winning_model_VML_i$variables))[1],
                                               "+",
@@ -504,7 +507,7 @@ lmGE <- function(selected_variables,
       winning_model_VML_i$e_r_squared <- r_decomp$lmg[make.names(unlist(winning_model_VML_i$variables))[2]]
       winning_model_VML_i$gxe_r_squared <- NA_real_
     } else if (winning_model_VML_i$model_group == "GxE") {
-      winning_lm <- stats::lm(data = as.data.frame(full_data_vml_i),
+      winning_lm <- stats::lm(data = full_data_vml_i_df,
                               formula = paste0("DNAme ~ ",
                                               make.names(unlist(winning_model_VML_i$variables))[1],
                                               " + ",
