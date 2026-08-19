@@ -136,3 +136,21 @@ test_that("lmGE throws errors when expected", {
     fixed = TRUE
   )
 })
+
+test_that("lmGE handles non-syntactic covariate names", {
+  cov_nonsyntactic <- RAMEN::test_covariates
+  colnames(cov_nonsyntactic)[1] <- "cell type"
+  expect_false(make.names(colnames(cov_nonsyntactic)[1]) ==
+                 colnames(cov_nonsyntactic)[1])
+
+  result <- expect_no_error(
+    suppressWarnings(RAMEN::lmGE(
+      selected_variables = selected_variables_test,
+      summarized_methyl_VML = summarized_methyl_VML_test,
+      genotype_matrix = RAMEN::test_genotype_matrix,
+      environmental_matrix = RAMEN::test_environmental_matrix,
+      covariates = cov_nonsyntactic,
+      model_selection = "AIC"
+    ))
+  )
+})

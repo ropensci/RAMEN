@@ -501,7 +501,10 @@ lmGE <- function(selected_variables,
         object = winning_lm,
         rela = FALSE,
         type = "lmg",
-        always = colnames(covariates_i)
+        # The columns of full_data_vml_i_df were passed through make.names()
+        # above, so the covariate names must be too in order to refer to terms
+        # that actually exist in the model
+        always = make.names(colnames(covariates_i))
       )
       winning_model_VML_i$g_r_squared <- r_decomp$lmg[make.names(unlist(winning_model_VML_i$variables))[1]]
       winning_model_VML_i$e_r_squared <- r_decomp$lmg[make.names(unlist(winning_model_VML_i$variables))[2]]
@@ -523,7 +526,10 @@ lmGE <- function(selected_variables,
         object = winning_lm,
         rela = FALSE,
         type = "lmg",
-        always = colnames(covariates_i)
+        # The columns of full_data_vml_i_df were passed through make.names()
+        # above, so the covariate names must be too in order to refer to terms
+        # that actually exist in the model
+        always = make.names(colnames(covariates_i))
       )
       # This slightly underestimates the relative importance compared to not
       # using the covariates as the basal model, but in the interaction option
