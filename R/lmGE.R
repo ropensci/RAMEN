@@ -219,54 +219,85 @@ lmGE <- function(selected_variables,
   selected_variables <- selected_variables |>
     dplyr::filter(!(selected_env %in% empty_lists &
       selected_genot %in% empty_lists))
+  #### Resolve per-VML look-ups and loop invariants once, up front ####
+  # Everything below is either constant across VML or a positional index that
+  # replaces a repeated name-based look-up. Indexing a matrix by name is a
+  # linear scan of its dimnames in R, so doing it inside the loop costs one
+  # scan of all VML (or all samples) per iteration.
+  sample_ids <- rownames(summarized_methyl_VML)
+  # Columns of selected_variables, accessed positionally instead of rebuilding
+  # a one-row data frame (with its list columns) on every iteration
+  sv_ids <- selected_variables$VML_index
+  sv_genot <- selected_variables$selected_genot
+  sv_env <- selected_variables$selected_env
+  # Resolve each VML's methylation column once. match() hashes, so this is a
+  # single pass rather than one dimnames scan per iteration.
+  methyl_col <- match(sv_ids, colnames(summarized_methyl_VML))
+  if (anyNA(methyl_col)) {
+    missing_ids <- sv_ids[is.na(methyl_col)]
+    stop(paste("Please make sure every VML_index in selected_variables has a",
+               "matching column in summarized_methyl_VML. Missing:",
+               paste(missing_ids[seq_len(min(5, length(missing_ids)))],
+                     collapse = ", ")))
+  }
+  # Sample positions in the E and G matrices. These resolve the sample-name
+  # look-ups without reordering the matrices themselves: reordering would
+  # duplicate genotype_matrix, which is by far the largest input.
+  env_row <- match(sample_ids, rownames(environmental_matrix))
+  genot_col <- match(sample_ids, colnames(genotype_matrix))
+  # Covariates and the basal formula do not depend on the VML at all
+  if (is.null(covariates)) {
+    covariates_i <- NULL
+    basal_model_formula <- "1"
+  } else {
+    covariates_i <- covariates[sample_ids, , drop = FALSE]
+    basal_model_formula <- colnames(covariates) |>
+      make.names() |>
+      paste(collapse = " + ")
+  }
+
   # Select the winning model
   winning_models <- foreach::foreach(i = seq_len(nrow(selected_variables)),
                                      .combine = "rbind",
-                                     .export = "empty_lists") %dopar% { # For every VML
+                                     .export = c("empty_lists", "sv_ids",
+                                                 "sv_genot", "sv_env",
+                                                 "methyl_col", "env_row",
+                                                 "genot_col", "covariates_i",
+                                                 "basal_model_formula")) %dopar% { # For every VML
     #### Prepare data sets ####
-    # Create the data frame with all the information for each VML
-    VML_i <- selected_variables[i, ]
-    summ_vml_i <- summarized_methyl_VML[, VML_i$VML_index, drop = FALSE]
+    # Create the data frame with all the information for each VML.
+    # Single-bracket indexing keeps each element wrapped in a length-1 list,
+    # matching the structure of selected_variables[i, ]$selected_genot
+    VML_index_i <- sv_ids[i]
+    selected_genot_i <- sv_genot[i]
+    selected_env_i <- sv_env[i]
+    summ_vml_i <- summarized_methyl_VML[, methyl_col[i], drop = FALSE]
     colnames(summ_vml_i) <- "DNAme"
-    if (!VML_i$selected_env %in% empty_lists) {
-      env_i <- environmental_matrix[rownames(summarized_methyl_VML),
-                                    unlist(VML_i$selected_env),
+    if (!selected_env_i %in% empty_lists) {
+      env_i <- environmental_matrix[env_row,
+                                    unlist(selected_env_i),
                                     drop = FALSE]
     } else {
       env_i <- NULL
     }
-    if (!VML_i$selected_genot %in% empty_lists) {
-      genot_i <- genotype_matrix[unlist(VML_i$selected_genot),
-                                 rownames(summarized_methyl_VML),
+    if (!selected_genot_i %in% empty_lists) {
+      genot_i <- genotype_matrix[unlist(selected_genot_i),
+                                 genot_col,
                                  drop = FALSE] |>
         t()
       } else {
         genot_i <- NULL
       }
-    if (is.null(covariates)) {
-      covariates_i <- NULL
-    } else {
-      covariates_i <- covariates[rownames(summarized_methyl_VML), , drop = FALSE]
-    }
     full_data_vml_i <- cbind(summ_vml_i, env_i, genot_i, covariates_i)
     colnames(full_data_vml_i) <- make.names(colnames(full_data_vml_i))
     # Converted once and reused across every lm() call below, instead of
     # re-converting the same matrix on every single model fit
     full_data_vml_i_df <- as.data.frame(full_data_vml_i)
-    # Set the basal model (only covariates, or the intercept-only model if
-    # there are no covariates)
-    if (!is.null(covariates)) {
-      basal_model_formula <- colnames(covariates) |>
-        make.names() |>
-        paste(collapse = " + ")
-    } else {
-      basal_model_formula <- "1"
-    }
     #### Fit G Models ####
     ## Fit models involving G if G has selected variables
-    if (!VML_i$selected_genot %in% empty_lists) {
+    if (!selected_genot_i %in% empty_lists) {
       models_g_involving_df <- foreach::foreach(
-        SNP = unlist(VML_i$selected_genot),
+        SNP = unlist(selected_genot_i),
         .combine = "rbind"
       ) %do% { # For each SNP
         ### Fit G models
@@ -286,10 +317,10 @@ lmGE <- function(selected_variables,
         }
         model_g_df$tot_r_squared <- summary(model_g)$r.squared
         #### Fit G+E and GxE models ####
-        if (!VML_i$selected_env %in% empty_lists) {
+        if (!selected_env_i %in% empty_lists) {
           ### Fit GxE and G+E models if E is not empty
           models_joint_df <- foreach::foreach(
-            env = unlist(VML_i$selected_env), # For every env var
+            env = unlist(selected_env_i), # For every env var
             .combine = "rbind"
           ) %do% {
             # Fit G + E
@@ -350,9 +381,9 @@ lmGE <- function(selected_variables,
 
     #### Fit E models ####
     # Only if E is not empty
-    if (!VML_i$selected_env %in% empty_lists) { # For each env var
+    if (!selected_env_i %in% empty_lists) { # For each env var
       models_e_df <- foreach::foreach(
-        env = unlist(VML_i$selected_env), # For every env var
+        env = unlist(selected_env_i), # For every env var
         .combine = "rbind"
       ) %do% {
         # Fit E models
@@ -546,7 +577,7 @@ lmGE <- function(selected_variables,
         ]
     }
 
-    winning_model_VML_i$VML_index <- VML_i$VML_index
+    winning_model_VML_i$VML_index <- VML_index_i
     # Return final object
     winning_model_VML_i
   }
