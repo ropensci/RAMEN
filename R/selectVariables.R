@@ -159,6 +159,12 @@ selectVariables <- function(VML_wSNPs,
   columns_exist(S4Vectors::mcols(VML_wSNPs), c("VML_index", "SNP"))
   argument_check(VML_wSNPs$SNP, "list")
   argument_check(VML_wSNPs$VML_index, "character")
+  # VML_index is used to index both summarized_methyl_VML and the pre-split SNP
+  # list below, so duplicated IDs would silently resolve to the first match
+  if (anyDuplicated(VML_wSNPs$VML_index) != 0) {
+    stop(paste("Please make sure the 'VML_index' column in the VML_wSNPs object",
+               "contains unique values."))
+  }
   # Check that IDs match across data sets
   vectors_match(rownames(summarized_methyl_VML), colnames(genotype_matrix),
                object_1_name = "rownames(summarized_methyl_VML)",
@@ -179,26 +185,44 @@ selectVariables <- function(VML_wSNPs,
   finite_numeric_check(summarized_methyl_VML)
   ## Set the seed
   if (!is.null(seed)) set.seed(seed)
-  i <- NULL # To avoid R CMD check note about undefined global variable
+  k <- NULL # To avoid R CMD check note about undefined global variable
+
+  #### Resolve per-VML look-ups once, up front ####
+  # The loop below iterates over positions rather than over VML_index values so
+  # that every per-VML look-up is a constant-time positional index.
+  VML_ids <- VML_wSNPs$VML_index
+  # Plain list of candidate SNPs, accessed positionally.
+  SNP_list <- VML_wSNPs$SNP
+  methyl_col <- match(VML_ids, colnames(summarized_methyl_VML))
+  if (anyNA(methyl_col)) {
+    missing_ids <- VML_ids[is.na(methyl_col)]
+    stop(paste("Please make sure every VML_index in VML_wSNPs has a matching",
+               "column in summarized_methyl_VML. Missing:",
+               paste(missing_ids[seq_len(min(5, length(missing_ids)))],
+                     collapse = ", ")))
+  }
+
   #### Run LASSO ####
-  lasso_results <- foreach::foreach(i = VML_wSNPs$VML_index,
+  lasso_results <- foreach::foreach(k = seq_along(VML_ids),
                                     .combine = "rbind",
-                                    .packages = c("GenomicRanges",
-                                                  "S4Vectors",
-                                                  "IRanges",
-                                                  "glmnet"),
-                                    .export = "empty_lists") %dorng% {
+                                    .packages = "glmnet",
+                                    .export = c("empty_lists", "VML_ids",
+                                                "SNP_list", "methyl_col")) %dorng% {
     #### Prepare data sets ####
-    VML_i <- VML_wSNPs[VML_wSNPs$VML_index == i]
-    # Select summarized VML information
-    summVMLi <- summarized_methyl_VML[, i, drop = FALSE]
+    i <- VML_ids[k] # VML_index of the VML handled by this iteration
+    # Single-bracket indexing keeps the element wrapped in a length-1 list,
+    # matching the structure of VML_wSNPs[VML_wSNPs$VML_index == i]$SNP
+    SNP_i <- SNP_list[k]
+    # Select summarized VML information (column resolved above; subsetting by
+    # position still carries the column name through)
+    summVMLi <- summarized_methyl_VML[, methyl_col[k], drop = FALSE]
     ## Prepare data
     # subset the genotyping data and match genotype, environment and DNAme IDs
-    if (VML_i$SNP %in% empty_lists) { # Catch VML with no surrounding SNPs
+    if (SNP_i %in% empty_lists) { # Catch VML with no surrounding SNPs
       genot_VMLi <- c()
       any_snp <- FALSE
     } else {
-      genot_VMLi <- genotype_matrix[unlist(VML_i$SNP),
+      genot_VMLi <- genotype_matrix[unlist(SNP_i),
                                     rownames(summVMLi),
                                     drop = FALSE] |>
         t()
@@ -322,7 +346,7 @@ selectVariables <- function(VML_wSNPs,
 
     #### Create final data frame ####
     selected_variables_final <- data.frame(
-      VML_index = VML_i$VML_index
+      VML_index = i
     )
     selected_variables_final$selected_genot <- list(selected_union_genot)
     selected_variables_final$selected_env <- list(selected_union_env)
