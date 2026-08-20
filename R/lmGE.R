@@ -118,7 +118,6 @@
 #'  - basal_rsquared: The R2 of the basal model (i.e., model fitted only with
 #'  the concomitant variables specified in the *covariates* argument)
 #' @importFrom foreach %dopar%
-#' @importFrom foreach %do%
 #' @export
 #' @examples
 #' # Evaluate sequentially
@@ -319,13 +318,22 @@ lmGE <- function(selected_variables,
     # Converted once and reused across every lm() call below, instead of
     # re-converting the same matrix on every single model fit
     full_data_vml_i_df <- as.data.frame(full_data_vml_i)
+    # Whether this VML has G and E variables to fit
+    genot_i_has_vars <- !selected_genot_i %in% empty_lists
+    env_i_has_vars <- !selected_env_i %in% empty_lists
+    snps_i <- if (genot_i_has_vars) unlist(selected_genot_i) else character(0)
+    envs_i <- if (env_i_has_vars) unlist(selected_env_i) else character(0)
+
     #### Fit G Models ####
     ## Fit models involving G if G has selected variables
-    if (!selected_genot_i %in% empty_lists) {
-      models_g_involving_df <- foreach::foreach(
-        SNP = unlist(selected_genot_i),
-        .combine = "rbind"
-      ) %do% { # For each SNP
+    if (genot_i_has_vars) {
+      # One slot per model that will be fitted: for each SNP, the G model
+      # followed by the GxE and G+E models of every environmental variable.
+      # The slots are filled in place and bound in a single rbind below
+      models_g_involving <- vector("list",
+                                   length(snps_i) * (1 + 2 * length(envs_i)))
+      pos <- 0L
+      for (SNP in snps_i) { # For each SNP
         ### Fit G models
         model_g <- stats::lm(data = full_data_vml_i_df,
                              formula = paste("DNAme ~",
@@ -342,76 +350,69 @@ lmGE <- function(selected_variables,
           model_g_df$BIC <- stats::BIC(model_g)
         }
         model_g_df$tot_r_squared <- summary(model_g)$r.squared
+        pos <- pos + 1L
+        models_g_involving[[pos]] <- model_g_df
         #### Fit G+E and GxE models ####
-        if (!selected_env_i %in% empty_lists) {
-          ### Fit GxE and G+E models if E is not empty
-          models_joint_df <- foreach::foreach(
-            env = unlist(selected_env_i), # For every env var
-            .combine = "rbind"
-          ) %do% {
-            # Fit G + E
-            model_ge <- stats::lm(data = full_data_vml_i_df,
-                                  formula = paste("DNAme ~",
-                                                  make.names(SNP),
-                                                  "+",
-                                                  make.names(env),
-                                                  "+",
-                                                  basal_model_formula)
-                                  )
+        ### Fit GxE and G+E models if E is not empty
+        for (env in envs_i) { # For every env var
+          # Fit G + E
+          model_ge <- stats::lm(data = full_data_vml_i_df,
+                                formula = paste("DNAme ~",
+                                                make.names(SNP),
+                                                "+",
+                                                make.names(env),
+                                                "+",
+                                                basal_model_formula)
+                                )
 
-            # Create data frame structure for the results
-            model_ge_df <- data.frame(model_group = "G+E")
-            model_ge_df$variables <- list(c(SNP, env))
-            if (model_selection == "AIC") {
-              model_ge_df$AIC <- stats::AIC(model_ge)
-            } else if (model_selection == "BIC") {
-              model_ge_df$BIC <- stats::BIC(model_ge)
-            }
-            model_ge_df$tot_r_squared <- summary(model_ge)$r.squared
-            # Fit GxE
-            model_gxe <- stats::lm(data = full_data_vml_i_df,
-                                   formula = paste0("DNAme ~ ",
-                                                   make.names(SNP),
-                                                   " + ",
-                                                   make.names(env),
-                                                   " + ",
-                                                   make.names(SNP),
-                                                   "*", make.names(env),
-                                                   " + ",
-                                                   basal_model_formula)
-                                   )
-            # Create data frame structure for the results
-            model_gxe_df <- data.frame(model_group = "GxE")
-            model_gxe_df$variables <- list(c(SNP, env))
-            if (model_selection == "AIC") {
-              model_gxe_df$AIC <- stats::AIC(model_gxe)
-            } else if (model_selection == "BIC") {
-              model_gxe_df$BIC <- stats::BIC(model_gxe)
-            }
-            model_gxe_df$tot_r_squared <- summary(model_gxe)$r.squared
-            # Return joint models
-            temp_models_joint <- rbind(model_gxe_df, model_ge_df)
-            temp_models_joint
+          # Create data frame structure for the results
+          model_ge_df <- data.frame(model_group = "G+E")
+          model_ge_df$variables <- list(c(SNP, env))
+          if (model_selection == "AIC") {
+            model_ge_df$AIC <- stats::AIC(model_ge)
+          } else if (model_selection == "BIC") {
+            model_ge_df$BIC <- stats::BIC(model_ge)
           }
-        } else {
-          models_joint_df <- NULL
+          model_ge_df$tot_r_squared <- summary(model_ge)$r.squared
+          # Fit GxE
+          model_gxe <- stats::lm(data = full_data_vml_i_df,
+                                 formula = paste0("DNAme ~ ",
+                                                 make.names(SNP),
+                                                 " + ",
+                                                 make.names(env),
+                                                 " + ",
+                                                 make.names(SNP),
+                                                 "*", make.names(env),
+                                                 " + ",
+                                                 basal_model_formula)
+                                 )
+          # Create data frame structure for the results
+          model_gxe_df <- data.frame(model_group = "GxE")
+          model_gxe_df$variables <- list(c(SNP, env))
+          if (model_selection == "AIC") {
+            model_gxe_df$AIC <- stats::AIC(model_gxe)
+          } else if (model_selection == "BIC") {
+            model_gxe_df$BIC <- stats::BIC(model_gxe)
+          }
+          model_gxe_df$tot_r_squared <- summary(model_gxe)$r.squared
+          # GxE is stored before G+E, keeping the order of the joint models
+          pos <- pos + 1L
+          models_g_involving[[pos]] <- model_gxe_df
+          pos <- pos + 1L
+          models_g_involving[[pos]] <- model_ge_df
         }
-
-        # Return object with all the G-involved models
-        temp_models_g_involving <- rbind(model_g_df, models_joint_df)
-        temp_models_g_involving
       }
+      models_g_involving_df <- do.call(rbind, models_g_involving)
     } else {
       models_g_involving_df <- NULL
     }
 
     #### Fit E models ####
     # Only if E is not empty
-    if (!selected_env_i %in% empty_lists) { # For each env var
-      models_e_df <- foreach::foreach(
-        env = unlist(selected_env_i), # For every env var
-        .combine = "rbind"
-      ) %do% {
+    if (env_i_has_vars) { # For each env var
+      models_e <- vector("list", length(envs_i))
+      for (pos_e in seq_along(envs_i)) { # For every env var
+        env <- envs_i[pos_e]
         # Fit E models
         model_e <- stats::lm(data = full_data_vml_i_df,
                              formula = paste("DNAme ~",
@@ -429,9 +430,9 @@ lmGE <- function(selected_variables,
           model_e_df$BIC <- stats::BIC(model_e)
         }
         model_e_df$tot_r_squared <- summary(model_e)$r.squared
-        # Return the final object
-        model_e_df
+        models_e[[pos_e]] <- model_e_df
       }
+      models_e_df <- do.call(rbind, models_e)
     } else {
       models_e_df <- NULL
     }
