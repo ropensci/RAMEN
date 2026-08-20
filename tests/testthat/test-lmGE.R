@@ -226,3 +226,62 @@ test_that("lmGE matches inputs by name, not by position", {
   colnames(mislabelled) <- c("VML_B", "VML_A")
   expect_equal(fit(mislabelled, genot, env, covs)$model_group, c("E", "G"))
 })
+
+
+test_that("lmGE reports SNPs missing from genotype_matrix", {
+  # Only 2 of the 100 SNPs below are selected, so genotype_matrix is trimmed down
+  # to the selected ones. That matters: the trim must come after this check, and
+  # must index by row position. A trim that ran first and indexed by SNP name
+  # would fail with "subscript out of bounds" before the message below could be
+  # raised
+  set.seed(1)
+  n <- 40
+  nsnp <- 100
+  ids <- paste0("S", seq_len(n))
+  env <- cbind(e1 = rnorm(n), e2 = rnorm(n))
+  rownames(env) <- ids
+  methyl <- cbind(V1 = rnorm(n))
+  rownames(methyl) <- ids
+  genot <- matrix(rbinom(nsnp * n, 2, 0.5), nrow = nsnp,
+                  dimnames = list(paste0("rs", seq_len(nsnp)), ids))
+  sel <- data.frame(VML_index = "V1")
+  sel$selected_genot <- list(c("rs1", "rs_absent"))
+  sel$selected_env <- list(c("e1", "e2"))
+
+  expect_error(
+    RAMEN::lmGE(
+      selected_variables = sel, summarized_methyl_VML = methyl,
+      genotype_matrix = genot, environmental_matrix = env,
+      covariates = NULL, model_selection = "AIC"
+    ),
+    paste("Please make sure every SNP in selected_variables$selected_genot is",
+          "present in the row names of genotype_matrix. Missing: rs_absent"),
+    fixed = TRUE
+  )
+})
+
+test_that("lmGE reports VML with no column in summarized_methyl_VML", {
+  set.seed(2)
+  n <- 40
+  ids <- paste0("S", seq_len(n))
+  env <- cbind(e1 = rnorm(n), e2 = rnorm(n))
+  rownames(env) <- ids
+  genot <- matrix(rbinom(2 * n, 2, 0.5), nrow = 2,
+                  dimnames = list(c("rs1", "rs2"), ids))
+  methyl <- cbind(V1 = rnorm(n))
+  rownames(methyl) <- ids
+  sel <- data.frame(VML_index = "V_absent")
+  sel$selected_genot <- list(c("rs1", "rs2"))
+  sel$selected_env <- list(c("e1", "e2"))
+
+  expect_error(
+    RAMEN::lmGE(
+      selected_variables = sel, summarized_methyl_VML = methyl,
+      genotype_matrix = genot, environmental_matrix = env,
+      covariates = NULL, model_selection = "AIC"
+    ),
+    paste("Please make sure every VML_index in selected_variables has a",
+          "matching column in summarized_methyl_VML. Missing: V_absent"),
+    fixed = TRUE
+  )
+})

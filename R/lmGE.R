@@ -219,33 +219,58 @@ lmGE <- function(selected_variables,
   selected_variables <- selected_variables |>
     dplyr::filter(!(selected_env %in% empty_lists &
       selected_genot %in% empty_lists))
-  #### Resolve per-VML look-ups and loop invariants once, up front ####
-  # Everything below is either constant across VML or a positional index that
-  # replaces a repeated name-based look-up. Indexing a matrix by name is a
-  # linear scan of its dimnames in R, so doing it inside the loop costs one
-  # scan of all VML (or all samples) per iteration.
-  sample_ids <- rownames(summarized_methyl_VML)
-  # Columns of selected_variables, accessed positionally instead of rebuilding
-  # a one-row data frame (with its list columns) on every iteration
+  # Create vectors that will be passed to the foreach loop
+  sample_ids <- rownames(summarized_methyl_VML) # Get samples in DNAme object
+  # Columns of selected_variables, accessed positionally
   sv_ids <- selected_variables$VML_index
   sv_genot <- selected_variables$selected_genot
   sv_env <- selected_variables$selected_env
-  # Resolve each VML's methylation column once. match() hashes, so this is a
-  # single pass rather than one dimnames scan per iteration.
+  # Get the position of each VML in DNAme object taking select_variables as
+  # reference
   methyl_col <- match(sv_ids, colnames(summarized_methyl_VML))
-  if (anyNA(methyl_col)) {
+  if (anyNA(methyl_col)) { # Check that all IDs are present
     missing_ids <- sv_ids[is.na(methyl_col)]
     stop(paste("Please make sure every VML_index in selected_variables has a",
                "matching column in summarized_methyl_VML. Missing:",
                paste(missing_ids[seq_len(min(5, length(missing_ids)))],
                      collapse = ", ")))
   }
-  # Sample positions in the E and G matrices. These resolve the sample-name
-  # look-ups without reordering the matrices themselves: reordering would
-  # duplicate genotype_matrix, which is by far the largest input.
+  # Get the positions of each individual in environmental matrix taking DNAme
+  # as reference
   env_row <- match(sample_ids, rownames(environmental_matrix))
+  # Identify VML with no genotype variables selected
+  genot_empty <- vapply(seq_along(sv_genot),
+                        function(j) sv_genot[j] %in% empty_lists,
+                        logical(1))
+  # Get an unlisted vector of all SNPs in the selected_variables object in order
+  flat_snps <- unlist(sv_genot[!genot_empty], use.names = FALSE)
+  used_snps <- unique(flat_snps) # get unique SNPs used across all VML
+  # Get the positons of SNPs used in genotype matrix
+  used_rows <- match(used_snps, rownames(genotype_matrix))
+  if (anyNA(used_rows)) { # If a used SNP is not present in genotype_matrix throw error
+    missing_snps <- used_snps[is.na(used_rows)]
+    stop(paste("Please make sure every SNP in selected_variables$selected_genot",
+               "is present in the row names of genotype_matrix. Missing:",
+               paste(missing_snps[seq_len(min(5, length(missing_snps)))],
+                     collapse = ", ")))
+  }
+  # Create a smaller matrix with used genotypes when worth it
+  if (length(used_snps) < 0.7 * nrow(genotype_matrix)) {
+    genotype_matrix <- genotype_matrix[used_rows, , drop = FALSE]
+  }
+  # Get the positions of each individual in genotype_matrix taking DNAme
+  # as reference
   genot_col <- match(sample_ids, colnames(genotype_matrix))
-  # Covariates and the basal formula do not depend on the VML at all
+  # Get the positions of each selected SNP in genotype matrix in VML order
+  flat_rows <- match(flat_snps, rownames(genotype_matrix))
+  # Separate the order per VML
+  sv_genot_rows <- vector("list", length(sv_genot))
+  sv_genot_rows[!genot_empty] <- split(
+    flat_rows,
+    rep(seq_len(sum(!genot_empty)), lengths(sv_genot[!genot_empty]))
+  )
+
+  # Create a covariate formula, which is shared across all VML
   if (is.null(covariates)) {
     covariates_i <- NULL
     basal_model_formula <- "1"
@@ -261,8 +286,9 @@ lmGE <- function(selected_variables,
                                      .combine = "rbind",
                                      .export = c("empty_lists", "sv_ids",
                                                  "sv_genot", "sv_env",
-                                                 "methyl_col", "env_row",
-                                                 "genot_col", "covariates_i",
+                                                 "sv_genot_rows", "methyl_col",
+                                                 "env_row", "genot_col",
+                                                 "covariates_i",
                                                  "basal_model_formula")) %dopar% { # For every VML
     #### Prepare data sets ####
     # Create the data frame with all the information for each VML.
@@ -281,7 +307,7 @@ lmGE <- function(selected_variables,
       env_i <- NULL
     }
     if (!selected_genot_i %in% empty_lists) {
-      genot_i <- genotype_matrix[unlist(selected_genot_i),
+      genot_i <- genotype_matrix[sv_genot_rows[[i]],
                                  genot_col,
                                  drop = FALSE] |>
         t()
