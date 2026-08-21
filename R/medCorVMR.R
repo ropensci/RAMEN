@@ -46,6 +46,8 @@ medCorVMR <- function(VML, methylation_data) {
   # generate a list where each element will contain a vector with the probes
   # present in one VMR
   VMR_probes <- S4Vectors::mcols(VML)$probes
+  methylation_data <- methylation_data[unique(unlist(VMR_probes)), ,
+                                       drop = FALSE]
   # Compute correlations
   i <- NULL # Bind variable to the environment
   median_correlation <- foreach::foreach(
