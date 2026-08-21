@@ -21,11 +21,7 @@
 map_revmap_names <- function(positions, manifest_hvp) {
   # We start with 1 5 6
   # We want to end with cg00000029,  cg00000158 cg00000165
-  names <- c()
-  for (element in positions) {
-    names <- c(names, row.names(manifest_hvp)[element])
-  }
-  return(names)
+  row.names(manifest_hvp)[positions]
 }
 
 
@@ -465,8 +461,12 @@ findVML <- function(methylation_data,
   }
 
   ### Capture sVMPs ###
-  # Select sVMPs
-  sVMPs <- candidate_VMRs[(GenomicRanges::elementMetadata(candidate_VMRs)[, "probes"] %in% lonely_probes)]
+  single_probe_region <- lengths(GenomicRanges::elementMetadata(candidate_VMRs)[, "probes"]) == 1
+  is_sVMP <- logical(length(candidate_VMRs))
+  is_sVMP[single_probe_region] <- unlist(
+    GenomicRanges::elementMetadata(candidate_VMRs)[, "probes"][single_probe_region]
+  ) %in% lonely_probes
+  sVMPs <- candidate_VMRs[is_sVMP]
   # Add a column of NAs under the name of median_correlation to match the VMRs
   S4Vectors::mcols(sVMPs)$median_correlation <- rep(NA,
                                                         nrow(S4Vectors::mcols(sVMPs)))
