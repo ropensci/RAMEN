@@ -80,7 +80,12 @@ finite_numeric_check <- function(object, extra_msg = NULL) {
   if (
     !is.numeric(object) ||
     anyNA(object) ||
-    any(is.infinite(object))
+    # is.infinite() builds a logical vector as large as the object it is given,
+    # which is a substantial allocation for a genotype matrix. Integers cannot
+    # hold Inf, and anyNA() above already covers NA_integer_, so the check is
+    # only needed for doubles. Written as part of the same || chain so that it
+    # is still only reached when the cheaper checks pass.
+    (!is.integer(object) && any(is.infinite(object)))
   ) {
     stop(paste("Please make sure the object",
                deparse(substitute(object)),
