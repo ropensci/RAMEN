@@ -112,6 +112,27 @@ of the high number of VML in the dataset. This assumption decreases
 significantly the number of permutations required to create a null
 distribution and reduces the computational time. For further information
 please read the RAMEN paper (https://doi.org/10.1186/s13059-025-03864-4).
+
+\strong{Reproducibility and the use of the seed}
+
+Random numbers are drawn in this function when the permutation orders are
+created, and again inside each permutation during the cross-validation and
+LASSO stages of \emph{selectVariables()}. Setting \emph{seed} makes the whole run
+reproducible.
+
+Note that the same \emph{seed} value is handed to \emph{selectVariables()} in every
+permutation. For a given VML the cross-validation folds are therefore
+identical from one permutation to the next, and what differs between
+permutations is the shuffled G and E data. The permutations are, in that
+sense, not fully independent draws with respect to the cross-validation
+randomness. This holds one source of variability fixed rather than biasing
+the delta R squared values, and its practical effect is small because the
+null distribution pools delta R squared across all the VML in the dataset,
+which is where nearly all of its draws come from. It is nonetheless worth
+keeping in mind when interpreting the spread of the distribution.
+
+Please note that setting a seed in this function modifies the seed globally
+(which is R's default behavior).
 }
 \examples{
 # Evaluate sequentially
