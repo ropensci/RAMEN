@@ -72,7 +72,7 @@ summarizeVML <- function(VML,
     i <- mcols_vml$VML_index[idx]
     probes <- unlist(mcols_vml$probes[[idx]])
     subset_meth <-  methylation_data[probes, , drop = FALSE]
-    median <- apply(subset_meth, 2, median, na.rm = TRUE)
+    median <- matrixStats::colMedians(as.matrix(subset_meth), na.rm = TRUE)
     matrix(median, ncol = 1, dimnames = list(NULL, i))
                                      }
   # Add ID names
