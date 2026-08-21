@@ -143,6 +143,8 @@ nullDistGE <- function(VML_wSNPs,
   finite_numeric_check(summarized_methyl_VML)
   if (!is.null(covariates)) finite_numeric_check(covariates)
 
+  i <- NULL # Bind variable to the environment
+
   #### Shuffle data ####
   # Set shuffle order
   if (!is.null(seed)) set.seed(seed)
