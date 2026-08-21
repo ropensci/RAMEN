@@ -331,34 +331,6 @@ findVML <- function(methylation_data,
     manifest <- array_manifest
   }
   #### Get HVPs ####
-  # Filter the manifest to remove the probes that have no variability score
-  # information because they were not measured/did not pass the QC and are not
-  # highly variable
-  manifest_hvp <- cbind(TargetID = rownames(manifest), manifest) |>
-    dplyr::select(c(TargetID, chr, pos, strand)) |>
-    dplyr::filter(
-      !is.na(pos), # Remove probes with no map info
-      TargetID %in% row.names(var_scores |>
-        dplyr::filter(var_score >= var_threshold))
-    ) |>
-    # Remove probes that have no methylation information in the processed data
-    #  and are not highly variable
-    dplyr::left_join(
-      # Add variability information
-      cbind(TargetID = rownames(var_scores), var_scores),
-      by = "TargetID"
-    ) |>
-    # important step for using Rle later when constructing the GenomicRanges
-    # object
-    dplyr::arrange(chr)
-  rownames(manifest_hvp) <- manifest_hvp$TargetID
-  if (is.factor(manifest_hvp$chr)) {
-    manifest_hvp <- manifest_hvp |>
-      dplyr::mutate(chr = droplevels(chr))
-  }
-
-  #### Identify sparse Variable Methylated Probes####
-  message("Identifying sparse Variable Methylated Probes")
   full_manifest <- cbind(TargetID = rownames(manifest), manifest) |>
     # Select necessary columns in case there is more
     dplyr::select(c(TargetID, chr, pos, strand)) |>
@@ -376,6 +348,25 @@ findVML <- function(methylation_data,
       dplyr::mutate(chr = droplevels(chr))
   }
 
+  # Keep the probes that are highly variable
+  manifest_hvp <- full_manifest |>
+    dplyr::filter(
+      TargetID %in% row.names(var_scores |>
+        dplyr::filter(var_score >= var_threshold))
+    ) |>
+    dplyr::left_join(
+      # Add variability information
+      cbind(TargetID = rownames(var_scores), var_scores),
+      by = "TargetID"
+    )
+  rownames(manifest_hvp) <- manifest_hvp$TargetID
+  if (is.factor(manifest_hvp$chr)) {
+    manifest_hvp <- manifest_hvp |>
+      dplyr::mutate(chr = droplevels(chr))
+  }
+
+  #### Identify sparse Variable Methylated Probes####
+  message("Identifying sparse Variable Methylated Probes")
   # Convert the full manifest to a GenomicRanges object
   seqnames_full_manifest_gr <- table(full_manifest$chr)
   full_manifest_gr <- GenomicRanges::GRanges(
@@ -387,10 +378,9 @@ findVML <- function(methylation_data,
       end = full_manifest$pos,
       names = full_manifest$TargetID
     ),
-    strand = S4Vectors::Rle(
-      rle(as.character(full_manifest$strand))$values,
-      rle(as.character(full_manifest$strand))$lengths
-    )
+    # Rle() run length encodes the vector itself, so the strands only have to be
+    # walked once rather than once for the values and again for the lengths
+    strand = S4Vectors::Rle(as.character(full_manifest$strand))
   )
 
   # Group the probes into regions to detect sVMPs
@@ -424,10 +414,7 @@ findVML <- function(methylation_data,
       end = manifest_hvp$pos,
       names = manifest_hvp$TargetID
     ),
-    strand = S4Vectors::Rle(
-      rle(as.character(manifest_hvp$strand))$values,
-      rle(as.character(manifest_hvp$strand))$lengths
-    ),
+    strand = S4Vectors::Rle(as.character(manifest_hvp$strand)),
     var_score = manifest_hvp$var_score
   ) # Metadata
 
