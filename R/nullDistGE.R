@@ -132,13 +132,10 @@ nullDistGE <- function(VML_wSNPs,
     as.data.frame()
   colnames(permutation_order) <- 1:permutations
 
-  # Put the environmental and genotype matrix in the same order to the
-  # summarized VML object
-  genotype_matrix <- genotype_matrix[, rownames(summarized_methyl_VML)]
-  environmental_matrix <- environmental_matrix[rownames(summarized_methyl_VML), ]
+  individuals <- rownames(summarized_methyl_VML)
 
   #### Run permutation ####
-  null_dist <- foreach::foreach(i = 1:permutations, .combine = rbind) %do% {
+  null_dist <- foreach::foreach(i = seq_len(permutations), .combine = rbind) %do% {
     message("Starting permutation ", i, " of ", permutations)
     # Change order of samples
     permutated_genotype <- genotype_matrix[, permutation_order[, i],
@@ -146,8 +143,8 @@ nullDistGE <- function(VML_wSNPs,
     permutated_environment <- environmental_matrix[permutation_order[, i], ,
                                                    drop = FALSE]
     # Assign previous row and colnames - break relationships, i.e., shuffle
-    colnames(permutated_genotype) <- colnames(genotype_matrix)
-    rownames(permutated_environment) <- rownames(environmental_matrix)
+    colnames(permutated_genotype) <- individuals
+    rownames(permutated_environment) <- individuals
 
     # Run RAMEN
     message("Starting variable selection of permutation ", i, " of ", permutations)
