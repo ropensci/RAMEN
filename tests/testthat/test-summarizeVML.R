@@ -7,6 +7,9 @@ test_that("summarizeVML output structure is correct", {
 test_that("summarizeVML adds VML_index when not present", {
   # Set the parallel backend to use 2 workers
   doParallel::registerDoParallel(2)
+  # Put the sequential back-end back so the parallel one does not leak
+  # into the tests that run after this one
+  on.exit(foreach::registerDoSEQ(), add = TRUE)
   # Delete IDs
   VML_no_IDs <- VML_test$VML[1:5, ]
   VML_no_IDs$VML_index <- NULL
@@ -26,6 +29,9 @@ test_that("summarizeVML adds VML_index when not present", {
 test_that("summarizeVML values are correct", {
   # Set the parallel backend to use 2 workers
   doParallel::registerDoParallel(2)
+  # Put the sequential back-end back so the parallel one does not leak
+  # into the tests that run after this one
+  on.exit(foreach::registerDoSEQ(), add = TRUE)
   # First for sVMPs: the summarized value should be equal to the methylation
   VML_gr <- VML_test$VML
   VML_test_summ <- VML_gr[VML_gr$type == "sVMP"][1]  # Get the first sVMP

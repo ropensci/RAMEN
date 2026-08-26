@@ -1,6 +1,9 @@
 test_that("nullDistGE output structure is correct", {
   # Set the parallel backend to use 2 workers
   doParallel::registerDoParallel(2)
+  # Put the sequential back-end back so the parallel one does not leak
+  # into the tests that run after this one
+  on.exit(foreach::registerDoSEQ(), add = TRUE)
   null_dist <- RAMEN::nullDistGE(
     VML_wSNPs = VML_cis_snps_test[1:5, ],
     genotype_matrix = RAMEN::test_genotype_matrix,
@@ -20,6 +23,9 @@ test_that("nullDistGE output structure is correct", {
 test_that("nullDistGE works with BIC", {
   # Set the parallel backend to use 2 workers
   doParallel::registerDoParallel(2)
+  # Put the sequential back-end back so the parallel one does not leak
+  # into the tests that run after this one
+  on.exit(foreach::registerDoSEQ(), add = TRUE)
   null_dist_bic <- RAMEN::nullDistGE(
     VML_wSNPs = VML_cis_snps_test[1:2, ],
     genotype_matrix = RAMEN::test_genotype_matrix,

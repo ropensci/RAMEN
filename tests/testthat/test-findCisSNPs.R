@@ -13,6 +13,9 @@ test_that("findCisSNPs output structure is correct", {
 test_that("findCisSNPs adds a VML index when it is not present", {
   # Set the parallel backend to use 2 workers
   doParallel::registerDoParallel(2)
+  # Put the sequential back-end back so the parallel one does not leak
+  # into the tests that run after this one
+  on.exit(foreach::registerDoSEQ(), add = TRUE)
   # Delete IDs
   VML_no_IDs <- VML_test$VML[1:5, ]
   VML_no_IDs$VML_index <- NULL
@@ -71,6 +74,9 @@ test_that("findCisSNPs throws errors when expected", {
 test_that("findCisSNPs returns the right number of cis SNPs", {
   # Set the parallel backend to use 2 workers
   doParallel::registerDoParallel(2)
+  # Put the sequential back-end back so the parallel one does not leak
+  # into the tests that run after this one
+  on.exit(foreach::registerDoSEQ(), add = TRUE)
   VML_vanilla <- GenomicRanges::GRanges(
     seqnames = "chr1",
     ranges = IRanges::IRanges(start = 1000, end = 2000),
