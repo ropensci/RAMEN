@@ -2,25 +2,40 @@
   "@context": "https://doi.org/10.5063/schema/codemeta-2.0",
   "@type": "SoftwareSourceCode",
   "identifier": "RAMEN",
-  "description": "R package that identifies which genetic (G), environmental (E), additive (G+E) or interaction (GxE) effect better explains DNA methylation levels in Variable Methylated Loci using microarray data.",
+  "description": "Using population data, RAMEN identifies which genetic (G), environmental (E), additive (G+E) or interaction (GxE) model better explains DNA methylation levels in genome-wide locations with high DNA methylation variability.",
   "name": "RAMEN: RAMEN: Regional Association of Methylome variability with the Exposome and geNome",
-  "codeRepository": "https://github.com/ErickNavarroD/RAMEN",
-  "issueTracker": "https://github.com/ErickNavarroD/RAMEN/issues",
+  "relatedLink": "https://ropensci.github.io/RAMEN/",
+  "codeRepository": "https://github.com/ropensci/RAMEN/",
+  "issueTracker": "https://github.com/ropensci/RAMEN/issues",
   "license": "https://spdx.org/licenses/GPL-3.0",
-  "version": "1.0.0.9003",
+  "version": "2.1.2",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
     "url": "https://r-project.org"
   },
-  "runtimePlatform": "R version 4.4.2 (2024-10-31)",
+  "runtimePlatform": "R version 4.6.1 (2026-06-24)",
   "author": [
     {
       "@type": "Person",
       "givenName": "Erick I.",
       "familyName": "Navarro-Delgado",
-      "email": "ericknadel98@hotmail.com",
+      "email": "erick.delgado@ubc.ca",
       "@id": "https://orcid.org/0000-0003-1040-3519"
+    },
+    {
+      "@type": "Person",
+      "givenName": "Keegan",
+      "familyName": "Korthauer",
+      "email": "keegan@stat.ubc.ca",
+      "@id": "https://orcid.org/0000-0002-4565-1654"
+    },
+    {
+      "@type": "Person",
+      "givenName": "Michael S.",
+      "familyName": "Kobor",
+      "email": "michael.kobor@ubc.ca",
+      "@id": "https://orcid.org/0000-0003-4140-1743"
     }
   ],
   "maintainer": [
@@ -28,7 +43,7 @@
       "@type": "Person",
       "givenName": "Erick I.",
       "familyName": "Navarro-Delgado",
-      "email": "ericknadel98@hotmail.com",
+      "email": "erick.delgado@ubc.ca",
       "@id": "https://orcid.org/0000-0003-1040-3519"
     }
   ],
@@ -56,6 +71,18 @@
         "url": "https://cran.r-project.org"
       },
       "sameAs": "https://CRAN.R-project.org/package=knitr"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "magick",
+      "name": "magick",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=magick"
     },
     {
       "@type": "SoftwareApplication",
@@ -92,6 +119,28 @@
         "url": "https://cran.r-project.org"
       },
       "sameAs": "https://CRAN.R-project.org/package=tidyr"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "doParallel",
+      "name": "doParallel",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=doParallel"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "IlluminaHumanMethylation450kanno.ilmn12.hg19",
+      "name": "IlluminaHumanMethylation450kanno.ilmn12.hg19"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "IlluminaHumanMethylationEPICv2anno.20a1.hg38",
+      "name": "IlluminaHumanMethylationEPICv2anno.20a1.hg38"
     },
     {
       "@type": "SoftwareApplication",
@@ -170,21 +219,6 @@
     },
     "6": {
       "@type": "SoftwareApplication",
-      "identifier": "IlluminaHumanMethylation450kanno.ilmn12.hg19",
-      "name": "IlluminaHumanMethylation450kanno.ilmn12.hg19"
-    },
-    "7": {
-      "@type": "SoftwareApplication",
-      "identifier": "IlluminaHumanMethylationEPICanno.ilm10b4.hg19",
-      "name": "IlluminaHumanMethylationEPICanno.ilm10b4.hg19"
-    },
-    "8": {
-      "@type": "SoftwareApplication",
-      "identifier": "IlluminaHumanMethylationEPICv2anno.20a1.hg38",
-      "name": "IlluminaHumanMethylationEPICv2anno.20a1.hg38"
-    },
-    "9": {
-      "@type": "SoftwareApplication",
       "identifier": "IRanges",
       "name": "IRanges",
       "provider": {
@@ -195,43 +229,24 @@
       },
       "sameAs": "https://bioconductor.org/packages/release/bioc/html/IRanges.html"
     },
-    "10": {
+    "7": {
       "@type": "SoftwareApplication",
-      "identifier": "iterators",
-      "name": "iterators",
+      "identifier": "matrixStats",
+      "name": "matrixStats",
       "provider": {
         "@id": "https://cran.r-project.org",
         "@type": "Organization",
         "name": "Comprehensive R Archive Network (CRAN)",
         "url": "https://cran.r-project.org"
       },
-      "sameAs": "https://CRAN.R-project.org/package=iterators"
+      "sameAs": "https://CRAN.R-project.org/package=matrixStats"
     },
-    "11": {
+    "8": {
       "@type": "SoftwareApplication",
-      "identifier": "lifecycle",
-      "name": "lifecycle",
-      "provider": {
-        "@id": "https://cran.r-project.org",
-        "@type": "Organization",
-        "name": "Comprehensive R Archive Network (CRAN)",
-        "url": "https://cran.r-project.org"
-      },
-      "sameAs": "https://CRAN.R-project.org/package=lifecycle"
+      "identifier": "methods",
+      "name": "methods"
     },
-    "12": {
-      "@type": "SoftwareApplication",
-      "identifier": "magrittr",
-      "name": "magrittr",
-      "provider": {
-        "@id": "https://cran.r-project.org",
-        "@type": "Organization",
-        "name": "Comprehensive R Archive Network (CRAN)",
-        "url": "https://cran.r-project.org"
-      },
-      "sameAs": "https://CRAN.R-project.org/package=magrittr"
-    },
-    "13": {
+    "9": {
       "@type": "SoftwareApplication",
       "identifier": "relaimpo",
       "name": "relaimpo",
@@ -243,7 +258,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=relaimpo"
     },
-    "14": {
+    "10": {
       "@type": "SoftwareApplication",
       "identifier": "S4Vectors",
       "name": "S4Vectors",
@@ -255,45 +270,170 @@
       },
       "sameAs": "https://bioconductor.org/packages/release/bioc/html/S4Vectors.html"
     },
-    "15": {
+    "11": {
+      "@type": "SoftwareApplication",
+      "identifier": "IlluminaHumanMethylationEPICanno.ilm10b4.hg19",
+      "name": "IlluminaHumanMethylationEPICanno.ilm10b4.hg19"
+    },
+    "12": {
       "@type": "SoftwareApplication",
       "identifier": "stats",
       "name": "stats"
     },
-    "16": {
-      "@type": "SoftwareApplication",
-      "identifier": "stringr",
-      "name": "stringr",
-      "provider": {
-        "@id": "https://cran.r-project.org",
-        "@type": "Organization",
-        "name": "Comprehensive R Archive Network (CRAN)",
-        "url": "https://cran.r-project.org"
-      },
-      "sameAs": "https://CRAN.R-project.org/package=stringr"
-    },
-    "17": {
-      "@type": "SoftwareApplication",
-      "identifier": "tibble",
-      "name": "tibble",
-      "provider": {
-        "@id": "https://cran.r-project.org",
-        "@type": "Organization",
-        "name": "Comprehensive R Archive Network (CRAN)",
-        "url": "https://cran.r-project.org"
-      },
-      "sameAs": "https://CRAN.R-project.org/package=tibble"
-    },
-    "18": {
+    "13": {
       "@type": "SoftwareApplication",
       "identifier": "R",
       "name": "R",
-      "version": ">= 4.2.0"
+      "version": ">= 4.5.0"
     },
     "SystemRequirements": null
   },
-  "fileSize": "3425.405KB",
-  "relatedLink": "https://ericknavarrod.github.io/RAMEN/",
-  "readme": "https://github.com/ErickNavarroD/RAMEN/blob/master/README.md",
+  "fileSize": "3536.285KB",
+  "citation": [
+    {
+      "@type": "ScholarlyArticle",
+      "datePublished": "2025",
+      "author": [
+        {
+          "@type": "Person",
+          "givenName": "Erick I.",
+          "familyName": "Navarro-Delgado"
+        },
+        {
+          "@type": "Person",
+          "givenName": "Karlie",
+          "familyName": "Edwards"
+        },
+        {
+          "@type": "Person",
+          "givenName": "Maggie P.",
+          "familyName": "Fu"
+        },
+        {
+          "@type": "Person",
+          "givenName": "Sarah M.",
+          "familyName": "Merrill"
+        },
+        {
+          "@type": "Person",
+          "givenName": "Chaini",
+          "familyName": "Konwar"
+        },
+        {
+          "@type": "Person",
+          "givenName": "Julie L.",
+          "familyName": "MacIsaac"
+        },
+        {
+          "@type": "Person",
+          "givenName": "David T.S.",
+          "familyName": "Lin"
+        },
+        {
+          "@type": "Person",
+          "givenName": "Piush",
+          "familyName": "Mandhane"
+        },
+        {
+          "@type": "Person",
+          "givenName": "Elinor",
+          "familyName": "Simons"
+        },
+        {
+          "@type": "Person",
+          "givenName": "Padmaja",
+          "familyName": "Subbarao"
+        },
+        {
+          "@type": "Person",
+          "givenName": "Theo J.",
+          "familyName": "Moraes"
+        },
+        {
+          "@type": "Person",
+          "givenName": "Jari",
+          "familyName": "Lahti"
+        },
+        {
+          "@type": "Person",
+          "givenName": "Gregory E.",
+          "familyName": "Miller"
+        },
+        {
+          "@type": "Person",
+          "givenName": "Elisabeth B.",
+          "familyName": "Binder"
+        },
+        {
+          "@type": "Person",
+          "givenName": "Katri",
+          "familyName": "Raikkonen"
+        },
+        {
+          "@type": "Person",
+          "givenName": "Stuart E.",
+          "familyName": "Turvey"
+        },
+        {
+          "@type": "Person",
+          "givenName": "Keegan",
+          "familyName": "Korthauer"
+        },
+        {
+          "@type": "Person",
+          "givenName": "Michael S.",
+          "familyName": "Kobor"
+        }
+      ],
+      "name": "RAMEN: Dissecting individual, additive and interactive gene-environment contributions to DNA methylome variability in cord blood",
+      "identifier": "10.1186/s13059-025-03864-4",
+      "pagination": "29",
+      "@id": "https://doi.org/10.1186/s13059-025-03864-4",
+      "sameAs": "https://doi.org/10.1186/s13059-025-03864-4",
+      "isPartOf": {
+        "@type": "PublicationIssue",
+        "issueNumber": "1",
+        "datePublished": "2025",
+        "isPartOf": {
+          "@type": ["PublicationVolume", "Periodical"],
+          "volumeNumber": "26",
+          "name": "Genome Biology"
+        }
+      }
+    },
+    {
+      "@type": "SoftwareSourceCode",
+      "datePublished": "2025",
+      "author": [
+        {
+          "@type": "Person",
+          "givenName": "Erick I.",
+          "familyName": "Navarro-Delgado"
+        },
+        {
+          "@type": "Person",
+          "givenName": "Keegan",
+          "familyName": "Korthauer"
+        },
+        {
+          "@type": "Person",
+          "givenName": "Michael S.",
+          "familyName": "Kobor"
+        }
+      ],
+      "name": "RAMEN: RAMEN: Regional Association of DNA Methylome variability with the Exposome and geNome",
+      "url": "https://github.com/ropensci/RAMEN",
+      "description": "R package version 2.1.2"
+    }
+  ],
+  "releaseNotes": "https://github.com/ropensci/RAMEN/blob/main/NEWS.md",
+  "readme": "https://github.com/ropensci/RAMEN/blob/main/README.md",
+  "contIntegration": ["https://app.codecov.io/gh/ErickNavarroD/RAMEN", "https://github.com/ropensci/RAMEN/actions/workflows/R-CMD-check.yaml"],
+  "developmentStatus": ["https://www.repostatus.org/#active", "https://lifecycle.r-lib.org/articles/stages.html#stable"],
+  "review": {
+    "@type": "Review",
+    "url": "https://github.com/ropensci/software-review/issues/743",
+    "provider": "https://ropensci.org"
+  },
   "keywords": ["exposome", "genome", "methylation-analysis", "methylation-microarrays", "multiomics", "r-package", "bioinformatics-tool", "dna-methylation"]
 }

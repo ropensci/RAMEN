@@ -13,9 +13,9 @@ Using population data, RAMEN identifies which genetic (G), environmental (E), ad
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://ericknavarrod.github.io/RAMEN/} 
-  \item \url{https://github.com/ErickNavarroD/RAMEN/}
-  \item Report bugs at \url{https://github.com/ErickNavarroD/RAMEN/issues}
+  \item \url{https://ropensci.github.io/RAMEN/} 
+  \item \url{https://github.com/ropensci/RAMEN/}
+  \item Report bugs at \url{https://github.com/ropensci/RAMEN/issues}
 }
 
 }

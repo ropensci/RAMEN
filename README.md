@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# RAMEN <a href="https://github.com/ErickNavarroD/RAMEN"><img src="man/figures/logo.png" align="right" height="150"/></a>
+# RAMEN <a href="https://github.com/ropensci/RAMEN"><img src="man/figures/logo.png" align="right" height="150"/></a>
 
 <!-- badges: start -->
 
@@ -11,7 +11,7 @@
 stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 [![Codecov test
 coverage](https://codecov.io/gh/ErickNavarroD/RAMEN/graph/badge.svg)](https://app.codecov.io/gh/ErickNavarroD/RAMEN)
-[![R-CMD-check](https://github.com/ErickNavarroD/RAMEN/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ErickNavarroD/RAMEN/actions/workflows/R-CMD-check.yaml)
+[![R-CMD-check](https://github.com/ropensci/RAMEN/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ropensci/RAMEN/actions/workflows/R-CMD-check.yaml)
 [![Status at rOpenSci Software Peer
 Review](https://badges.ropensci.org/743_status.svg)](https://github.com/ropensci/software-review/issues/743)
 <!-- badges: end -->
@@ -36,9 +36,9 @@ RAMEN is designed to be computationally efficient and user-friendly,
 allowing researchers to gain insights into the complex interplay between
 genetics, environment and DNA methylation variability. The package
 includes a detailed
-[tutorial](https://ericknavarrod.github.io/RAMEN/articles/RAMEN.html),
-and individual functions that could be useful for other applications
-beyond the gene-environment contribution analysis.
+[tutorial](https://ropensci.github.io/RAMEN/articles/RAMEN.html), and
+individual functions that could be useful for other applications beyond
+the gene-environment contribution analysis.
 
 RAMEN takes advantage of the fact that DNA methylation levels at nearby
 CpG sites are often correlated, and uses this information to identify
@@ -65,17 +65,19 @@ You can install the latest version of RAMEN from
 # BiocManager::install("IlluminaHumanMethylation450kanno.ilmn12.hg19")
 # BiocManager::install("IlluminaHumanMethylationEPICv2anno.20a1.hg38")
 
-## Install the RAMEN package from GitHub
-BiocManager::install("ErickNavarroD/RAMEN")
+## Install the RAMEN package from R-universe
+install.packages("RAMEN", repos = c('https://ropensci.r-universe.dev', 'https://cloud.r-project.org'))
+## Alternatively install the RAMEN package from GitHub
+BiocManager::install("ropensci/RAMEN")
 ```
 
 ## Usage
 
 For a detailed tutorial on how to use RAMEN, please check the package’s
 vignette, which you can build locally by running
-`BiocManager::install("ErickNavarroD/RAMEN",  build_vignettes = TRUE)`
-or see externally in its
-[website](https://ericknavarrod.github.io/RAMEN/articles/RAMEN.html).
+`BiocManager::install("ropensci/RAMEN",  build_vignettes = TRUE)` or see
+externally in its
+[website](https://ropensci.github.io/RAMEN/articles/RAMEN.html).
 Altogether, RAMEN provides a workflow that takes a set of individuals
 with genome, exposome and DNA methylome information, and generates an
 estimation of the contribution of genetic variants and environmental
@@ -237,59 +239,7 @@ selected_variables <- RAMEN::selectVariables(
   summarized_methyl_VML = summarized_methyl_VML,
   seed = 1
 )
-#> Loading required package: stats4
-#> Loading required package: BiocGenerics
-#> Loading required package: generics
-#> 
-#> Attaching package: 'generics'
-#> The following object is masked from 'package:dplyr':
-#> 
-#>     explain
-#> The following objects are masked from 'package:base':
-#> 
-#>     as.difftime, as.factor, as.ordered, intersect, is.element, setdiff,
-#>     setequal, union
-#> 
-#> Attaching package: 'BiocGenerics'
-#> The following object is masked from 'package:dplyr':
-#> 
-#>     combine
-#> The following objects are masked from 'package:stats':
-#> 
-#>     IQR, mad, sd, var, xtabs
-#> The following objects are masked from 'package:base':
-#> 
-#>     anyDuplicated, aperm, append, as.data.frame, basename, cbind,
-#>     colnames, dirname, do.call, duplicated, eval, evalq, Filter, Find,
-#>     get, grep, grepl, is.unsorted, lapply, Map, mapply, match, mget,
-#>     order, paste, pmax, pmax.int, pmin, pmin.int, Position, rank,
-#>     rbind, Reduce, rownames, sapply, saveRDS, table, tapply, unique,
-#>     unsplit, which.max, which.min
-#> Loading required package: S4Vectors
-#> 
-#> Attaching package: 'S4Vectors'
-#> The following objects are masked from 'package:dplyr':
-#> 
-#>     first, rename
-#> The following object is masked from 'package:utils':
-#> 
-#>     findMatches
-#> The following objects are masked from 'package:base':
-#> 
-#>     expand.grid, I, unname
-#> Loading required package: IRanges
-#> 
-#> Attaching package: 'IRanges'
-#> The following objects are masked from 'package:dplyr':
-#> 
-#>     collapse, desc, slice
-#> Loading required package: Seqinfo
 #> Loading required package: Matrix
-#> 
-#> Attaching package: 'Matrix'
-#> The following object is masked from 'package:S4Vectors':
-#> 
-#>     expand
 #> Loaded glmnet 5.0
 #> Loading required package: rngtools
 
@@ -406,7 +356,7 @@ exposome and methylome) have undergone quality control, pre-processing
 and normalization steps when required. The choice of methods for these
 steps are out of the scope of this package, but we provide some
 resources and guidance in the
-[tutorial](https://ericknavarrod.github.io/RAMEN/articles/RAMEN.html).
+[tutorial](https://ropensci.github.io/RAMEN/articles/RAMEN.html).
 
 ## Variations to the standard workflow
 
@@ -426,7 +376,7 @@ tasks, such as:
 ## How to get help for RAMEN
 
 If you have any question about RAMEN usage, please [post a new
-issue](https://github.com/ErickNavarroD/RAMEN/issues/new/choose) in this
+issue](https://github.com/ropensci/RAMEN/issues/new/choose) in this
 github repository so that future users also benefit from the discussion.
 
 ## Acknowledgments

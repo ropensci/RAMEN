@@ -37,10 +37,10 @@ Want to ask a question in private? Contact the package maintainer by
 ### Propose an idea 💡
 
 Have an idea for a new RAMEN feature? Take a look at the 
-[documentation](https://ericknavarrod.github.io/RAMEN/articles/RAMEN.html) and 
-[issue list](https://github.com/ErickNavarroD/RAMEN/issues) to see if it isn't 
+[documentation](https://ropensci.github.io/RAMEN/articles/RAMEN.html) and 
+[issue list](https://github.com/ropensci/RAMEN/issues) to see if it isn't 
 included or suggested yet. If not, suggest your idea as a 
-[new issue on GitHub][https://github.com/ErickNavarroD/RAMEN/issues/new/choose]. 
+[new issue on GitHub][https://github.com/ropensci/RAMEN/issues/new/choose]. 
 While we can't promise to implement your idea, it helps to:
 
 * Explain in detail how it would work.
@@ -70,7 +70,7 @@ make sure someone from the team agrees that it’s needed.
 
 Using RAMEN and discovered a bug? That's annoying! Don't let others have 
 the same experience and report it as well in an 
-[issue on GitHub](https://github.com/ErickNavarroD/RAMEN/issues/new/choose) so 
+[issue on GitHub](https://github.com/ropensci/RAMEN/issues/new/choose) so 
 we can fix it. If you’ve found a bug, please file an issue that illustrates the 
 bug with a minimal [reprex](https://www.tidyverse.org/help/#reprex) (this will 
 also help you write a unit test, if needed). See our guide on 
@@ -86,7 +86,7 @@ for development.
 
 *   Fork the package and clone onto your computer. If you haven't done this 
     before, we recommend using 
-    `usethis::create_from_github("ErickNavarroD/RAMEN", fork = TRUE)`.
+    `usethis::create_from_github("ropensci/RAMEN", fork = TRUE)`.
 
 *   Install all development dependencies with `devtools::install_dev_deps()`, 
     and then make sure the package passes R CMD check by running 

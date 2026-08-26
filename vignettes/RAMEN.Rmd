@@ -340,8 +340,10 @@ available in the RAMEN package.
 # BiocManager::install("IlluminaHumanMethylation450kanno.ilmn12.hg19")
 # BiocManager::install("IlluminaHumanMethylationEPICv2anno.20a1.hg38")
 
-## Install the RAMEN package from GitHub
-BiocManager::install("ErickNavarroD/RAMEN")
+## Install the RAMEN package from R-universe
+install.packages("RAMEN", repos = c('https://ropensci.r-universe.dev', 'https://cloud.r-project.org'))
+## Alternatively install the RAMEN package from GitHub
+BiocManager::install("ropensci/RAMEN")
 ```
 
 ```{r setup, warning=FALSE, message=FALSE}

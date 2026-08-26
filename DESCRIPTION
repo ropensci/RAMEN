@@ -58,7 +58,7 @@ Depends:
     R (>= 4.5.0)
 LazyData: true
 URL: 
-    https://ericknavarrod.github.io/RAMEN/ ,
-    https://github.com/ErickNavarroD/RAMEN/
-BugReports: https://github.com/ErickNavarroD/RAMEN/issues
-Config/roxygen2/version: 8.0.0
+    https://ropensci.github.io/RAMEN/ ,
+    https://github.com/ropensci/RAMEN/
+BugReports: https://github.com/ropensci/RAMEN/issues
+Config/roxygen2/version: 8.1.0
