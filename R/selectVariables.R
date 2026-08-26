@@ -56,9 +56,10 @@
 #' NAs and it's all numerical, since the LASSO implementation we use does not
 #' support missing or non-numerical values.
 #'
-#' Note: If you want to conduct the variable selection step only in one data set
-#' (e.g., only in the genotype), you can set the other argument to NULL
-#' (e.g., *environmental_matrix = NULL*).
+#' Note: If you want to conduct the variable selection step only on the
+#' genotype, you can set *environmental_matrix = NULL*. In that case only the
+#' genotype model is fitted, and the *selected_env* column of the output is
+#' empty for every VML. A *genotype_matrix* is always required.
 #'
 #'
 #' @param VML_wSNPs GRanges object produced by *RAMEN::findCisSNPs()*. Must
@@ -169,9 +170,11 @@ selectVariables <- function(VML_wSNPs,
   vectors_match(rownames(summarized_methyl_VML), colnames(genotype_matrix),
                object_1_name = "rownames(summarized_methyl_VML)",
                object_2_name = "colnames(genotype_matrix)")
-  vectors_match(rownames(summarized_methyl_VML), rownames(environmental_matrix),
-               object_1_name = "rownames(summarized_methyl_VML)",
-               object_2_name = "rownames(environmental_matrix)")
+  if (!is.null(environmental_matrix)) {
+    vectors_match(rownames(summarized_methyl_VML), rownames(environmental_matrix),
+                 object_1_name = "rownames(summarized_methyl_VML)",
+                 object_2_name = "rownames(environmental_matrix)")
+  }
   if (!is.null(covariates)) {
     vectors_match(rownames(summarized_methyl_VML), rownames(covariates),
                  object_1_name = "rownames(summarized_methyl_VML)",
@@ -180,7 +183,7 @@ selectVariables <- function(VML_wSNPs,
   ## Check that genotype_matrix, environmental_matrix, and covariates (in case
   ## it is provided) have only numeric values and no NA, NaN, Inf
   finite_numeric_check(genotype_matrix)
-  finite_numeric_check(environmental_matrix)
+  if (!is.null(environmental_matrix)) finite_numeric_check(environmental_matrix)
   if (!is.null(covariates)) finite_numeric_check(covariates)
   finite_numeric_check(summarized_methyl_VML)
   ## Set the seed
@@ -230,14 +233,26 @@ selectVariables <- function(VML_wSNPs,
     }
     if (!is.null(environmental_matrix)) {
       environ_VMLi <- environmental_matrix[rownames(summVMLi), , drop = FALSE]
+      environ_genot_VMLi <- cbind(genot_VMLi, environ_VMLi)
+    } else {
+      # With no environmental data there is neither an environment only model
+      # nor a joint one to fit, and the checks further down test environ_VMLi
+      # against NULL to skip them
+      environ_VMLi <- NULL
+      environ_genot_VMLi <- NULL
     }
-    environ_genot_VMLi <- cbind(genot_VMLi, environ_VMLi)
     # Bind covariates data
     if (!is.null(covariates)) {
       covariates_VMLi <- covariates[rownames(summVMLi), , drop = FALSE]
       genot_VMLi <- cbind(genot_VMLi, covariates_VMLi)
-      environ_VMLi <- cbind(environ_VMLi, covariates_VMLi)
-      environ_genot_VMLi <- cbind(environ_genot_VMLi, covariates_VMLi)
+      # Only bind the covariates to the environment objects when there is
+      # environmental data to begin with. Binding them to NULL would turn
+      # environ_VMLi into a covariates only matrix, and the models below would
+      # then be fitted on the covariates alone instead of being skipped
+      if (!is.null(environ_VMLi)) {
+        environ_VMLi <- cbind(environ_VMLi, covariates_VMLi)
+        environ_genot_VMLi <- cbind(environ_genot_VMLi, covariates_VMLi)
+      }
       ncol_covariates <- ncol(covariates_VMLi)
     } else {
       ncol_covariates <- 0

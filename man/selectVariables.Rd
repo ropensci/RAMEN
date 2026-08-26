@@ -121,9 +121,10 @@ options(future.globals.maxSize= +Inf). Please make sure that your data has no
 NAs and it's all numerical, since the LASSO implementation we use does not
 support missing or non-numerical values.
 
-Note: If you want to conduct the variable selection step only in one data set
-(e.g., only in the genotype), you can set the other argument to NULL
-(e.g., \emph{environmental_matrix = NULL}).
+Note: If you want to conduct the variable selection step only on the
+genotype, you can set \emph{environmental_matrix = NULL}. In that case only the
+genotype model is fitted, and the \emph{selected_env} column of the output is
+empty for every VML. A \emph{genotype_matrix} is always required.
 }
 \examples{
 ## Find VML in test data
