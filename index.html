@@ -13,7 +13,7 @@
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="RAMEN: Regional Association of Methylome variability with the Exposome and geNome">
 <meta name="description" content="Using population data, RAMEN identifies which genetic (G), environmental (E), additive (G+E) or interaction (GxE) model better explains DNA methylation levels in genome-wide locations with high DNA methylation variability.">
 <meta property="og:description" content="Using population data, RAMEN identifies which genetic (G), environmental (E), additive (G+E) or interaction (GxE) model better explains DNA methylation levels in genome-wide locations with high DNA methylation variability.">
-<meta property="og:image" content="https://ericknavarrod.github.io/RAMEN/logo.png">
+<meta property="og:image" content="https://ropensci.github.io/RAMEN/logo.png">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -23,7 +23,7 @@
 
     <a class="navbar-brand me-2" href="index.html">RAMEN</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.1.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -40,7 +40,7 @@
 <li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="search.json">
 </form></li>
-<li class="nav-item"><a class="external-link nav-link" href="https://github.com/ErickNavarroD/RAMEN/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/ropensci/RAMEN/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
 
@@ -60,7 +60,7 @@
 <h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
 <p><strong>Regional Association of Methylome variability with the Exposome and geNome</strong> <strong>(RAMEN)</strong> is an R package which goal is to estimate the contribution of genetic variants and environmental exposures to loci with high DNA methylation (DNAme) variability at a genome-wide scale using population data. Characterizing the factors that contribute to DNAme variability is important because DNAme is a key epigenetic mechanism that regulates gene expression and plays an important role in development, disease, and environmental adaptation.</p>
-<p>RAMEN provides a Findable, Accesible, Interoperable and Reusable (FAIR) workflow to conduct gene-environment contribution analyses to high-dimensional DNA methylome data (described in <a href="https://doi.org/10.1186/s13059-025-03864-4" class="external-link">Navarro-Delgado et al. (2025)</a>. Using a blend of traditional statistical methods and machine learning approaches, RAMEN is designed to be computationally efficient and user-friendly, allowing researchers to gain insights into the complex interplay between genetics, environment and DNA methylation variability. The package includes a detailed <a href="https://ericknavarrod.github.io/RAMEN/articles/RAMEN.html">tutorial</a>, and individual functions that could be useful for other applications beyond the gene-environment contribution analysis.</p>
+<p>RAMEN provides a Findable, Accesible, Interoperable and Reusable (FAIR) workflow to conduct gene-environment contribution analyses to high-dimensional DNA methylome data (described in <a href="https://doi.org/10.1186/s13059-025-03864-4" class="external-link">Navarro-Delgado et al. (2025)</a>. Using a blend of traditional statistical methods and machine learning approaches, RAMEN is designed to be computationally efficient and user-friendly, allowing researchers to gain insights into the complex interplay between genetics, environment and DNA methylation variability. The package includes a detailed <a href="https://ropensci.github.io/RAMEN/articles/RAMEN.html">tutorial</a>, and individual functions that could be useful for other applications beyond the gene-environment contribution analysis.</p>
 <p>RAMEN takes advantage of the fact that DNA methylation levels at nearby CpG sites are often correlated, and uses this information to identify Variable Methylated Loci (VML) from microarray DNA methylation data. Then, integrating genomic and exposomic data, it can identify which model out of the following explains best the DNA methylation variability at each VML: genetic (G), environmental (E), additive (G+E) or interactive (GxE).</p>
 </div>
 <div class="section level2">
@@ -79,20 +79,22 @@
 <span><span class="co"># BiocManager::install("IlluminaHumanMethylation450kanno.ilmn12.hg19")</span></span>
 <span><span class="co"># BiocManager::install("IlluminaHumanMethylationEPICv2anno.20a1.hg38")</span></span>
 <span></span>
-<span><span class="co">## Install the RAMEN package from GitHub</span></span>
-<span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://bioconductor.github.io/BiocManager/reference/install.html" class="external-link">install</a></span><span class="op">(</span><span class="st">"ErickNavarroD/RAMEN"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="co">## Install the RAMEN package from R-universe</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"RAMEN"</span>, repos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'https://ropensci.r-universe.dev'</span>, <span class="st">'https://cloud.r-project.org'</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">## Alternatively install the RAMEN package from GitHub</span></span>
+<span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://bioconductor.github.io/BiocManager/reference/install.html" class="external-link">install</a></span><span class="op">(</span><span class="st">"ropensci/RAMEN"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
 </h2>
-<p>For a detailed tutorial on how to use RAMEN, please check the package’s vignette, which you can build locally by running <code>BiocManager::install("ErickNavarroD/RAMEN",  build_vignettes = TRUE)</code> or see externally in its <a href="https://ericknavarrod.github.io/RAMEN/articles/RAMEN.html">website</a>. Altogether, RAMEN provides a workflow that takes a set of individuals with genome, exposome and DNA methylome information, and generates an estimation of the contribution of genetic variants and environmental exposures to its DNA methylation variability. Functions that conduct computationally intensive tasks are compatible with parallel computing.</p>
+<p>For a detailed tutorial on how to use RAMEN, please check the package’s vignette, which you can build locally by running <code>BiocManager::install("ropensci/RAMEN",  build_vignettes = TRUE)</code> or see externally in its <a href="https://ropensci.github.io/RAMEN/articles/RAMEN.html">website</a>. Altogether, RAMEN provides a workflow that takes a set of individuals with genome, exposome and DNA methylome information, and generates an estimation of the contribution of genetic variants and environmental exposures to its DNA methylation variability. Functions that conduct computationally intensive tasks are compatible with parallel computing.</p>
 <p><img src="reference/figures/RAMEN_pipeline.png" width="600"></p>
 <p>In brief, the standard workflow consists of the following steps:</p>
 <ol style="list-style-type: decimal">
 <li>Identify Variable Methylated Loci (VML) with <code><a href="reference/findVML.html">findVML()</a></code>.</li>
 </ol>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ericknavarrod.github.io/RAMEN/">RAMEN</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ropensci.github.io/RAMEN/">RAMEN</a></span><span class="op">)</span></span>
 <span><span class="co">#&gt;          __      _             ___</span></span>
 <span><span class="co">#&gt;          )_)    /_)    )\/)    )_     )\  )</span></span>
 <span><span class="co">#&gt;         / \    / /    (  (    (__    (  \(</span></span>
@@ -234,59 +236,7 @@
 <span>  summarized_methyl_VML <span class="op">=</span> <span class="va">summarized_methyl_VML</span>,</span>
 <span>  seed <span class="op">=</span> <span class="fl">1</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; Loading required package: stats4</span></span>
-<span><span class="co">#&gt; Loading required package: BiocGenerics</span></span>
-<span><span class="co">#&gt; Loading required package: generics</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Attaching package: 'generics'</span></span>
-<span><span class="co">#&gt; The following object is masked from 'package:dplyr':</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     explain</span></span>
-<span><span class="co">#&gt; The following objects are masked from 'package:base':</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     as.difftime, as.factor, as.ordered, intersect, is.element, setdiff,</span></span>
-<span><span class="co">#&gt;     setequal, union</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Attaching package: 'BiocGenerics'</span></span>
-<span><span class="co">#&gt; The following object is masked from 'package:dplyr':</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     combine</span></span>
-<span><span class="co">#&gt; The following objects are masked from 'package:stats':</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     IQR, mad, sd, var, xtabs</span></span>
-<span><span class="co">#&gt; The following objects are masked from 'package:base':</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     anyDuplicated, aperm, append, as.data.frame, basename, cbind,</span></span>
-<span><span class="co">#&gt;     colnames, dirname, do.call, duplicated, eval, evalq, Filter, Find,</span></span>
-<span><span class="co">#&gt;     get, grep, grepl, is.unsorted, lapply, Map, mapply, match, mget,</span></span>
-<span><span class="co">#&gt;     order, paste, pmax, pmax.int, pmin, pmin.int, Position, rank,</span></span>
-<span><span class="co">#&gt;     rbind, Reduce, rownames, sapply, saveRDS, table, tapply, unique,</span></span>
-<span><span class="co">#&gt;     unsplit, which.max, which.min</span></span>
-<span><span class="co">#&gt; Loading required package: S4Vectors</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Attaching package: 'S4Vectors'</span></span>
-<span><span class="co">#&gt; The following objects are masked from 'package:dplyr':</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     first, rename</span></span>
-<span><span class="co">#&gt; The following object is masked from 'package:utils':</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     findMatches</span></span>
-<span><span class="co">#&gt; The following objects are masked from 'package:base':</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     expand.grid, I, unname</span></span>
-<span><span class="co">#&gt; Loading required package: IRanges</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Attaching package: 'IRanges'</span></span>
-<span><span class="co">#&gt; The following objects are masked from 'package:dplyr':</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     collapse, desc, slice</span></span>
-<span><span class="co">#&gt; Loading required package: Seqinfo</span></span>
 <span><span class="co">#&gt; Loading required package: Matrix</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Attaching package: 'Matrix'</span></span>
-<span><span class="co">#&gt; The following object is masked from 'package:S4Vectors':</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     expand</span></span>
 <span><span class="co">#&gt; Loaded glmnet 5.0</span></span>
 <span><span class="co">#&gt; Loading required package: rngtools</span></span>
 <span></span>
@@ -389,7 +339,7 @@
 <span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">"VML"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_classic</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-7-1.png" alt="" width="100%"></p>
-<p>It is worth mentioning that RAMEN assumes that all data sets (genome, exposome and methylome) have undergone quality control, pre-processing and normalization steps when required. The choice of methods for these steps are out of the scope of this package, but we provide some resources and guidance in the <a href="https://ericknavarrod.github.io/RAMEN/articles/RAMEN.html">tutorial</a>.</p>
+<p>It is worth mentioning that RAMEN assumes that all data sets (genome, exposome and methylome) have undergone quality control, pre-processing and normalization steps when required. The choice of methods for these steps are out of the scope of this package, but we provide some resources and guidance in the <a href="https://ropensci.github.io/RAMEN/articles/RAMEN.html">tutorial</a>.</p>
 </div>
 <div class="section level2">
 <h2 id="variations-to-the-standard-workflow">Variations to the standard workflow<a class="anchor" aria-label="anchor" href="#variations-to-the-standard-workflow"></a>
@@ -405,7 +355,7 @@
 <div class="section level2">
 <h2 id="how-to-get-help-for-ramen">How to get help for RAMEN<a class="anchor" aria-label="anchor" href="#how-to-get-help-for-ramen"></a>
 </h2>
-<p>If you have any question about RAMEN usage, please <a href="https://github.com/ErickNavarroD/RAMEN/issues/new/choose" class="external-link">post a new issue</a> in this github repository so that future users also benefit from the discussion.</p>
+<p>If you have any question about RAMEN usage, please <a href="https://github.com/ropensci/RAMEN/issues/new/choose" class="external-link">post a new issue</a> in this github repository so that future users also benefit from the discussion.</p>
 </div>
 <div class="section level2">
 <h2 id="acknowledgments">Acknowledgments<a class="anchor" aria-label="anchor" href="#acknowledgments"></a>
@@ -440,8 +390,8 @@
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
-<li><a href="https://github.com/ErickNavarroD/RAMEN/" class="external-link">Browse source code</a></li>
-<li><a href="https://github.com/ErickNavarroD/RAMEN/issues" class="external-link">Report a bug</a></li>
+<li><a href="https://github.com/ropensci/RAMEN/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/ropensci/RAMEN/issues" class="external-link">Report a bug</a></li>
 </ul>
 </div>
 
@@ -483,8 +433,8 @@
 <li><a href="https://www.repostatus.org/#active" class="external-link"><img src="https://www.repostatus.org/badges/latest/active.svg" alt="status"></a></li>
 <li><a href="https://zenodo.org/badge/latestdoi/585986641" class="external-link"><img src="https://zenodo.org/badge/585986641.svg" alt="DOI"></a></li>
 <li><a href="https://lifecycle.r-lib.org/articles/stages.html#stable" class="external-link"><img src="https://img.shields.io/badge/lifecycle-stable-brightgreen.svg" alt="Lifecycle: stable"></a></li>
-<li><a href="https://app.codecov.io/gh/ErickNavarroD/RAMEN" class="external-link"><img src="https://codecov.io/gh/ErickNavarroD/RAMEN/graph/badge.svg" alt="Codecov test coverage"></a></li>
-<li><a href="https://github.com/ErickNavarroD/RAMEN/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/ErickNavarroD/RAMEN/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
+<li><a href="https://app.codecov.io/gh/ropensci/RAMEN" class="external-link"><img src="https://codecov.io/gh/ropensci/RAMEN/graph/badge.svg" alt="Codecov test coverage"></a></li>
+<li><a href="https://github.com/ropensci/RAMEN/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/ropensci/RAMEN/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
 <li><a href="https://github.com/ropensci/software-review/issues/743" class="external-link"><img src="https://badges.ropensci.org/743_status.svg" alt="Status at rOpenSci Software Peer Review"></a></li>
 </ul>
 </div>

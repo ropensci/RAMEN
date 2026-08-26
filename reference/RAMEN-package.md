@@ -9,11 +9,11 @@ variability.
 
 Useful links:
 
-- <https://ericknavarrod.github.io/RAMEN/>
+- <https://ropensci.github.io/RAMEN/>
 
-- <https://github.com/ErickNavarroD/RAMEN/>
+- <https://github.com/ropensci/RAMEN/>
 
-- Report bugs at <https://github.com/ErickNavarroD/RAMEN/issues>
+- Report bugs at <https://github.com/ropensci/RAMEN/issues>
 
 ## Author
 

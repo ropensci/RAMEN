@@ -20,7 +20,7 @@
 ## Citation
 
 Source:
-[`inst/CITATION`](https://github.com/ErickNavarroD/RAMEN/blob/v2.1.1/inst/CITATION)
+[`inst/CITATION`](https://github.com/ropensci/RAMEN/blob/main/inst/CITATION)
 
 Navarro-Delgado E, Edwards K, Fu M, Merrill S, Konwar C, MacIsaac J, Lin
 D, Mandhane P, Simons E, Subbarao P, Moraes T, Lahti J, Miller G, Binder
@@ -43,12 +43,12 @@ Biology*, **26**(1), 29.
 
 Navarro-Delgado E, Korthauer K, Kobor M (2025). *RAMEN: RAMEN: Regional
 Association of DNA Methylome variability with the Exposome and geNome*.
-R package version 2.0.0, <https://github.com/ErickNavarroD/RAMEN>.
+R package version 2.1.2, <https://github.com/ropensci/RAMEN>.
 
     @Manual{RAMEN,
       title = {RAMEN: RAMEN: Regional Association of DNA Methylome variability with the Exposome and geNome},
       author = {Erick I. Navarro-Delgado and Keegan Korthauer and Michael S. Kobor},
-      note = {R package version 2.0.0},
+      note = {R package version 2.1.2},
       year = {2025},
-      url = {https://github.com/ErickNavarroD/RAMEN},
+      url = {https://github.com/ropensci/RAMEN},
     }

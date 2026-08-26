@@ -1,5 +1,66 @@
 # Changelog
 
+## RAMEN 2.1.2
+
+This patch focuses on the running time and memory usage of the package,
+and fixes a couple of bugs:
+
+- Fixed a bug in
+  [`lmGE()`](https://ropensci.github.io/RAMEN/reference/lmGE.md) where
+  the function would throw an error when a covariate had a non-syntactic
+  name (e.g. “cell type”). This happened whenever the winning model was
+  G+E or GxE.
+- Fixed a bug in
+  [`selectVariables()`](https://ropensci.github.io/RAMEN/reference/selectVariables.md)
+  where setting `environmental_matrix = NULL`, which the documentation
+  describes as the way to run the variable selection on the genotype
+  alone, would throw an error instead. The documentation of that
+  argument was also narrowed: a `genotype_matrix` is always required,
+  and only the environmental one can be omitted.
+
+The performance work touches
+[`findVML()`](https://ropensci.github.io/RAMEN/reference/findVML.md),
+[`medCorVMR()`](https://ropensci.github.io/RAMEN/reference/medCorVMR.md),
+[`summarizeVML()`](https://ropensci.github.io/RAMEN/reference/summarizeVML.md),
+[`selectVariables()`](https://ropensci.github.io/RAMEN/reference/selectVariables.md),
+[`lmGE()`](https://ropensci.github.io/RAMEN/reference/lmGE.md) and
+[`nullDistGE()`](https://ropensci.github.io/RAMEN/reference/nullDistGE.md).
+Most of it resolves look-ups that were being repeated once per locus a
+single time up front instead, and avoids keeping unnecessary copies of
+the genotype and methylation objects. Both the running time and the
+memory each parallel worker needs are reduced.
+
+Outputs are unchanged, with one exception:
+[`summarizeVML()`](https://ropensci.github.io/RAMEN/reference/summarizeVML.md)
+now computes medians with
+[`matrixStats::colMedians()`](https://rdrr.io/pkg/matrixStats/man/rowMedians.html).
+For VML with an even number of probes the two middle values are averaged
+slightly differently than by
+[`median()`](https://rdrr.io/r/stats/median.html), so results can differ
+in the last representable digit (a relative difference of about one
+machine epsilon). VML with an odd number of probes, including all sVMPs,
+are unaffected.
+
+The documentation of
+[`nullDistGE()`](https://ropensci.github.io/RAMEN/reference/nullDistGE.md)
+now notes that the same seed is handed to
+[`selectVariables()`](https://ropensci.github.io/RAMEN/reference/selectVariables.md)
+in every permutation, so the cross-validation folds are shared across
+permutations.
+
+On the testing side, a test was added checking that the variables
+[`selectVariables()`](https://ropensci.github.io/RAMEN/reference/selectVariables.md)
+reports are the ones the underlying LASSO fits select, and the tests
+that register a parallel back-end now restore the sequential one when
+they finish, so that the back-end no longer leaks into the test files
+that run after them.
+
+Finally, the repository was transferred to ropensci after passing the
+peer review process. All repository and website links were updated to
+reflect this change.
+
+The changes in this patch were conducted with help of Claude Opus 5.
+
 ## RAMEN 2.1.1
 
 This patch fixes some minor bugs in RAMEN including:
@@ -7,20 +68,20 @@ This patch fixes some minor bugs in RAMEN including:
 - Improved argument check - empty objects now throw errors, and all
   functions check for matched IDs across all objects.
 - Fixed bug in
-  [`nullDistGE()`](https://ericknavarrod.github.io/RAMEN/reference/nullDistGE.md)
+  [`nullDistGE()`](https://ropensci.github.io/RAMEN/reference/nullDistGE.md)
   where the seed was fixed to 1 during the
-  [`selectVariables()`](https://ericknavarrod.github.io/RAMEN/reference/selectVariables.md)
+  [`selectVariables()`](https://ropensci.github.io/RAMEN/reference/selectVariables.md)
   step instead of using the seed argument provided.
 - Fixed a bug in
-  [`selectVariables()`](https://ericknavarrod.github.io/RAMEN/reference/selectVariables.md)
+  [`selectVariables()`](https://ropensci.github.io/RAMEN/reference/selectVariables.md)
   where the function would throw an error when, in the absence of
   covariates, a VML had only 1 SNP. In that case, the variable selection
   for G is now not conducted and the same SNP is returned.
 - Fixed a bug in
-  [`lmGE()`](https://ericknavarrod.github.io/RAMEN/reference/lmGE.md)
-  where the function would throw an error when no covariates were fed
-  into the function.
-- [`summarizeVML()`](https://ericknavarrod.github.io/RAMEN/reference/summarizeVML.md)
+  [`lmGE()`](https://ropensci.github.io/RAMEN/reference/lmGE.md) where
+  the function would throw an error when no covariates were fed into the
+  function.
+- [`summarizeVML()`](https://ropensci.github.io/RAMEN/reference/summarizeVML.md)
   now explicitly errors if the `VML` object has duplicate `VML_index`
   values, instead of silently merging them.
 
@@ -39,26 +100,26 @@ variability scoring, and VML summarization), with no change in output.
 
 This patch presents no changes on the user’s end, other than the
 dependency change and the
-[`summarizeVML()`](https://ericknavarrod.github.io/RAMEN/reference/summarizeVML.md)
+[`summarizeVML()`](https://ropensci.github.io/RAMEN/reference/summarizeVML.md)
 duplicate-index check noted above.
 
 ## RAMEN 2.1.0 - July 14, 2026
 
 This minor version presents a couple of changes that improve the
 integration of RAMEN with GenomicRanges objects and Bioconductor: -
-[`findVML()`](https://ericknavarrod.github.io/RAMEN/reference/findVML.md)
+[`findVML()`](https://ropensci.github.io/RAMEN/reference/findVML.md)
 outputs a GRanges object for the identified VML instead of a data
 frame. - Downstream functions (i.e.,
-[`summarizeVML()`](https://ericknavarrod.github.io/RAMEN/reference/summarizeVML.md),
-[`findCisSNPs()`](https://ericknavarrod.github.io/RAMEN/reference/findCisSNPs.md),
-[`selectVariables()`](https://ericknavarrod.github.io/RAMEN/reference/selectVariables.md),
-[`medCorVMR()`](https://ericknavarrod.github.io/RAMEN/reference/medCorVMR.md)
+[`summarizeVML()`](https://ropensci.github.io/RAMEN/reference/summarizeVML.md),
+[`findCisSNPs()`](https://ropensci.github.io/RAMEN/reference/findCisSNPs.md),
+[`selectVariables()`](https://ropensci.github.io/RAMEN/reference/selectVariables.md),
+[`medCorVMR()`](https://ropensci.github.io/RAMEN/reference/medCorVMR.md)
 and
-[`nullDistGE()`](https://ericknavarrod.github.io/RAMEN/reference/nullDistGE.md))
+[`nullDistGE()`](https://ropensci.github.io/RAMEN/reference/nullDistGE.md))
 now take GRanges objects as an input, instead of data frames. The
 argument name changed from “VML_df” to “VML”. When appropriate, the
 output is now also a GRanges object. -
-[`summarizeVML()`](https://ericknavarrod.github.io/RAMEN/reference/summarizeVML.md)
+[`summarizeVML()`](https://ropensci.github.io/RAMEN/reference/summarizeVML.md)
 now outputs a matrix instead of a data frame.
 
 In addition to that, the Vignette has been improved. New sections have
@@ -121,12 +182,12 @@ Terminology update {.table}
 
 - To reflect the terminology change, the following functions had a name
   change:
-  [`findVML()`](https://ericknavarrod.github.io/RAMEN/reference/findVML.md)
+  [`findVML()`](https://ropensci.github.io/RAMEN/reference/findVML.md)
   (previously named `findVMRs()` in RAMEN v1) and
-  [`summarizeVML()`](https://ericknavarrod.github.io/RAMEN/reference/summarizeVML.md)
+  [`summarizeVML()`](https://ropensci.github.io/RAMEN/reference/summarizeVML.md)
   (previously named `summarizeVMRs()` in RAMEN v1).
 
-- [`findVML()`](https://ericknavarrod.github.io/RAMEN/reference/findVML.md):
+- [`findVML()`](https://ropensci.github.io/RAMEN/reference/findVML.md):
 
   - Output: list does not separate VMRs and sVMPs into two different
     list elements anymore. Now, a single element (“VML”) is returned in
@@ -146,13 +207,13 @@ Terminology update {.table}
     tissue and developmental stage) to discriminate Highly Variable
     Probes, which are then grouped into VML. This method is the default
     one now. For more information please see the
-    [`findVML()`](https://ericknavarrod.github.io/RAMEN/reference/findVML.md)
+    [`findVML()`](https://ropensci.github.io/RAMEN/reference/findVML.md)
     documentation and the package vignette. The previously default
     method to identify Highly Variable Probes (top 10% of probes with
     the highest variance in the data set) is still available using the
     argument `var_distribution = "all"`.
 
-- [`nullDistGE()`](https://ericknavarrod.github.io/RAMEN/reference/nullDistGE.md):
+- [`nullDistGE()`](https://ropensci.github.io/RAMEN/reference/nullDistGE.md):
   Prints messages to keep track of the progress. Fixed a bug that made
   doFuture parallelization strategies crash.
 

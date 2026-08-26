@@ -2,4 +2,4 @@
 
 ### All vignettes
 
-- [RAMEN](https://ericknavarrod.github.io/RAMEN/articles/RAMEN.md):
+- [RAMEN](https://ropensci.github.io/RAMEN/articles/RAMEN.md):

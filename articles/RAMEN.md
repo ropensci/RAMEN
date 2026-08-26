@@ -48,20 +48,20 @@ The main [gene-environment interaction
 modeling](#gene-environment-interaction-analysis) pipeline is conducted
 though six core functions:
 
-- [`findVML()`](https://ericknavarrod.github.io/RAMEN/reference/findVML.md)
+- [`findVML()`](https://ropensci.github.io/RAMEN/reference/findVML.md)
   identifies Variable Methylated Regions (VML) in microarrays
-- [`summarizeVML()`](https://ericknavarrod.github.io/RAMEN/reference/summarizeVML.md)summarizes
+- [`summarizeVML()`](https://ropensci.github.io/RAMEN/reference/summarizeVML.md)summarizes
   the regional methylation state of each VML
-- [`findCisSNPs()`](https://ericknavarrod.github.io/RAMEN/reference/findCisSNPs.md)
+- [`findCisSNPs()`](https://ropensci.github.io/RAMEN/reference/findCisSNPs.md)
   identifies the SNPs in *cis* of each VML
-- [`selectVariables()`](https://ericknavarrod.github.io/RAMEN/reference/selectVariables.md)
+- [`selectVariables()`](https://ropensci.github.io/RAMEN/reference/selectVariables.md)
   conducts a LASSO-based variable selection strategy to identify
   potentially relevant *cis* SNPs and environmental variables
-- [`lmGE()`](https://ericknavarrod.github.io/RAMEN/reference/lmGE.md)
-  fits linear single-variable genetic (G) and environmental (E), and
-  pairwise additive (G+E) and interaction (GxE) linear models and select
-  the best explanatory model per VML.
-- [`nullDistGE()`](https://ericknavarrod.github.io/RAMEN/reference/nullDistGE.md)
+- [`lmGE()`](https://ropensci.github.io/RAMEN/reference/lmGE.md) fits
+  linear single-variable genetic (G) and environmental (E), and pairwise
+  additive (G+E) and interaction (GxE) linear models and select the best
+  explanatory model per VML.
+- [`nullDistGE()`](https://ropensci.github.io/RAMEN/reference/nullDistGE.md)
   simulates a delta R squared null distribution of G and E effects on
   DNAme variability. Useful for filtering out poor-performing best
   explanatory models selected by *lmGE()*.
@@ -118,12 +118,12 @@ the data internally that pre-processing choices should be made
 compatible with:
 
 - Variance stability in DNAme data:
-  [`RAMEN::findVML()`](https://ericknavarrod.github.io/RAMEN/reference/findVML.md)
+  [`RAMEN::findVML()`](https://ropensci.github.io/RAMEN/reference/findVML.md)
   identifies variably methylated loci (VML) by comparing each probe’s
   variance (or MAD) against a percentile threshold derived from a
   reference distribution of probes expected to show little biological
   variability
-  ([`RAMEN::ultrastable_cpgs`](https://ericknavarrod.github.io/RAMEN/reference/ultrastable_cpgs.md)).
+  ([`RAMEN::ultrastable_cpgs`](https://ropensci.github.io/RAMEN/reference/ultrastable_cpgs.md)).
   This comparison assumes that variance is on a comparable scale across
   probes and samples, so pre-processing steps must not compress or
   inflate variance differently for the ultrastable (i.e. noise variance)
@@ -136,7 +136,7 @@ compatible with:
     rank-based mapping compresses variance more for probes with more
     extreme values.
 - Normality:
-  [`RAMEN::lmGE()`](https://ericknavarrod.github.io/RAMEN/reference/lmGE.md)
+  [`RAMEN::lmGE()`](https://ropensci.github.io/RAMEN/reference/lmGE.md)
   relies on [`stats::lm()`](https://rdrr.io/r/stats/lm.html) to compare
   candidate models via AIC/BIC; this comparison is most valid when
   residuals are approximately normally distributed, so strongly skewed
@@ -273,12 +273,12 @@ following into account:
 There is no need to standardize exposome variables before providing them
 to RAMEN, even though they typically come in very different scales.
 During variable selection,
-[`RAMEN::selectVariables()`](https://ericknavarrod.github.io/RAMEN/reference/selectVariables.md)
+[`RAMEN::selectVariables()`](https://ropensci.github.io/RAMEN/reference/selectVariables.md)
 uses `glmnet` for its LASSO-based selection, which by default
 (`standardize = TRUE`) z-scores all predictors before fitting and
 un-standardizes the resulting coefficients, so scale differences across
 variables do not bias which ones get selected. Model comparison in
-[`RAMEN::lmGE()`](https://ericknavarrod.github.io/RAMEN/reference/lmGE.md)
+[`RAMEN::lmGE()`](https://ropensci.github.io/RAMEN/reference/lmGE.md)
 does not require standardization either, since AIC/BIC/R2 are invariant
 to a linear rescaling of a predictor.
 
@@ -346,8 +346,10 @@ These data sets are already available in the RAMEN package.
 # BiocManager::install("IlluminaHumanMethylation450kanno.ilmn12.hg19")
 # BiocManager::install("IlluminaHumanMethylationEPICv2anno.20a1.hg38")
 
-## Install the RAMEN package from GitHub
-BiocManager::install("ErickNavarroD/RAMEN")
+## Install the RAMEN package from R-universe
+install.packages("RAMEN", repos = c('https://ropensci.r-universe.dev', 'https://cloud.r-project.org'))
+## Alternatively install the RAMEN package from GitHub
+BiocManager::install("ropensci/RAMEN")
 ```
 
 ``` r
@@ -427,7 +429,7 @@ RAMEN identifies 2 categories of VML:
 
 The first step is to identify **Variable Methylated Loci**(VML) using
 the
-[`RAMEN::findVML()`](https://ericknavarrod.github.io/RAMEN/reference/findVML.md)
+[`RAMEN::findVML()`](https://ropensci.github.io/RAMEN/reference/findVML.md)
 function. This function uses GenomicRanges::reduce() to group the
 regions, which is strand-sensitive. In the Illumina microarrays, the
 MAPINFO for all the probes is usually provided as for the + strand. If
@@ -564,10 +566,6 @@ VML <- RAMEN::findVML(
   max_distance = 1000
 )
 #> Identifying Highly Variable Probes...
-#> Warning: replacing previous import 'S4Arrays::makeNindexFromArrayViewport' by
-#> 'DelayedArray::makeNindexFromArrayViewport' when loading 'SummarizedExperiment'
-#> Warning: replacing previous import 'S4Arrays::makeNindexFromArrayViewport' by
-#> 'DelayedArray::makeNindexFromArrayViewport' when loading 'HDF5Array'
 #> Setting options('download.file.method.GEOquery'='auto')
 #> Setting options('GEOquery.inmemory.gpl'=FALSE)
 #> Identifying sparse Variable Methylated Probes
@@ -619,7 +617,7 @@ We can sometimes see the following warning message:
 ```
 
 This is printed in the screen just to warn us that
-[`RAMEN::findVML()`](https://ericknavarrod.github.io/RAMEN/reference/findVML.md)
+[`RAMEN::findVML()`](https://ropensci.github.io/RAMEN/reference/findVML.md)
 is running sequentially. RAMEN supports parallel computing for increased
 speed, which is really important when working with real data sets that
 tend to contain information from thousands of probes. To do so, you have
@@ -652,7 +650,7 @@ data.frame(VML_gr) |>
 
 Next, we want to summarize the DNAme level of each VML per individual.
 To do this, we use
-[`RAMEN::summarizeVML()`](https://ericknavarrod.github.io/RAMEN/reference/summarizeVML.md).
+[`RAMEN::summarizeVML()`](https://ropensci.github.io/RAMEN/reference/summarizeVML.md).
 For sparse VMPs, there is nothing to summarize as we have one probe per
 loci, so the DNAme level of the corresponding probe is returned. For
 VMRs, the median DNAme level of all the probes in the region is returned
@@ -792,7 +790,7 @@ mean(VML_cis_snps$surrounding_SNPs)
 The following stage in the pipeline is to screen the available variables
 in our environmental and *cis* SNPs data sets to identify the
 potentially relevant ones. This is achieved with the
-[`RAMEN::selectVariables()`](https://ericknavarrod.github.io/RAMEN/reference/selectVariables.md)
+[`RAMEN::selectVariables()`](https://ropensci.github.io/RAMEN/reference/selectVariables.md)
 function. This function uses a data-driven approach based on LASSO,
 which is an embedded variable selection method commonly used in machine
 learning.
@@ -864,62 +862,9 @@ selected_variables <- RAMEN::selectVariables(
   summarized_methyl_VML = summarized_methyl_VML,
   seed = 1
 )
-#> Loading required package: stats4
-#> Loading required package: BiocGenerics
-#> Loading required package: generics
-#> 
-#> Attaching package: 'generics'
-#> The following object is masked from 'package:dplyr':
-#> 
-#>     explain
-#> The following objects are masked from 'package:base':
-#> 
-#>     as.difftime, as.factor, as.ordered, intersect, is.element, setdiff,
-#>     setequal, union
-#> 
-#> Attaching package: 'BiocGenerics'
-#> The following object is masked from 'package:dplyr':
-#> 
-#>     combine
-#> The following objects are masked from 'package:stats':
-#> 
-#>     IQR, mad, sd, var, xtabs
-#> The following objects are masked from 'package:base':
-#> 
-#>     anyDuplicated, aperm, append, as.data.frame, basename, cbind,
-#>     colnames, dirname, do.call, duplicated, eval, evalq, Filter, Find,
-#>     get, grep, grepl, is.unsorted, lapply, Map, mapply, match, mget,
-#>     order, paste, pmax, pmax.int, pmin, pmin.int, Position, rank,
-#>     rbind, Reduce, rownames, sapply, saveRDS, table, tapply, unique,
-#>     unsplit, which.max, which.min
-#> Loading required package: S4Vectors
-#> 
-#> Attaching package: 'S4Vectors'
-#> The following object is masked from 'package:tidyr':
-#> 
-#>     expand
-#> The following objects are masked from 'package:dplyr':
-#> 
-#>     first, rename
-#> The following object is masked from 'package:utils':
-#> 
-#>     findMatches
-#> The following objects are masked from 'package:base':
-#> 
-#>     expand.grid, I, unname
-#> Loading required package: IRanges
-#> 
-#> Attaching package: 'IRanges'
-#> The following objects are masked from 'package:dplyr':
-#> 
-#>     collapse, desc, slice
-#> Loading required package: Seqinfo
 #> Loading required package: Matrix
 #> 
 #> Attaching package: 'Matrix'
-#> The following object is masked from 'package:S4Vectors':
-#> 
-#>     expand
 #> The following objects are masked from 'package:tidyr':
 #> 
 #>     expand, pack, unpack
@@ -933,7 +878,7 @@ argument. As a note, setting a seed inside of this function modifies the
 seed globally (which is R’s default behavior).
 
 The output of
-[`RAMEN::selectVariables()`](https://ericknavarrod.github.io/RAMEN/reference/selectVariables.md)
+[`RAMEN::selectVariables()`](https://ropensci.github.io/RAMEN/reference/selectVariables.md)
 is an object with the VML index, and the G and E variables selected for
 each VML.
 
@@ -948,7 +893,7 @@ dplyr::glimpse(selected_variables)
 ```
 
 We can see how using
-[`RAMEN::selectVariables()`](https://ericknavarrod.github.io/RAMEN/reference/selectVariables.md)
+[`RAMEN::selectVariables()`](https://ropensci.github.io/RAMEN/reference/selectVariables.md)
 reduces the number of variables (originally 100 environmental variables
 and 771.3644068 SNPs per VML on average as seen in Figure
 @ref(fig:cissnps)).
@@ -1022,7 +967,7 @@ data set that provide similar information.
 Now that we have selected the list of potentially relevant G and E
 variables, we will fit the models mentioned in Table
 @ref(tab:modelstable) using the
-[`RAMEN::lmGE()`](https://ericknavarrod.github.io/RAMEN/reference/lmGE.md)
+[`RAMEN::lmGE()`](https://ropensci.github.io/RAMEN/reference/lmGE.md)
 function. This function fits, for each VML, G and E models with all of
 the variables selected, as well as all their possible pairwise
 combinations of G+E and GxE.
@@ -1047,7 +992,7 @@ model per group (G,E,G+E pr GxE), the model with the lowest AIC or BIC
 will be declared as the winning model.
 
 Additionally,
-[`RAMEN::lmGE()`](https://ericknavarrod.github.io/RAMEN/reference/lmGE.md)
+[`RAMEN::lmGE()`](https://ropensci.github.io/RAMEN/reference/lmGE.md)
 conducts a variance decomposition analysis, so that the relative R2
 contribution of each of the variables of interest (G, E and GxE) is
 reported. This decomposition is done using the
@@ -1087,8 +1032,8 @@ dplyr::glimpse(lmge_res)
 ```
 
 The output of
-[`RAMEN::lmGE()`](https://ericknavarrod.github.io/RAMEN/reference/lmGE.md)
-is a data frame with the following 13 columns:
+[`RAMEN::lmGE()`](https://ropensci.github.io/RAMEN/reference/lmGE.md) is
+a data frame with the following 13 columns:
 
 - *VML_index*: The index of the respective VML
 - *model_group*: The selected winning model (G, E, G+E or GxE). For the
@@ -1137,10 +1082,10 @@ winning models might perform no better than what we would expect by
 chance. Therefore, The last step of the pipeline is to compute a null
 distribution to remove the best models that are likely to be so by
 chance. To do so, we use
-[`RAMEN::nullDistGE()`](https://ericknavarrod.github.io/RAMEN/reference/nullDistGE.md).
+[`RAMEN::nullDistGE()`](https://ropensci.github.io/RAMEN/reference/nullDistGE.md).
 
 The goal of
-[`RAMEN::nullDistGE()`](https://ericknavarrod.github.io/RAMEN/reference/nullDistGE.md)
+[`RAMEN::nullDistGE()`](https://ropensci.github.io/RAMEN/reference/nullDistGE.md)
 is to create a distribution of how much the R2 increases when we include
 the SNP or Environmentl Exposure (EE) or SNPxEE variables **when G and E
 having no associations with DNAme.** This distribution that we obtain
@@ -1166,7 +1111,7 @@ dataset. This assumption decreases significantly the number of
 permutations required to create a null distribution and reduces the
 computational time. For further information on how this is done please
 read the RAMEN paper (Navarro-Delgado EI *et al.*, 2025).
-[`RAMEN::nullDistGE()`](https://ericknavarrod.github.io/RAMEN/reference/nullDistGE.md)
+[`RAMEN::nullDistGE()`](https://ropensci.github.io/RAMEN/reference/nullDistGE.md)
 shuffles the G and E variables in the dataset and runs findVML,
 selectVariables() and lmGE(). This is repeated as many times as
 indicated in the *permutations* parameter. The number of permutations
@@ -1333,9 +1278,9 @@ models.
 We recommend the users of the package to include the number of VML with
 Basal models (i.e. where we could not find a conclusive best model in
 the final results either because no variables were selected with
-[`RAMEN::selectVariables()`](https://ericknavarrod.github.io/RAMEN/reference/selectVariables.md)
+[`RAMEN::selectVariables()`](https://ropensci.github.io/RAMEN/reference/selectVariables.md)
 or because they did not pass the R2_difference threshold obtained with
-[`RAMEN::nullDistGE()`](https://ericknavarrod.github.io/RAMEN/reference/nullDistGE.md)).
+[`RAMEN::nullDistGE()`](https://ropensci.github.io/RAMEN/reference/nullDistGE.md)).
 
 ``` r
 
@@ -1406,7 +1351,7 @@ analyses, such as:
 - Reduction of tests prior to an EWAS or differential methylation
   analysis  
   with
-  [`RAMEN::findVML()`](https://ericknavarrod.github.io/RAMEN/reference/findVML.md)(i.e.,
+  [`RAMEN::findVML()`](https://ropensci.github.io/RAMEN/reference/findVML.md)(i.e.,
   conducting the analysis on identified VML which
 
 1.  reduces redundant tests by grouping nearby correlated CpGs, and 2)
@@ -1414,21 +1359,21 @@ analyses, such as:
     multiple hypothesis testing burden.
 
 - Summarize a DNAme region of interest with
-  [`RAMEN::summarizeVML()`](https://ericknavarrod.github.io/RAMEN/reference/summarizeVML.md)
+  [`RAMEN::summarizeVML()`](https://ropensci.github.io/RAMEN/reference/summarizeVML.md)
 - Easily conduct variable selection in high-dimensional data sets to
   identify potentially relevant variables from one or two independent
   data sets with
-  [`RAMEN::selectVariables()`](https://ericknavarrod.github.io/RAMEN/reference/selectVariables.md).
+  [`RAMEN::selectVariables()`](https://ropensci.github.io/RAMEN/reference/selectVariables.md).
 - Fit additive and interaction models given two sets of variables of
   interest (not limited to G and E) and select the best explanatory
   model for DNAme data with
-  [`RAMEN::selectVariables()`](https://ericknavarrod.github.io/RAMEN/reference/selectVariables.md)
+  [`RAMEN::selectVariables()`](https://ropensci.github.io/RAMEN/reference/selectVariables.md)
   and
-  [`RAMEN::lmGE()`](https://ericknavarrod.github.io/RAMEN/reference/lmGE.md)
+  [`RAMEN::lmGE()`](https://ropensci.github.io/RAMEN/reference/lmGE.md)
   (e.g. exploring the interaction between two environmental dimensions
   and their contribution to DNAme variability, or epistasis effects).
 - Quickly identify SNPs in *cis* of CpG probes with
-  [`RAMEN::findCisSNPs()`](https://ericknavarrod.github.io/RAMEN/reference/findCisSNPs.md)
+  [`RAMEN::findCisSNPs()`](https://ropensci.github.io/RAMEN/reference/findCisSNPs.md)
 - Get the median correlation of probes in regions of interest (with
   `RAMEN::medCorVML()`).
 
@@ -1473,12 +1418,12 @@ readRDS(file = "path/selected_variables.Rds")
 ### How can I set up the parallel backend?
 
 Most functions in RAMEN are compatible with parallel computing
-([`findVML()`](https://ericknavarrod.github.io/RAMEN/reference/findVML.md),
-[`medCorVMR()`](https://ericknavarrod.github.io/RAMEN/reference/medCorVMR.md),
-[`summarizeVML()`](https://ericknavarrod.github.io/RAMEN/reference/summarizeVML.md),
-[`selectVariables()`](https://ericknavarrod.github.io/RAMEN/reference/selectVariables.md),
-[`lmGE()`](https://ericknavarrod.github.io/RAMEN/reference/lmGE.md),
-[`nullDistGE()`](https://ericknavarrod.github.io/RAMEN/reference/nullDistGE.md)).
+([`findVML()`](https://ropensci.github.io/RAMEN/reference/findVML.md),
+[`medCorVMR()`](https://ropensci.github.io/RAMEN/reference/medCorVMR.md),
+[`summarizeVML()`](https://ropensci.github.io/RAMEN/reference/summarizeVML.md),
+[`selectVariables()`](https://ropensci.github.io/RAMEN/reference/selectVariables.md),
+[`lmGE()`](https://ropensci.github.io/RAMEN/reference/lmGE.md),
+[`nullDistGE()`](https://ropensci.github.io/RAMEN/reference/nullDistGE.md)).
 You can run these functions sequentially, which is the default in a
 fresh R session. This will trigger the following warning, which is just
 a message:
@@ -1558,17 +1503,14 @@ sessionInfo()
 #> tzcode source: system (glibc)
 #> 
 #> attached base packages:
-#> [1] stats4    parallel  stats     graphics  grDevices utils     datasets 
-#> [8] methods   base     
+#> [1] parallel  stats     graphics  grDevices utils     datasets  methods  
+#> [8] base     
 #> 
 #> other attached packages:
-#>  [1] doRNG_1.8.6.3        rngtools_1.5.2       glmnet_5.0          
-#>  [4] Matrix_1.7-5         GenomicRanges_1.64.0 Seqinfo_1.2.0       
-#>  [7] IRanges_2.46.0       S4Vectors_0.50.1     BiocGenerics_0.58.1 
-#> [10] generics_0.1.4       doParallel_1.0.17    iterators_1.0.14    
-#> [13] foreach_1.5.2        tidyr_1.3.2          ggplot2_4.0.3       
-#> [16] dplyr_1.2.1          RAMEN_2.1.1          knitr_1.51          
-#> [19] BiocStyle_2.40.0    
+#>  [1] doRNG_1.8.6.3     rngtools_1.5.2    glmnet_5.0        Matrix_1.7-5     
+#>  [5] doParallel_1.0.17 iterators_1.0.14  foreach_1.5.2     tidyr_1.3.2      
+#>  [9] ggplot2_4.0.3     dplyr_1.2.1       RAMEN_2.1.2       knitr_1.51       
+#> [13] BiocStyle_2.40.0 
 #> 
 #> loaded via a namespace (and not attached):
 #>   [1] RColorBrewer_1.1-3                                 
@@ -1586,11 +1528,11 @@ sessionInfo()
 #>  [13] memoise_2.0.1                                      
 #>  [14] Rsamtools_2.28.0                                   
 #>  [15] DelayedMatrixStats_1.34.0                          
-#>  [16] RCurl_1.98-1.19                                    
+#>  [16] RCurl_1.98-1.20                                    
 #>  [17] askpass_1.2.1                                      
 #>  [18] htmltools_0.5.9                                    
 #>  [19] S4Arrays_1.12.0                                    
-#>  [20] curl_7.1.0                                         
+#>  [20] curl_8.0.0                                         
 #>  [21] Rhdf5lib_2.0.0                                     
 #>  [22] SparseArray_1.12.2                                 
 #>  [23] rhdf5_2.56.0                                       
@@ -1611,86 +1553,93 @@ sessionInfo()
 #>  [38] siggenes_1.86.0                                    
 #>  [39] reshape_0.8.10                                     
 #>  [40] AnnotationDbi_1.74.0                               
-#>  [41] textshaping_1.0.5                                  
-#>  [42] RSQLite_3.53.3                                     
-#>  [43] base64_2.0.2                                       
-#>  [44] labeling_0.4.3                                     
-#>  [45] httr_1.4.8                                         
-#>  [46] abind_1.4-8                                        
-#>  [47] compiler_4.6.1                                     
-#>  [48] beanplot_1.3.1                                     
-#>  [49] bit64_4.8.2                                        
-#>  [50] withr_3.0.3                                        
-#>  [51] S7_0.2.2                                           
-#>  [52] BiocParallel_1.46.0                                
-#>  [53] DBI_1.3.0                                          
-#>  [54] HDF5Array_1.40.0                                   
-#>  [55] MASS_7.3-65                                        
-#>  [56] openssl_2.4.2                                      
-#>  [57] DelayedArray_0.38.2                                
-#>  [58] rjson_0.2.23                                       
-#>  [59] tools_4.6.1                                        
-#>  [60] otel_0.2.0                                         
-#>  [61] rentrez_1.2.4                                      
-#>  [62] glue_1.8.1                                         
-#>  [63] quadprog_1.5-8                                     
-#>  [64] h5mread_1.4.0                                      
-#>  [65] restfulr_0.0.17                                    
-#>  [66] nlme_3.1-169                                       
-#>  [67] rhdf5filters_1.24.1                                
-#>  [68] grid_4.6.1                                         
-#>  [69] gtable_0.3.6                                       
-#>  [70] tzdb_0.5.0                                         
-#>  [71] preprocessCore_1.74.0                              
-#>  [72] hms_1.1.4                                          
-#>  [73] data.table_1.18.4                                  
-#>  [74] xml2_1.6.0                                         
-#>  [75] XVector_0.52.0                                     
-#>  [76] pillar_1.11.1                                      
-#>  [77] limma_3.68.5                                       
-#>  [78] genefilter_1.94.0                                  
-#>  [79] splines_4.6.1                                      
-#>  [80] lattice_0.22-9                                     
-#>  [81] survival_3.8-6                                     
-#>  [82] rtracklayer_1.72.0                                 
-#>  [83] bit_4.6.0                                          
-#>  [84] GEOquery_2.80.0                                    
-#>  [85] annotate_1.90.0                                    
-#>  [86] tidyselect_1.2.1                                   
-#>  [87] locfit_1.5-9.12                                    
-#>  [88] Biostrings_2.80.1                                  
-#>  [89] bookdown_0.47                                      
-#>  [90] SummarizedExperiment_1.42.0                        
-#>  [91] xfun_0.60                                          
-#>  [92] Biobase_2.72.0                                     
-#>  [93] scrime_1.3.7                                       
-#>  [94] statmod_1.5.2                                      
-#>  [95] matrixStats_1.5.0                                  
-#>  [96] yaml_2.3.12                                        
-#>  [97] evaluate_1.0.5                                     
-#>  [98] codetools_0.2-20                                   
-#>  [99] cigarillo_1.2.1                                    
-#> [100] tibble_3.3.1                                       
-#> [101] minfi_1.58.0                                       
-#> [102] BiocManager_1.30.27                                
-#> [103] cli_3.6.6                                          
-#> [104] bumphunter_1.54.0                                  
-#> [105] xtable_1.8-8                                       
-#> [106] systemfonts_1.3.2                                  
-#> [107] jquerylib_0.1.4                                    
-#> [108] Rcpp_1.1.2                                         
-#> [109] png_0.1-9                                          
-#> [110] XML_3.99-0.23                                      
-#> [111] readr_2.2.0                                        
-#> [112] pkgdown_2.2.1                                      
-#> [113] blob_1.3.0                                         
-#> [114] mclust_6.1.3                                       
-#> [115] sparseMatrixStats_1.24.0                           
-#> [116] bitops_1.1-0                                       
-#> [117] scales_1.4.0                                       
-#> [118] illuminaio_0.54.0                                  
-#> [119] purrr_1.2.2                                        
-#> [120] crayon_1.5.3                                       
-#> [121] rlang_1.3.0                                        
-#> [122] KEGGREST_1.52.2
+#>  [41] S4Vectors_0.50.2                                   
+#>  [42] textshaping_1.0.5                                  
+#>  [43] GenomicRanges_1.64.0                               
+#>  [44] RSQLite_3.53.3                                     
+#>  [45] base64_2.0.2                                       
+#>  [46] labeling_0.4.3                                     
+#>  [47] httr_1.4.8                                         
+#>  [48] abind_1.4-8                                        
+#>  [49] compiler_4.6.1                                     
+#>  [50] beanplot_1.3.1                                     
+#>  [51] bit64_4.8.4                                        
+#>  [52] withr_3.0.3                                        
+#>  [53] S7_0.2.2                                           
+#>  [54] BiocParallel_1.46.0                                
+#>  [55] DBI_1.3.0                                          
+#>  [56] HDF5Array_1.40.0                                   
+#>  [57] MASS_7.3-65                                        
+#>  [58] openssl_2.4.2                                      
+#>  [59] DelayedArray_0.38.2                                
+#>  [60] rjson_0.2.23                                       
+#>  [61] tools_4.6.1                                        
+#>  [62] otel_0.2.0                                         
+#>  [63] rentrez_1.2.4                                      
+#>  [64] glue_1.8.1                                         
+#>  [65] quadprog_1.5-8                                     
+#>  [66] h5mread_1.4.1                                      
+#>  [67] restfulr_0.0.17                                    
+#>  [68] nlme_3.1-169                                       
+#>  [69] rhdf5filters_1.24.1                                
+#>  [70] grid_4.6.1                                         
+#>  [71] generics_0.1.4                                     
+#>  [72] gtable_0.3.6                                       
+#>  [73] tzdb_0.5.0                                         
+#>  [74] preprocessCore_1.74.0                              
+#>  [75] hms_1.1.4                                          
+#>  [76] data.table_1.18.6.1                                
+#>  [77] xml2_1.6.0                                         
+#>  [78] XVector_0.52.0                                     
+#>  [79] BiocGenerics_0.58.1                                
+#>  [80] pillar_1.11.1                                      
+#>  [81] limma_3.68.5                                       
+#>  [82] genefilter_1.94.0                                  
+#>  [83] splines_4.6.1                                      
+#>  [84] lattice_0.22-9                                     
+#>  [85] survival_3.8-6                                     
+#>  [86] rtracklayer_1.72.0                                 
+#>  [87] bit_4.6.0                                          
+#>  [88] GEOquery_2.80.0                                    
+#>  [89] annotate_1.90.0                                    
+#>  [90] tidyselect_1.2.1                                   
+#>  [91] locfit_1.5-9.12                                    
+#>  [92] Biostrings_2.80.1                                  
+#>  [93] bookdown_0.47                                      
+#>  [94] IRanges_2.46.0                                     
+#>  [95] Seqinfo_1.2.0                                      
+#>  [96] SummarizedExperiment_1.42.0                        
+#>  [97] stats4_4.6.1                                       
+#>  [98] xfun_0.60                                          
+#>  [99] Biobase_2.72.0                                     
+#> [100] scrime_1.3.7                                       
+#> [101] statmod_1.5.2                                      
+#> [102] matrixStats_1.5.0                                  
+#> [103] yaml_2.3.12                                        
+#> [104] evaluate_1.0.5                                     
+#> [105] codetools_0.2-20                                   
+#> [106] cigarillo_1.2.1                                    
+#> [107] tibble_3.3.1                                       
+#> [108] minfi_1.58.0                                       
+#> [109] BiocManager_1.30.27                                
+#> [110] cli_3.6.6                                          
+#> [111] bumphunter_1.54.0                                  
+#> [112] xtable_1.8-8                                       
+#> [113] systemfonts_1.3.2                                  
+#> [114] jquerylib_0.1.4                                    
+#> [115] Rcpp_1.1.2                                         
+#> [116] png_0.1-9                                          
+#> [117] XML_3.99-0.24                                      
+#> [118] readr_2.2.0                                        
+#> [119] pkgdown_2.2.1                                      
+#> [120] blob_1.3.0                                         
+#> [121] mclust_6.1.3                                       
+#> [122] sparseMatrixStats_1.24.0                           
+#> [123] bitops_1.1-0                                       
+#> [124] scales_1.4.0                                       
+#> [125] illuminaio_0.54.0                                  
+#> [126] purrr_1.2.2                                        
+#> [127] crayon_1.5.3                                       
+#> [128] rlang_1.3.0                                        
+#> [129] KEGGREST_1.52.2
 ```
