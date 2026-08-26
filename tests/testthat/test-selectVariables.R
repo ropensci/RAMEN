@@ -199,3 +199,89 @@ test_that("selectVariables does not error when a VML has only one candidate SNP"
     VML_one_snp$SNP[[1]] %in% result$selected_genot[[1]]
   )
 })
+
+# Check that the LASSO stage is wired up correctly, by running the same fits
+# outside of selectVariables() and comparing what they select.
+# The reference fits are wrapped in a one-task %dorng% loop started from the
+# same seed, so that they draw the same random numbers, and therefore build the
+# same cross-validation folds, as the fits inside selectVariables(). Comparing
+# against a plain cv.glmnet() call would compare different fold assignments.
+test_that("the variables LASSO selects are the ones selectVariables reports", {
+  foreach::registerDoSEQ()
+  set.seed(42)
+  n <- 100
+  ids <- paste0("S", seq_len(n))
+  genot <- matrix(rbinom(6 * n, 2, 0.5), nrow = 6,
+                  dimnames = list(paste0("g", 1:6), ids))
+  env <- matrix(rnorm(3 * n), ncol = 3,
+                dimnames = list(ids, paste0("e", 1:3)))
+  methyl <- matrix(2 * genot["g1", ] + env[, "e1"] + rnorm(n, sd = 0.5),
+                   ncol = 1, dimnames = list(ids, "VML1"))
+  vml <- GenomicRanges::GRanges(
+    "chr1", IRanges::IRanges(start = 1000, width = 100),
+    VML_index = "VML1", SNP = I(list(paste0("g", 1:6)))
+  )
+
+  result <- suppressMessages(RAMEN::selectVariables(
+    VML_wSNPs = vml,
+    genotype_matrix = genot,
+    environmental_matrix = env,
+    covariates = NULL,
+    summarized_methyl_VML = methyl,
+    seed = 1
+  ))
+
+  # The variables kept by one fit, dropping the intercept
+  selected_by <- function(fit) {
+    coefficients <- stats::coef(fit, s = "lambda.min")
+    names(coefficients[abs(coefficients[, 1]) > 0, ])[-1]
+  }
+  x_genot <- t(genot[paste0("g", 1:6), ids, drop = FALSE])
+  x_env <- env[ids, , drop = FALSE]
+  x_joint <- cbind(x_genot, x_env)
+
+  k <- NULL # To avoid R CMD check notes
+  `%dorng%` <- doRNG::`%dorng%`
+  set.seed(1)
+  reference <- foreach::foreach(k = 1) %dorng% {
+    list(
+      genot = selected_by(glmnet::cv.glmnet(
+        x = x_genot, y = methyl, alpha = 1, nfolds = 5,
+        penalty.factor = rep(1, ncol(x_genot)))),
+      env = selected_by(glmnet::cv.glmnet(
+        x = x_env, y = methyl, alpha = 1, nfolds = 5,
+        penalty.factor = rep(1, ncol(x_env)))),
+      joint = selected_by(glmnet::cv.glmnet(
+        x = x_joint, y = methyl, alpha = 1, nfolds = 5,
+        penalty.factor = rep(1, ncol(x_joint))))
+    )
+  }
+  reference <- reference[[1]]
+
+  # LASSO has to actually select something, or the comparison below is empty
+  expect_gt(length(reference$genot), 0)
+  expect_gt(length(reference$env), 0)
+  # The SNP and the environmental variable the VML was simulated from are among
+  # the variables LASSO keeps
+  expect_true("g1" %in% reference$genot)
+  expect_true("e1" %in% reference$env)
+
+  # selectVariables() reports exactly the union the two relevant fits produce
+  expect_setequal(
+    result$selected_genot[[1]],
+    setdiff(unique(c(reference$genot, reference$joint)), colnames(x_env))
+  )
+  expect_setequal(
+    result$selected_env[[1]],
+    setdiff(unique(c(reference$env, reference$joint)), colnames(x_genot))
+  )
+})
+
+test_that("selectVariables runs on the genotype alone when environmental_matrix is NULL", {
+  expect_no_error(suppressWarnings(RAMEN::selectVariables(VML_wSNPs = VML_cis_snps_test[1:3],
+                                         genotype_matrix = RAMEN::test_genotype_matrix,
+                                         environmental_matrix = NULL,
+                                         covariates = RAMEN::test_covariates,
+                                         summarized_methyl_VML = summarized_methyl_VML_test)))
+  }
+  )
