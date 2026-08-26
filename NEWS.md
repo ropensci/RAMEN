@@ -1,11 +1,16 @@
 # RAMEN 2.1.2
 
 This patch focuses on the running time and memory usage of the package, and
-fixes one bug:
+fixes a couple of bugs:
 
   - Fixed a bug in `lmGE()` where the function would throw an error when a
   covariate had a non-syntactic name (e.g. "cell type"). This happened whenever
   the winning model was G+E or GxE.
+  - Fixed a bug in `selectVariables()` where setting `environmental_matrix =
+  NULL`, which the documentation describes as the way to run the variable
+  selection on the genotype alone, would throw an error instead. The
+  documentation of that argument was also narrowed: a `genotype_matrix` is
+  always required, and only the environmental one can be omitted.
 
 The performance work touches `findVML()`, `medCorVMR()`, `summarizeVML()`,
 `selectVariables()`, `lmGE()` and `nullDistGE()`. Most of it resolves look-ups
@@ -23,6 +28,12 @@ sVMPs, are unaffected.
 The documentation of `nullDistGE()` now notes that the same seed is handed to
 `selectVariables()` in every permutation, so the cross-validation folds are
 shared across permutations.
+
+On the testing side, a test was added checking that the variables
+`selectVariables()` reports are the ones the underlying LASSO fits select, and
+the tests that register a parallel back-end now restore the sequential one when
+they finish, so that the back-end no longer leaks into the test files that run
+after them.
 
 Finally, the repository was transferred to ropensci after passing the peer 
 review process. All repository and website links were updated to reflect this 
