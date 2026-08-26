@@ -1,6 +1,34 @@
 # RAMEN 2.1.2
 
+This patch focuses on the running time and memory usage of the package, and
+fixes one bug:
 
+  - Fixed a bug in `lmGE()` where the function would throw an error when a
+  covariate had a non-syntactic name (e.g. "cell type"). This happened whenever
+  the winning model was G+E or GxE.
+
+The performance work touches `findVML()`, `medCorVMR()`, `summarizeVML()`,
+`selectVariables()`, `lmGE()` and `nullDistGE()`. Most of it resolves look-ups
+that were being repeated once per locus a single time up front instead, and
+avoids keeping unnecessary copies of the genotype and methylation objects. Both
+the running time and the memory each parallel worker needs are reduced.
+
+Outputs are unchanged, with one exception: `summarizeVML()` now computes
+medians with `matrixStats::colMedians()`. For VML with an even number of probes
+the two middle values are averaged slightly differently than by `median()`, so
+results can differ in the last representable digit (a relative difference of
+about one machine epsilon). VML with an odd number of probes, including all
+sVMPs, are unaffected.
+
+The documentation of `nullDistGE()` now notes that the same seed is handed to
+`selectVariables()` in every permutation, so the cross-validation folds are
+shared across permutations.
+
+Finally, the repository was transferred to ropensci after passing the peer 
+review process. All repository and website links were updated to reflect this 
+change. 
+
+The changes in this patch were conducted with help of Claude Opus 5. 
 
 # RAMEN 2.1.1
 
