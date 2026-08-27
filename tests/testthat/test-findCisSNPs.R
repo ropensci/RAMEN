@@ -32,7 +32,7 @@ test_that("findCisSNPs adds a VML index when it is not present", {
 test_that("findCisSNPs throws errors when expected", {
   expect_error(
     RAMEN::findCisSNPs(
-      VML = data.frame(VML_test$VML),
+      VML = data.frame(seqnames = "chr1", start = 1000, end = 2000),
       genotype_information = RAMEN::test_genotype_information,
       distance = 1e+06
     ) |>
