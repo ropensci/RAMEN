@@ -209,8 +209,7 @@ selectVariables <- function(VML_wSNPs,
   lasso_results <- foreach::foreach(k = seq_along(VML_ids),
                                     .combine = "rbind",
                                     .packages = "glmnet",
-                                    .export = c("empty_lists", "VML_ids",
-                                                "SNP_list", "methyl_col")) %dorng% {
+                                    .export = "empty_lists") %dorng% {
     #### Prepare data sets ####
     i <- VML_ids[k] # VML_index of the VML handled by this iteration
     # Single-bracket indexing keeps the element wrapped in a length-1 list,
