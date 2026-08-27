@@ -3,13 +3,19 @@
 ## RAMEN 2.1.2
 
 This patch focuses on the running time and memory usage of the package,
-and fixes a couple of bugs:
+and fixes a few bugs:
 
 - Fixed a bug in
   [`lmGE()`](https://ropensci.github.io/RAMEN/reference/lmGE.md) where
   the function would throw an error when a covariate had a non-syntactic
   name (e.g. “cell type”). This happened whenever the winning model was
   G+E or GxE.
+- Fixed a bug in
+  [`lmGE()`](https://ropensci.github.io/RAMEN/reference/lmGE.md) where a
+  `selected_variables` object in which no VML had any selected genotype
+  or environmental variable would throw an error. All the VML are now
+  returned with the basal model as their winner, which is what already
+  happened when only some of them were empty.
 - Fixed a bug in
   [`selectVariables()`](https://ropensci.github.io/RAMEN/reference/selectVariables.md)
   where setting `environmental_matrix = NULL`, which the documentation
