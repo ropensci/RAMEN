@@ -638,7 +638,7 @@ for the following parts of the pipeline.
 VML_gr <- VML$VML
 
 # Example of an epxloration plot
-data.frame(VML_gr) |>
+as(VML_gr, "data.frame") |>
   dplyr::filter(width > 1) |> # Only plot VMRs, since sVMPs all have a lenght of 1
   ggplot2::ggplot(aes(x = width)) +
   ggplot2::geom_histogram(binwidth = 50, fill = "#BAB4D8") +
@@ -760,7 +760,7 @@ following:
 ``` r
 
 VML_cis_snps |>
-  data.frame() |>
+  as("data.frame") |>
   dplyr::mutate(surrounding_SNPs = case_when(
     surrounding_SNPs > 3000 ~ 3000,
     TRUE ~ surrounding_SNPs
@@ -903,7 +903,7 @@ and 771.3644068 SNPs per VML on average as seen in Figure
 selected_variables |>
   dplyr::left_join(
     VML_cis_snps |>
-      data.frame() |>
+      as("data.frame") |>
       select(c(VML_index, type)),
     by = "VML_index"
   ) |>
