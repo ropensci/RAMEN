@@ -218,6 +218,49 @@ lmGE <- function(selected_variables,
   selected_variables <- selected_variables |>
     dplyr::filter(!(selected_env %in% empty_lists &
       selected_genot %in% empty_lists))
+  # VML with no selected variables are reported with the basal model as their
+  # winner
+  no_vars_VML <- no_vars_VML |>
+    # remove empty columns
+    dplyr::select(-selected_genot, -selected_env)
+  if (model_selection == "AIC") {
+    no_vars_VML <- no_vars_VML |>
+      dplyr::mutate(
+        model_group = "B",
+        variables = list(NA_character_),
+        tot_r_squared = NA_real_,
+        g_r_squared = NA_real_,
+        e_r_squared = NA_real_,
+        gxe_r_squared = NA_real_,
+        AIC = NA_real_,
+        second_winner = NA_character_,
+        delta_aic = NA_real_,
+        delta_r_squared = NA_real_,
+        basal_AIC = NA_real_,
+        basal_rsquared = NA_real_
+      )
+  } else if (model_selection == "BIC") {
+    no_vars_VML <- no_vars_VML |>
+      dplyr::mutate(
+        model_group = "B",
+        variables = list(NA_character_),
+        tot_r_squared = NA_real_,
+        g_r_squared = NA_real_,
+        e_r_squared = NA_real_,
+        gxe_r_squared = NA_real_,
+        BIC = NA_real_,
+        second_winner = NA_character_,
+        delta_bic = NA_real_,
+        delta_r_squared = NA_real_,
+        basal_BIC = NA_real_,
+        basal_rsquared = NA_real_
+      )
+  }
+  # With no VML left there is nothing to model, and every VML is returned with
+  # the basal model as its winner
+  if (nrow(selected_variables) == 0) {
+    return(no_vars_VML)
+  }
   # Create vectors that will be passed to the foreach loop
   sample_ids <- rownames(summarized_methyl_VML) # Get samples in DNAme object
   # Columns of selected_variables, accessed positionally
@@ -283,12 +326,7 @@ lmGE <- function(selected_variables,
   # Select the winning model
   winning_models <- foreach::foreach(i = seq_len(nrow(selected_variables)),
                                      .combine = "rbind",
-                                     .export = c("empty_lists", "sv_ids",
-                                                 "sv_genot", "sv_env",
-                                                 "sv_genot_rows", "methyl_col",
-                                                 "env_row", "genot_col",
-                                                 "covariates_i",
-                                                 "basal_model_formula")) %dopar% { # For every VML
+                                     .export = "empty_lists") %dopar% { # For every VML
     #### Prepare data sets ####
     # Create the data frame with all the information for each VML.
     # Single-bracket indexing keeps each element wrapped in a length-1 list,
@@ -623,46 +661,6 @@ lmGE <- function(selected_variables,
                     delta_bic, delta_r_squared, basal_BIC, basal_rsquared)
   }
 
-  if (model_selection == "AIC") {
-    return(winning_models |>
-             # Attach VML with no variables selected in selectVariables()
-             rbind(no_vars_VML |>
-                     # remove empty columns
-                     dplyr::select(-selected_genot, -selected_env) |>
-                     dplyr::mutate(
-                       model_group = "B",
-                       variables = list(NA_character_),
-                       tot_r_squared = NA_real_,
-                       g_r_squared = NA_real_,
-                       e_r_squared = NA_real_,
-                       gxe_r_squared = NA_real_,
-                       AIC = NA_real_,
-                       second_winner = NA_character_,
-                       delta_aic = NA_real_,
-                       delta_r_squared = NA_real_,
-                       basal_AIC = NA_real_,
-                       basal_rsquared = NA_real_
-                       )))
-  }
-  if (model_selection == "BIC") {
-    return(winning_models |>
-             # Attach VML with no variables selected in selectVariables()
-             rbind(no_vars_VML |>
-                     # remove empty columns
-                     dplyr::select(-selected_genot, -selected_env) |>
-                     dplyr::mutate(
-                       model_group = "B",
-                       variables = list(NA_character_),
-                       tot_r_squared = NA_real_,
-                       g_r_squared = NA_real_,
-                       e_r_squared = NA_real_,
-                       gxe_r_squared = NA_real_,
-                       BIC = NA_real_,
-                       second_winner = NA_character_,
-                       delta_bic = NA_real_,
-                       delta_r_squared = NA_real_,
-                       basal_BIC = NA_real_,
-                       basal_rsquared = NA_real_
-                     )))
-  }
+  # Attach VML with no variables selected in selectVariables()
+  return(rbind(winning_models, no_vars_VML))
 }

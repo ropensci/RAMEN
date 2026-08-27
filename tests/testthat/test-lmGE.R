@@ -285,3 +285,37 @@ test_that("lmGE reports VML with no column in summarized_methyl_VML", {
     fixed = TRUE
   )
 })
+
+test_that("lmGE returns basal models when no VML has selected variables", {
+  foreach::registerDoSEQ()
+  # A VML object that does have selected variables, used both as the starting
+  # point for the empty one and as the reference for the shape of the output
+  populated <- selected_variables_test[1:4, ]
+  all_empty <- populated
+  # Every spelling of an empty selection that empty_lists recognises
+  all_empty$selected_genot <- list(character(0), NULL, NA, "")
+  all_empty$selected_env <- list(NA, "", character(0), NULL)
+
+  fit <- function(selected_variables, model_selection) {
+    suppressWarnings(suppressMessages(RAMEN::lmGE(
+      selected_variables = selected_variables,
+      summarized_methyl_VML = summarized_methyl_VML_test,
+      genotype_matrix = RAMEN::test_genotype_matrix,
+      environmental_matrix = RAMEN::test_environmental_matrix,
+      covariates = RAMEN::test_covariates,
+      model_selection = model_selection
+    )))
+  }
+
+  for (model_selection in c("AIC", "BIC")) {
+    result <- expect_no_error(fit(all_empty, model_selection))
+    # Every VML is returned, with the basal model as its winner
+    expect_equal(nrow(result), nrow(all_empty))
+    expect_setequal(result$VML_index, populated$VML_index)
+    expect_true(all(result$model_group == "B"))
+    expect_true(all(is.na(unlist(result$variables))))
+    expect_true(all(is.na(result$tot_r_squared)))
+    # The object has the same shape a normal run produces
+    expect_identical(names(result), names(fit(populated, model_selection)))
+  }
+})
