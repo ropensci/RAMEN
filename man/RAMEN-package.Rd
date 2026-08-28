@@ -33,6 +33,7 @@ Other contributors:
 \itemize{
   \item Lluís Revilla Sancho \email{lluis.revilla@gmail.com} (\href{https://orcid.org/0000-0001-9747-2570}{ORCID}) [reviewer]
   \item Ulduz Vafadarshamasbi \email{vafadar.u@uq.edu.au} (\href{https://orcid.org/0000-0002-8370-8084}{ORCID}) [reviewer]
+  \item The University of British Columbia [funder]
 }
 
 }

@@ -38,6 +38,12 @@
       "@id": "https://orcid.org/0000-0003-4140-1743"
     }
   ],
+  "funder": [
+    {
+      "@type": "Organization",
+      "name": "The University of British Columbia"
+    }
+  ],
   "maintainer": [
     {
       "@type": "Person",
@@ -288,7 +294,7 @@
     },
     "SystemRequirements": null
   },
-  "fileSize": "3544.248KB",
+  "fileSize": "3543.995KB",
   "citation": [
     {
       "@type": "ScholarlyArticle",
