@@ -53,9 +53,9 @@ findCisSNPs <- function(VML, genotype_information, distance = 1e6) {
   argument_check(VML, "GRanges")
   argument_check(genotype_information, "data.frame")
   columns_exist(genotype_information, c("CHROM", "POS", "ID"))
-  message(paste("Reminder: please make sure that the positions of the VML data",
-  "frame and the ones in the genotype information are from the same genome",
-  "build."))
+  message("Reminder: please make sure that the positions of the VML data ",
+          "frame and the ones in the genotype information are from the same ",
+          "genome build.")
   argument_check(distance, "numeric")
 
   #### Extend each VML 1 Mb up and downstream ####

@@ -2,13 +2,13 @@
   "@context": "https://doi.org/10.5063/schema/codemeta-2.0",
   "@type": "SoftwareSourceCode",
   "identifier": "RAMEN",
-  "description": "Using population data, RAMEN identifies which genetic (G), environmental (E), additive (G+E) or interaction (GxE) model better explains DNA methylation levels in genome-wide locations with high DNA methylation variability.",
-  "name": "RAMEN: RAMEN: Regional Association of Methylome variability with the Exposome and geNome",
+  "description": "RAMEN is an R package which goal is to identify Variable Methylated Loci (VML) in microarray DNA methylation data and then, using genome and exposome data, identify which individual genetic (G) or environmental (E) or joint (G+E or GxE) model better explains the VML variability. This package provides estimates of genetic and environmental contribution for each VML, allowing researchers to gain insights into the complex interplay between genetics, environment and DNA methylation.",
+  "name": "RAMEN: Regional Association of Methylome variability with the Exposome and geNome",
   "relatedLink": "https://ropensci.github.io/RAMEN/",
   "codeRepository": "https://github.com/ropensci/RAMEN/",
   "issueTracker": "https://github.com/ropensci/RAMEN/issues",
   "license": "https://spdx.org/licenses/GPL-3.0",
-  "version": "2.1.2",
+  "version": "2.99.0",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
@@ -284,11 +284,11 @@
       "@type": "SoftwareApplication",
       "identifier": "R",
       "name": "R",
-      "version": ">= 4.5.0"
+      "version": ">= 4.6.0"
     },
     "SystemRequirements": null
   },
-  "fileSize": "3536.285KB",
+  "fileSize": "3544.248KB",
   "citation": [
     {
       "@type": "ScholarlyArticle",
@@ -421,14 +421,14 @@
           "familyName": "Kobor"
         }
       ],
-      "name": "RAMEN: RAMEN: Regional Association of DNA Methylome variability with the Exposome and geNome",
+      "name": "RAMEN: Regional Association of Methylome variability with the Exposome and geNome",
       "url": "https://github.com/ropensci/RAMEN",
-      "description": "R package version 2.1.2"
+      "description": "R package version 2.99.0"
     }
   ],
   "releaseNotes": "https://github.com/ropensci/RAMEN/blob/main/NEWS.md",
   "readme": "https://github.com/ropensci/RAMEN/blob/main/README.md",
-  "contIntegration": ["https://app.codecov.io/gh/ErickNavarroD/RAMEN", "https://github.com/ropensci/RAMEN/actions/workflows/R-CMD-check.yaml"],
+  "contIntegration": ["https://github.com/ropensci/RAMEN/actions/workflows/R-CMD-check.yaml", "https://app.codecov.io/gh/ropensci/RAMEN"],
   "developmentStatus": ["https://www.repostatus.org/#active", "https://lifecycle.r-lib.org/articles/stages.html#stable"],
   "review": {
     "@type": "Review",

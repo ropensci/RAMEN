@@ -51,14 +51,14 @@ summarizeVML <- function(VML,
     S4Vectors::mcols(VML)$VML_index <- paste0("VML", seq_along(VML))
   }
   if (anyDuplicated(S4Vectors::mcols(VML)$VML_index) != 0) {
-    stop(paste("Please make sure the 'VML_index' column in the VML object",
-               "contains unique values."))
+    stop("Please make sure the 'VML_index' column in the VML object ",
+         "contains unique values.")
   }
   if (!all(unique(unlist(VML$probes)) %in% rownames(methylation_data))) {
-    warning(paste("Some probes listed in the VML data frame are not found in",
-    "the methylation data. Please check that all probes listed in the 'probes'",
-    "column of the VML data frame are present in the row names of the",
-    "methylation data frame to avoid having NAs."))
+    warning("Some probes listed in the VML data frame are not found in ",
+            "the methylation data. Please check that all probes listed in ",
+            "the 'probes' column of the VML data frame are present in the ",
+            "row names of the methylation data frame to avoid having NAs.")
   }
   # Check that probes is a list.
   if (!is.list(VML$probes)) {

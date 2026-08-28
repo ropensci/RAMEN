@@ -1,3 +1,15 @@
+# RAMEN 2.99.0
+
+This minor version prepares RAMEN for submission to Bioconductor. It is mostly a
+formatting and packaging release: apart from the change to the seed described
+below, the analysis functions return the same results as in 2.1.2, and the
+error and warning messages are unchanged.
+
+  - `selectVariables()` and `nullDistGE()` no longer leave the global random
+  number generator reseeded. The `seed` argument now applies for the duration
+  of the call only: the RNG state found on entry is restored when the function
+  returns.
+
 # RAMEN 2.1.2
 
 This patch focuses on the running time and memory usage of the package, and

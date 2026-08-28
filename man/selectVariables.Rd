@@ -53,7 +53,8 @@ the sample IDs, and must match with the IDs of the other matrices.}
 generator. Random numbers in this function are created during the lambda
 cross validation and the LASSO stages. Setting a seed is highly encouraged
 for result reproducibility.
-\strong{Please note that setting a seed in this function modifies the seed globally}.}
+\strong{The seed is applied for the duration of this call only; the global random
+stream is restored when the function returns}.}
 }
 \value{
 A data frame with three columns:
@@ -109,9 +110,10 @@ does not impose a big concern. After finding the best lambda value, the
 sequence of models is fit by coordinate descent using \emph{glmnet()}. Random
 numbers in this function are created during the lambda cross validation and
 the LASSO stages. Setting a seed is highly encouraged for result
-reproducibility using the \emph{seed} argument. Please note that setting a seed
-inside of this function modifies the seed globally (which is R's default
-behavior).
+reproducibility using the \emph{seed} argument. The seed is applied for the
+duration of this call only: the random number generator state found on
+entry is restored when the function returns, so a seeded run leaves the
+global random stream untouched.
 
 This function supports parallel computing for increased speed. To do so,
 you have to set the parallel back-end in your R session before running the

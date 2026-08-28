@@ -183,26 +183,28 @@ findVML <- function(methylation_data,
                         "'IlluminaHumanMethylationEPICv2')."))
     # Check that the array strand is in the format expected by the user
     if (base::length(base::unique(array_manifest$strand)) > 1) {
-      warning(paste("The manifest currently has more than one type of strands.",
-                    "Please note that this function is strand sensitive. So, probes in",
-                    "proximal coordinates but different strands on the manifest will not be",
-                    "grouped together. Many array manifests such as the Illumina EPIC v1",
-                    "include the PROBE strand, but the position of the actual CpGs (pos) is",
-                    "reported in the same strand; in those cases we recommend setting all of",
-                    "the probes to the same strand."))
+      warning("The manifest currently has more than one type of strands. ",
+              "Please note that this function is strand sensitive. So, ",
+              "probes in proximal coordinates but different strands on the ",
+              "manifest will not be grouped together. Many array manifests ",
+              "such as the Illumina EPIC v1 include the PROBE strand, but ",
+              "the position of the actual CpGs (pos) is reported in the same ",
+              "strand; in those cases we recommend setting all of the probes ",
+              "to the same strand.")
     }
     if (var_distribution == "ultrastable") {
       # If the user provides their own manifest and is choosing to use the
       # ultrastable probes, make sure that a good number of them is present
       # in the data set. If not, throw an error
       if (sum(row.names(array_manifest) %in% RAMEN::ultrastable_cpgs) < 25) {
-        stop(paste("The var_distribution = 'ultrastable' option is only",
-                   "compatible with Illumina human microarrays at the moment. If you are",
-                   "using a human Illumina microarray please indicate it with their",
-                   "corresponding string, or make sure that it contains a more than 25",
-                   "ultrastable probes (RAMEN::ultrastable_cpgs). If not, please get the",
-                   "variability threshold based on all the probes in your data set",
-                   "(var_distribution = 'all', var_threshold_percentile = 0.9)."))
+        stop("The var_distribution = 'ultrastable' option is only ",
+             "compatible with Illumina human microarrays at the moment. If ",
+             "you are using a human Illumina microarray please indicate it ",
+             "with their corresponding string, or make sure that it contains ",
+             "a more than 25 ultrastable probes (RAMEN::ultrastable_cpgs). ",
+             "If not, please get the variability threshold based on all the ",
+             "probes in your data set (var_distribution = 'all', ",
+             "var_threshold_percentile = 0.9).")
       }
     }
   } else argument_char_options(array_manifest,
@@ -258,9 +260,9 @@ findVML <- function(methylation_data,
       # Get the name of the ultrastable probes in the EPICv2 format
       if (!requireNamespace("IlluminaHumanMethylationEPICv2anno.20a1.hg38",
                             quietly = TRUE)) {
-        stop(paste("Package \'IlluminaHumanMethylationEPICv2anno.20a1.hg38\' must",
-          "be installed to use this function."),
-          call. = FALSE)
+        stop("Package 'IlluminaHumanMethylationEPICv2anno.20a1.hg38' must ",
+             "be installed to use this function.",
+             call. = FALSE)
       }
       epicv2_ultrastable_cpgs <- IlluminaHumanMethylationEPICv2anno.20a1.hg38::Other |>
         data.frame() |>
@@ -271,11 +273,11 @@ findVML <- function(methylation_data,
         var_threshold_percentile
       )
       if (sum(row.names(var_scores) %in% epicv2_ultrastable_cpgs) < 25) {
-        stop(paste("Your data set should contain more than 25 ultrastable probes",
-                   "(RAMEN::ultrastable_cpgs) to compute a variance threshold. If",
-                   "not, please get the",
-                   "variability threshold based on all the probes in your data set",
-                   "(var_distribution = 'all', var_threshold_percentile = 0.9)."))
+        stop("Your data set should contain more than 25 ultrastable probes ",
+             "(RAMEN::ultrastable_cpgs) to compute a variance threshold. If ",
+             "not, please get the variability threshold based on all the ",
+             "probes in your data set (var_distribution = 'all', ",
+             "var_threshold_percentile = 0.9).")
       }
     } else {
       # EPICv1 or 450k (same probe name as the ultrastable probes)
@@ -285,11 +287,11 @@ findVML <- function(methylation_data,
         var_threshold_percentile
       )
       if (sum(row.names(var_scores) %in% RAMEN::ultrastable_cpgs) < 25) {
-        stop(paste("Your data set should contain more than 25 ultrastable probes",
-                   "(RAMEN::ultrastable_cpgs) to compute a variance threshold. If",
-                   "not, please get the",
-                   "variability threshold based on all the probes in your data set",
-                   "(var_distribution = 'all', var_threshold_percentile = 0.9)."))
+        stop("Your data set should contain more than 25 ultrastable probes ",
+             "(RAMEN::ultrastable_cpgs) to compute a variance threshold. If ",
+             "not, please get the variability threshold based on all the ",
+             "probes in your data set (var_distribution = 'all', ",
+             "var_threshold_percentile = 0.9).")
       }
     }
   }
@@ -300,9 +302,9 @@ findVML <- function(methylation_data,
       if (!requireNamespace("IlluminaHumanMethylation450kanno.ilmn12.hg19",
         quietly = TRUE
       )) {
-        stop(paste("Package \"IlluminaHumanMethylation450kanno.ilmn12.hg19\" ",
-        "must be installed to use this function."),
-          call. = FALSE
+        stop("Package \"IlluminaHumanMethylation450kanno.ilmn12.hg19\"  ",
+             "must be installed to use this function.",
+             call. = FALSE
         )
       }
       manifest <- data.frame(IlluminaHumanMethylation450kanno.ilmn12.hg19::Locations)
@@ -310,9 +312,9 @@ findVML <- function(methylation_data,
       if (!requireNamespace("IlluminaHumanMethylationEPICanno.ilm10b4.hg19",
         quietly = TRUE
       )) {
-        stop(paste("Package \'IlluminaHumanMethylationEPICanno.ilm10b4.hg19\'",
-                   "must be installed to use this function."),
-          call. = FALSE
+        stop("Package 'IlluminaHumanMethylationEPICanno.ilm10b4.hg19' ",
+             "must be installed to use this function.",
+             call. = FALSE
         )
       }
       manifest <- data.frame(IlluminaHumanMethylationEPICanno.ilm10b4.hg19::Locations)
@@ -320,9 +322,9 @@ findVML <- function(methylation_data,
       if (!requireNamespace("IlluminaHumanMethylationEPICv2anno.20a1.hg38",
         quietly = TRUE
       )) {
-        stop(paste("Package \'IlluminaHumanMethylationEPICv2anno.20a1.hg38\'",
-                   "must be installed to use this function."),
-          call. = FALSE
+        stop("Package 'IlluminaHumanMethylationEPICv2anno.20a1.hg38' ",
+             "must be installed to use this function.",
+             call. = FALSE
         )
       }
       manifest <- data.frame(IlluminaHumanMethylationEPICv2anno.20a1.hg38::Locations)

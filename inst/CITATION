@@ -13,9 +13,9 @@ bibentry(
 bibentry(
   key = "RAMEN",
   bibtype  = "Manual",
-  title    = "RAMEN: RAMEN: Regional Association of DNA Methylome variability with the Exposome and geNome",
+  title    = "RAMEN: Regional Association of Methylome variability with the Exposome and geNome",
   author = c(person("Erick I.", "Navarro-Delgado"), person("Keegan", "Korthauer"), person("Michael S.", "Kobor")),
-  note  = "R package version 2.1.2",
+  note  = paste("R package version", meta$Version),
   year     = "2025",
   url      = "https://github.com/ropensci/RAMEN"
 )

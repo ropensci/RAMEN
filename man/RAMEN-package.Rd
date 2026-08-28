@@ -4,11 +4,11 @@
 \name{RAMEN-package}
 \alias{RAMEN}
 \alias{RAMEN-package}
-\title{RAMEN: RAMEN: Regional Association of Methylome variability with the Exposome and geNome}
+\title{RAMEN: Regional Association of Methylome variability with the Exposome and geNome}
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-Using population data, RAMEN identifies which genetic (G), environmental (E), additive (G+E) or interaction (GxE) model better explains DNA methylation levels in genome-wide locations with high DNA methylation variability.
+RAMEN is an R package which goal is to identify Variable Methylated Loci (VML) in microarray DNA methylation data and then, using genome and exposome data, identify which individual genetic (G) or environmental (E) or joint (G+E or GxE) model better explains the VML variability. This package provides estimates of genetic and environmental contribution for each VML, allowing researchers to gain insights into the complex interplay between genetics, environment and DNA methylation.
 }
 \seealso{
 Useful links:

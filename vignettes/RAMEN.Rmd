@@ -19,7 +19,7 @@ vignette: >
 ---
 
 
-```{r, include = FALSE}
+```{r knitr-opts, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
@@ -302,7 +302,7 @@ appropiate:
 Once that we have that data sets ready, the overview of the pipeline is the 
 following:
 
-```{r,echo= FALSE, fig.cap="RAMEN pipeline"}
+```{r pipeline-fig, echo= FALSE, fig.cap="RAMEN pipeline"}
 knitr::include_graphics("RAMEN_pipeline.png")
 ```
 
@@ -328,7 +328,7 @@ available in the RAMEN package.
 
 ## Install RAMEN and set up environment
 
-```{r eval=FALSE}
+```{r install, eval=FALSE}
 ## Install dependencies
 # install.packages("BiocManager")
 # BiocManager::install("S4Vectors")
@@ -444,7 +444,7 @@ DNAme levels, but 90 (45%) of them have different DNAme levels, the variance
 method could capture this scenario as a highly variable probe, while MAD will 
 not. Let's see an example:
   
-```{r}
+```{r var-mad-demo}
 set.seed(1)
 sample <- c(
   rep(0.2, 110),
@@ -467,7 +467,7 @@ instance, let's check the relation between variance and MAD score in the CHILD
 dataset used in RAMEN's first publication (see Navarro-Delgado EI, *et al.*, 
 2025, Genome Biology).
 
-```{r,echo= FALSE, fig.cap="MAD vs var relation"}
+```{r mad-var-fig, echo= FALSE, fig.cap="MAD vs var relation"}
 knitr::include_graphics("mad_var.png")
 ```
 
@@ -475,7 +475,7 @@ Additionally, if we were to take the top 10% of probes as highly variable, we
 found a 86% overlap between the two methods. So think of this more of a 
 fine-tuning parameter rather than a game-changer.
 
-```{r,echo= FALSE, fig.cap="HVPs with mad vs var"}
+```{r hvps-mad-var-fig, echo= FALSE, fig.cap="HVPs with mad vs var"}
 knitr::include_graphics("hvps_mad_var.png")
 ```
 
@@ -522,7 +522,7 @@ a definition of HVPs unique to each data set.
 So, after covering all the basics and understanding how the function works, we 
 can start our analysis! Let's give it a try. 
 
-```{r}
+```{r methylation-input}
 # See the structure of the input DNA methylation data set
 RAMEN::test_methylation_data[1:5, 1:5]
 
@@ -547,7 +547,7 @@ head(VML$VML)
 
 We can sometimes see the following warning message: 
 
-```{r}
+```{r dopar-warning-note}
 #> Warning: executing %dopar% sequentially: no parallel backend registered
 ```
 
@@ -566,7 +566,7 @@ Finally, we will extract the VML GRanges object, which we can use to produce plo
 and explore the results. This data frame will also be used for the following 
 parts of the pipeline. 
 
-```{r}
+```{r explore-vml}
 VML_gr <- VML$VML
 
 # Example of an epxloration plot
@@ -584,7 +584,7 @@ summarize as we have one probe per loci, so the DNAme level of the corresponding
 probe is returned. For VMRs, the median DNAme level of all the probes in the 
 region is returned per individual as the representative value. 
 
-```{r}
+```{r run-summarizevml}
 summarized_methyl_VML <- RAMEN::summarizeVML(
   VML = VML_gr,
   methylation_data = test_methylation_data
@@ -611,7 +611,7 @@ be considered *cis* - the distance threshold tend to go from few kb to 1
 megabase. We recommend to include SNPs within 500 kb to 1 Mb to capture SNPs
 with a high potential to associate with DNAme.
 
-```{r}
+```{r genotype-input}
 # Take a look at the structure of the genotype information data set, which
 # contains the genomic location of the SNPs in our genotype data set
 head(RAMEN::test_genotype_information)
@@ -694,7 +694,7 @@ use in RAMEN does not support missing values, and that all values are numeric.
 If your data has missing values, consider 
 [handling](https://doi.org/10.4097/kjae.2013.64.5.402) them. 
 
-```{r}
+```{r selectvars-input}
 # Take a look at the structure of the genotype, environment and covariate data
 # sets, which will be used as input for the variable selection stage
 RAMEN::test_genotype_matrix[1:5, 1:5]
@@ -720,7 +720,7 @@ default behavior).
 The output of `RAMEN::selectVariables()` is an object with the VML index, and 
 the G and E variables selected for each VML. 
 
-```{r}
+```{r explore-selectedvars}
 dplyr::glimpse(selected_variables)
 ```
 
@@ -815,7 +815,7 @@ R package, using the Lindeman, Merenda and Gold (lmg) method, which is based on
 the heuristic approach of averaging the relative R contribution of each variable
 over all input orders in the linear model.
 
-```{r}
+```{r run-lmge}
 lmge_res <- RAMEN::lmGE(
   selected_variables = selected_variables,
   summarized_methyl_VML = summarized_methyl_VML,
@@ -906,7 +906,7 @@ excluding VML which best model was Baseline (B)). Since many VML will be
 labelled as B during the the selectVariables() stage, we recommend using the 
 following formula:
 
-```{r}
+```{r vml-size}
 (vml_size <- length(VML_cis_snps)) # Number of VML in your data set
 desired_obs <- 400000 # We want ~300k informative observations, and we are adding
 # 100k extra to account for the VML that will be labelled as Basal (B) during
@@ -920,7 +920,7 @@ make sure to run the recommended number of permutations in your real data
 analysis. In real data sets where we have thousands of probes, ~5-10 permutations
 are typically needed. 
 
-```{r}
+```{r run-nulldistge}
 # Compute the null distribution
 null_dist <- RAMEN::nullDistGE(
   VML_wSNPs = VML_cis_snps,
@@ -952,7 +952,7 @@ model (SNP or E). In comparison, joint models have a higher mean R2_difference
 because they have two or three shuffled terms (SNP, E and SNP*E), which just by
 chance increases their probability of having a higher R2_difference. 
 
-```{r, fig.cap = "R2 difference (winner - basal) in a suffled data set."}
+```{r nulldist-fig, fig.cap = "R2 difference (winner - basal) in a suffled data set."}
 # See the distribution of R2_difference across different winning models
 null_dist |>
   drop_na() |> # Remove Basal models from the results, where there is no
@@ -967,7 +967,7 @@ null_dist |>
 We suggest using the 95th percentile of those distributions as a threshold to 
 remove bad performing winning models found in our observed data. 
 
-```{r}
+```{r nulldist-cutoff}
 # Get a cutoff of the 95th percentile of the null distribution for single and
 # joint models
 cutoff_single <- quantile(
@@ -1100,7 +1100,7 @@ read/write functions. We suggest two options:
   1.    Use `fwrite()` and `fread()`  from the `r CRANpkg("data.table")` package
   (recommended because of time and storage space). 
 
-```{r, eval=FALSE}
+```{r faq-save-csv, eval=FALSE}
 # Example for saving and reading selected_variables object
 data.table::fwrite(selected_variables, file = "path/selected_variables.csv")
 
@@ -1116,7 +1116,7 @@ selected_variables <- fread("path/selected_variables.csv", data.table = FALSE) |
 
   2.    Save files as .rds
 
-```{r, eval=FALSE}
+```{r faq-save-rds, eval=FALSE}
 # Example for saving the selected_variables object
 saveRDS(selected_variables, file = "path/selected_variables.Rds")
 
@@ -1131,14 +1131,14 @@ Most functions in RAMEN are compatible with parallel computing (`findVML()`,
 You can run these functions sequentially, which is the default in a fresh R 
 session. This will trigger the following warning, which is just a message: 
 
-```{r}
+```{r faq-dopar-warning}
 #> Warning: executing %dopar% sequentially: no parallel backend registered
 ```
 
 To silence it, you can explicitly set up a sequential evaluation before running
 any of the above functions:
 
-```{r eval=FALSE}
+```{r faq-backend-seq, eval=FALSE}
 foreach::registerDoSEQ()
 
 # Run RAMEN functions here
@@ -1148,7 +1148,7 @@ To run the function in parallel, you just need to specify the parallel backend
 of your preference. Just to provide examples, you can use the `doParallel` 
 package:
 
-```{r eval=FALSE}
+```{r faq-backend-parallel, eval=FALSE}
 library(parallel)
 library(doParallel)
 # Find the number of CPU cores to use (leaving one core free is common practice)
@@ -1167,7 +1167,7 @@ registerDoSEQ()
 
 You can also use the future framework:
 
-```{r, eval=FALSE}
+```{r faq-backend-future, eval=FALSE}
 library(future)
 
 # Set the backend to use multiple background R sessions

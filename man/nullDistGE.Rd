@@ -57,7 +57,8 @@ individual. Row names must correspond to the individual IDs.}
 generator. Random numbers in this function are created during the lambda
 cross validation and the LASSO stages. Setting a seed is highly encouraged
 for result reproducibility.
-\strong{Please note that setting a seed in this function modifies the seed globally}.}
+\strong{The seed is applied for the duration of this call only; the global random
+stream is restored when the function returns}.}
 
 \item{model_selection}{Which metric to use to select the best model for each
 VML. Supported options are "AIC" or BIC".}
@@ -131,8 +132,9 @@ null distribution pools delta R squared across all the VML in the dataset,
 which is where nearly all of its draws come from. It is nonetheless worth
 keeping in mind when interpreting the spread of the distribution.
 
-Please note that setting a seed in this function modifies the seed globally
-(which is R's default behavior).
+The seed is applied for the duration of this call only: the random number
+generator state found on entry is restored when the function returns, so a
+seeded run leaves the global random stream untouched.
 }
 \examples{
 # Evaluate sequentially

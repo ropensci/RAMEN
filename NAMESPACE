@@ -8,5 +8,7 @@ export(nullDistGE)
 export(selectVariables)
 export(summarizeVML)
 importFrom(doRNG,"%dorng%")
-importFrom(foreach,"%do%")
-importFrom(foreach,"%dopar%")
+importFrom(foreach,
+  "%do%",
+  "%dopar%"
+)
