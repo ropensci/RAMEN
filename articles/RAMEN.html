@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">RAMEN</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.1.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.99.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -59,7 +59,7 @@ Columbia<br><a class="author_email" href="mailto:#"></a><a href="mailto:erick.de
       </address>
                   
       
-      <small class="dont-index">Source: <a href="https://github.com/ropensci/RAMEN/blob/v2.1.2/vignettes/RAMEN.Rmd" class="external-link"><code>vignettes/RAMEN.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ropensci/RAMEN/blob/main/vignettes/RAMEN.Rmd" class="external-link"><code>vignettes/RAMEN.Rmd</code></a></small>
       <div class="d-none name"><code>RAMEN.Rmd</code></div>
     </div>
 
@@ -638,6 +638,10 @@ works, we can start our analysis! Let’s give it a try.</p>
 <span>  max_distance <span class="op">=</span> <span class="fl">1000</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; Identifying Highly Variable Probes...</span></span>
+<span><span class="co">#&gt; Warning: replacing previous import 'S4Arrays::makeNindexFromArrayViewport' by</span></span>
+<span><span class="co">#&gt; 'DelayedArray::makeNindexFromArrayViewport' when loading 'SummarizedExperiment'</span></span>
+<span><span class="co">#&gt; Warning: replacing previous import 'S4Arrays::makeNindexFromArrayViewport' by</span></span>
+<span><span class="co">#&gt; 'DelayedArray::makeNindexFromArrayViewport' when loading 'HDF5Array'</span></span>
 <span><span class="co">#&gt; Setting options('download.file.method.GEOquery'='auto')</span></span>
 <span><span class="co">#&gt; Setting options('GEOquery.inmemory.gpl'=FALSE)</span></span>
 <span><span class="co">#&gt; Identifying sparse Variable Methylated Probes</span></span>
@@ -707,7 +711,7 @@ for the following parts of the pipeline.</p>
 <span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html" class="external-link">geom_histogram</a></span><span class="op">(</span>binwidth <span class="op">=</span> <span class="fl">50</span>, fill <span class="op">=</span> <span class="st">"#BAB4D8"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_classic</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"VMRs width (bp)"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="RAMEN_files/figure-html/unnamed-chunk-9-1.png" class="r-plt" alt="" width="700"></p>
+<p><img src="RAMEN_files/figure-html/explore-vml-1.png" class="r-plt" alt="" width="700"></p>
 <p>Next, we want to summarize the DNAme level of each VML per
 individual. To do this, we use <code><a href="../reference/summarizeVML.html">RAMEN::summarizeVML()</a></code>. For
 sparse VMPs, there is nothing to summarize as we have one probe per
@@ -1225,7 +1229,7 @@ their probability of having a higher R2_difference.</p>
 <span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_classic</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; `stat_bin()` using `bins = 30`. Pick better value `binwidth`.</span></span></code></pre></div>
 <div class="figure">
-<img src="RAMEN_files/figure-html/unnamed-chunk-17-1.png" class="r-plt" alt="R2 difference (winner - basal) in a suffled data set." width="700"><p class="caption">
+<img src="RAMEN_files/figure-html/nulldist-fig-1.png" class="r-plt" alt="R2 difference (winner - basal) in a suffled data set." width="700"><p class="caption">
 R2 difference (winner - basal) in a suffled data set.
 </p>
 </div>
@@ -1506,7 +1510,7 @@ use the <code>doParallel</code> package:</p>
 <span><span class="co">#&gt; other attached packages:</span></span>
 <span><span class="co">#&gt;  [1] doRNG_1.8.6.3     rngtools_1.5.2    glmnet_5.0        Matrix_1.7-5     </span></span>
 <span><span class="co">#&gt;  [5] doParallel_1.0.17 iterators_1.0.14  foreach_1.5.2     tidyr_1.3.2      </span></span>
-<span><span class="co">#&gt;  [9] ggplot2_4.0.3     dplyr_1.2.1       RAMEN_2.1.2       knitr_1.51       </span></span>
+<span><span class="co">#&gt;  [9] ggplot2_4.0.3     dplyr_1.2.1       RAMEN_2.99.0      knitr_1.51       </span></span>
 <span><span class="co">#&gt; [13] BiocStyle_2.40.0 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
@@ -1647,7 +1651,7 @@ use the <code>doParallel</code> package:</p>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Erick I. Navarro-Delgado, Keegan Korthauer, Michael S. Kobor.</p>
+  <p>Developed by Erick I. Navarro-Delgado, Keegan Korthauer, Michael S. Kobor, The University of British Columbia.</p>
 </div>
 
 <div class="pkgdown-footer-right">

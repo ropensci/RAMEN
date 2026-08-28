@@ -566,6 +566,10 @@ VML <- RAMEN::findVML(
   max_distance = 1000
 )
 #> Identifying Highly Variable Probes...
+#> Warning: replacing previous import 'S4Arrays::makeNindexFromArrayViewport' by
+#> 'DelayedArray::makeNindexFromArrayViewport' when loading 'SummarizedExperiment'
+#> Warning: replacing previous import 'S4Arrays::makeNindexFromArrayViewport' by
+#> 'DelayedArray::makeNindexFromArrayViewport' when loading 'HDF5Array'
 #> Setting options('download.file.method.GEOquery'='auto')
 #> Setting options('GEOquery.inmemory.gpl'=FALSE)
 #> Identifying sparse Variable Methylated Probes
@@ -646,7 +650,7 @@ as(VML_gr, "data.frame") |>
   ggplot2::ggtitle("VMRs width (bp)")
 ```
 
-![](RAMEN_files/figure-html/unnamed-chunk-9-1.png)
+![](RAMEN_files/figure-html/explore-vml-1.png)
 
 Next, we want to summarize the DNAme level of each VML per individual.
 To do this, we use
@@ -1202,7 +1206,7 @@ null_dist |>
 ```
 
 ![R2 difference (winner - basal) in a suffled data
-set.](RAMEN_files/figure-html/unnamed-chunk-17-1.png)
+set.](RAMEN_files/figure-html/nulldist-fig-1.png)
 
 R2 difference (winner - basal) in a suffled data set.
 
@@ -1509,7 +1513,7 @@ sessionInfo()
 #> other attached packages:
 #>  [1] doRNG_1.8.6.3     rngtools_1.5.2    glmnet_5.0        Matrix_1.7-5     
 #>  [5] doParallel_1.0.17 iterators_1.0.14  foreach_1.5.2     tidyr_1.3.2      
-#>  [9] ggplot2_4.0.3     dplyr_1.2.1       RAMEN_2.1.2       knitr_1.51       
+#>  [9] ggplot2_4.0.3     dplyr_1.2.1       RAMEN_2.99.0      knitr_1.51       
 #> [13] BiocStyle_2.40.0 
 #> 
 #> loaded via a namespace (and not attached):

@@ -69,8 +69,9 @@ selectVariables(
   An integer number that initializes a pseudo-random number generator.
   Random numbers in this function are created during the lambda cross
   validation and the LASSO stages. Setting a seed is highly encouraged
-  for result reproducibility. **Please note that setting a seed in this
-  function modifies the seed globally**.
+  for result reproducibility. **The seed is applied for the duration of
+  this call only; the global random stream is restored when the function
+  returns**.
 
 ## Value
 
@@ -127,9 +128,10 @@ big concern. After finding the best lambda value, the sequence of models
 is fit by coordinate descent using *glmnet()*. Random numbers in this
 function are created during the lambda cross validation and the LASSO
 stages. Setting a seed is highly encouraged for result reproducibility
-using the *seed* argument. Please note that setting a seed inside of
-this function modifies the seed globally (which is R's default
-behavior).
+using the *seed* argument. The seed is applied for the duration of this
+call only: the random number generator state found on entry is restored
+when the function returns, so a seeded run leaves the global random
+stream untouched.
 
 This function supports parallel computing for increased speed. To do so,
 you have to set the parallel back-end in your R session before running

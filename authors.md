@@ -17,10 +17,12 @@
 - **Ulduz Vafadarshamasbi**. Reviewer.
   [](https://orcid.org/0000-0002-8370-8084)
 
+- **The University of British Columbia**. Funder.
+
 ## Citation
 
 Source:
-[`inst/CITATION`](https://github.com/ropensci/RAMEN/blob/v2.1.2/inst/CITATION)
+[`inst/CITATION`](https://github.com/ropensci/RAMEN/blob/main/inst/CITATION)
 
 Navarro-Delgado E, Edwards K, Fu M, Merrill S, Konwar C, MacIsaac J, Lin
 D, Mandhane P, Simons E, Subbarao P, Moraes T, Lahti J, Miller G, Binder
@@ -41,14 +43,14 @@ Biology*, **26**(1), 29.
       doi = {10.1186/s13059-025-03864-4},
     }
 
-Navarro-Delgado E, Korthauer K, Kobor M (2025). *RAMEN: RAMEN: Regional
-Association of DNA Methylome variability with the Exposome and geNome*.
-R package version 2.1.2, <https://github.com/ropensci/RAMEN>.
+Navarro-Delgado E, Korthauer K, Kobor M (2025). *RAMEN: Regional
+Association of Methylome variability with the Exposome and geNome*. R
+package version 2.99.0, <https://github.com/ropensci/RAMEN>.
 
     @Manual{RAMEN,
-      title = {RAMEN: RAMEN: Regional Association of DNA Methylome variability with the Exposome and geNome},
+      title = {RAMEN: Regional Association of Methylome variability with the Exposome and geNome},
       author = {Erick I. Navarro-Delgado and Keegan Korthauer and Michael S. Kobor},
-      note = {R package version 2.1.2},
+      note = {R package version 2.99.0},
       year = {2025},
       url = {https://github.com/ropensci/RAMEN},
     }

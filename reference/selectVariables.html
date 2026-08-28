@@ -11,7 +11,7 @@ using LASSO. See details below for more information."><meta property="og:image" 
 
     <a class="navbar-brand me-2" href="../index.html">RAMEN</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.1.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.99.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -33,7 +33,7 @@ using LASSO. See details below for more information."><meta property="og:image" 
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Selection of relevant environment and genotype variables associated with Variably Methylated Loci (VML)</h1>
-      <small class="dont-index">Source: <a href="https://github.com/ropensci/RAMEN/blob/v2.1.2/R/selectVariables.R" class="external-link"><code>R/selectVariables.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ropensci/RAMEN/blob/main/R/selectVariables.R" class="external-link"><code>R/selectVariables.R</code></a></small>
       <div class="d-none name"><code>selectVariables.Rd</code></div>
     </div>
 
@@ -108,7 +108,8 @@ the sample IDs, and must match with the IDs of the other matrices.</p></dd>
 generator. Random numbers in this function are created during the lambda
 cross validation and the LASSO stages. Setting a seed is highly encouraged
 for result reproducibility.
-<strong>Please note that setting a seed in this function modifies the seed globally</strong>.</p></dd>
+<strong>The seed is applied for the duration of this call only; the global random
+stream is restored when the function returns</strong>.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -158,9 +159,10 @@ does not impose a big concern. After finding the best lambda value, the
 sequence of models is fit by coordinate descent using <em>glmnet()</em>. Random
 numbers in this function are created during the lambda cross validation and
 the LASSO stages. Setting a seed is highly encouraged for result
-reproducibility using the <em>seed</em> argument. Please note that setting a seed
-inside of this function modifies the seed globally (which is R's default
-behavior).</p>
+reproducibility using the <em>seed</em> argument. The seed is applied for the
+duration of this call only: the random number generator state found on
+entry is restored when the function returns, so a seeded run leaves the
+global random stream untouched.</p>
 <p>This function supports parallel computing for increased speed. To do so,
 you have to set the parallel back-end in your R session before running the
 function  (e.g., <em>doParallel::registerDoParallel(4)</em>). After that, the
@@ -224,7 +226,7 @@ empty for every VML. A <em>genotype_matrix</em> is always required.</p>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Erick I. Navarro-Delgado, Keegan Korthauer, Michael S. Kobor.</p>
+  <p>Developed by Erick I. Navarro-Delgado, Keegan Korthauer, Michael S. Kobor, The University of British Columbia.</p>
 </div>
 
 <div class="pkgdown-footer-right">

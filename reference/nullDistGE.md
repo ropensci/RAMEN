@@ -81,8 +81,9 @@ nullDistGE(
   An integer number that initializes a pseudo-random number generator.
   Random numbers in this function are created during the lambda cross
   validation and the LASSO stages. Setting a seed is highly encouraged
-  for result reproducibility. **Please note that setting a seed in this
-  function modifies the seed globally**.
+  for result reproducibility. **The seed is applied for the duration of
+  this call only; the global random stream is restored when the function
+  returns**.
 
 - model_selection:
 
@@ -158,8 +159,9 @@ the VML in the dataset, which is where nearly all of its draws come
 from. It is nonetheless worth keeping in mind when interpreting the
 spread of the distribution.
 
-Please note that setting a seed in this function modifies the seed
-globally (which is R's default behavior).
+The seed is applied for the duration of this call only: the random
+number generator state found on entry is restored when the function
+returns, so a seeded run leaves the global random stream untouched.
 
 ## Examples
 
