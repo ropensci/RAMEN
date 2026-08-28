@@ -44,9 +44,10 @@
 #' sequence of models is fit by coordinate descent using *glmnet()*. Random
 #' numbers in this function are created during the lambda cross validation and
 #' the LASSO stages. Setting a seed is highly encouraged for result
-#' reproducibility using the *seed* argument. Please note that setting a seed
-#' inside of this function modifies the seed globally (which is R's default
-#' behavior).
+#' reproducibility using the *seed* argument. The seed is applied for the
+#' duration of this call only: the random number generator state found on
+#' entry is restored when the function returns, so a seeded run leaves the
+#' global random stream untouched.
 #'
 #' This function supports parallel computing for increased speed. To do so,
 #' you have to set the parallel back-end in your R session before running the
@@ -95,7 +96,8 @@
 #' generator. Random numbers in this function are created during the lambda
 #' cross validation and the LASSO stages. Setting a seed is highly encouraged
 #' for result reproducibility.
-#' **Please note that setting a seed in this function modifies the seed globally**.
+#' **The seed is applied for the duration of this call only; the global random
+#' stream is restored when the function returns**.
 #'
 #' @return A data frame with three columns:
 #'  - VML_index: Unique VML ID.
@@ -163,8 +165,8 @@ selectVariables <- function(VML_wSNPs,
   # VML_index is used to index both summarized_methyl_VML and the pre-split SNP
   # list below, so duplicated IDs would silently resolve to the first match
   if (anyDuplicated(VML_wSNPs$VML_index) != 0) {
-    stop(paste("Please make sure the 'VML_index' column in the VML_wSNPs object",
-               "contains unique values."))
+    stop("Please make sure the 'VML_index' column in the VML_wSNPs object ",
+         "contains unique values.")
   }
   # Check that IDs match across data sets
   vectors_match(rownames(summarized_methyl_VML), colnames(genotype_matrix),
@@ -186,8 +188,20 @@ selectVariables <- function(VML_wSNPs,
   if (!is.null(environmental_matrix)) finite_numeric_check(environmental_matrix)
   if (!is.null(covariates)) finite_numeric_check(covariates)
   finite_numeric_check(summarized_methyl_VML)
-  ## Set the seed
-  if (!is.null(seed)) set.seed(seed)
+  ## Seed the RNG for this call only. The caller's random stream is captured
+  ## first and put back by on.exit(), so that a seeded run here does not leave
+  ## the global generator in a different state than it found it.
+  if (!is.null(seed)) {
+    if (exists(".Random.seed", envir = globalenv(), inherits = FALSE)) {
+      entry_seed <- get(".Random.seed", envir = globalenv(), inherits = FALSE)
+      on.exit(assign(".Random.seed", entry_seed, envir = globalenv()),
+              add = TRUE)
+    } else {
+      ## set.seed() below always creates it, so rm() cannot warn here.
+      on.exit(rm(".Random.seed", envir = globalenv()), add = TRUE)
+    }
+    set.seed(seed)
+  }
   k <- NULL # To avoid R CMD check note about undefined global variable
 
   #### Resolve per-VML look-ups once, up front ####

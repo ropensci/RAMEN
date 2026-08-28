@@ -52,8 +52,9 @@
 #' which is where nearly all of its draws come from. It is nonetheless worth
 #' keeping in mind when interpreting the spread of the distribution.
 #'
-#' Please note that setting a seed in this function modifies the seed globally
-#' (which is R's default behavior).
+#' The seed is applied for the duration of this call only: the random number
+#' generator state found on entry is restored when the function returns, so a
+#' seeded run leaves the global random stream untouched.
 #'
 #' @inheritParams selectVariables
 #' @inheritParams lmGE
@@ -147,13 +148,26 @@ nullDistGE <- function(VML_wSNPs,
 
   #### Shuffle data ####
   # Set shuffle order
-  if (!is.null(seed)) set.seed(seed)
+  ## Seed the RNG for this call only. The caller's random stream is captured
+  ## first and put back by on.exit(), so that a seeded run here does not leave
+  ## the global generator in a different state than it found it.
+  if (!is.null(seed)) {
+    if (exists(".Random.seed", envir = globalenv(), inherits = FALSE)) {
+      entry_seed <- get(".Random.seed", envir = globalenv(), inherits = FALSE)
+      on.exit(assign(".Random.seed", entry_seed, envir = globalenv()),
+              add = TRUE)
+    } else {
+      ## set.seed() below always creates it, so rm() cannot warn here.
+      on.exit(rm(".Random.seed", envir = globalenv()), add = TRUE)
+    }
+    set.seed(seed)
+  }
   # Initialize permutation object
   permutation_order <- replicate(permutations,
                                  sample(rownames(summarized_methyl_VML)),
                                  simplify = FALSE) |>
     as.data.frame()
-  colnames(permutation_order) <- 1:permutations
+  colnames(permutation_order) <- seq_len(permutations)
 
   individuals <- rownames(summarized_methyl_VML)
 
