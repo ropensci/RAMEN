@@ -232,16 +232,16 @@ summarized_methyl_VML <- RAMEN::summarizeVML(
 )
 
 ## Select relevant genotype and environmental variables
+set.seed(1)
 selected_vars <- RAMEN::selectVariables(
   VML_wSNPs = VML_with_cis_snps,
   genotype_matrix = RAMEN::test_genotype_matrix,
   environmental_matrix = RAMEN::test_environmental_matrix,
   covariates = RAMEN::test_covariates,
-  summarized_methyl_VML = summarized_methyl_VML,
-  seed = 1
+  summarized_methyl_VML = summarized_methyl_VML
 )
 #> Loading required package: Matrix
-#> Loaded glmnet 5.0
+#> Loaded glmnet 5.1
 #> Loading required package: foreach
 #> Loading required package: rngtools
 

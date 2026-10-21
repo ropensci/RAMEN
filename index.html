@@ -23,7 +23,7 @@
 
     <a class="navbar-brand me-2" href="index.html">RAMEN</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.99.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.99.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -68,19 +68,11 @@
 </h2>
 <p>You can install the latest version of RAMEN from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">## Install dependencies</span></span>
-<span><span class="co"># install.packages("BiocManager")</span></span>
-<span><span class="co"># BiocManager::install("S4Vectors")</span></span>
-<span><span class="co"># BiocManager::install("IRanges")</span></span>
-<span><span class="co"># BiocManager::install("GenomicRanges")</span></span>
-<span><span class="co"># BiocManager::install("IlluminaHumanMethylationEPICanno.ilm10b4.hg19")</span></span>
+<code class="sourceCode R"><span><span class="co">## Install RAMEN (recommended option)</span></span>
+<span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="st"><a href="https://bioconductor.github.io/BiocManager/" class="external-link">"BiocManager"</a></span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"BiocManager"</span><span class="op">)</span></span>
+<span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://bioconductor.github.io/BiocManager/reference/install.html" class="external-link">install</a></span><span class="op">(</span><span class="st">"RAMEN"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co">## Install if these manifests are used</span></span>
-<span><span class="co"># BiocManager::install("IlluminaHumanMethylation450kanno.ilmn12.hg19")</span></span>
-<span><span class="co"># BiocManager::install("IlluminaHumanMethylationEPICv2anno.20a1.hg38")</span></span>
-<span></span>
-<span><span class="co">## Install the RAMEN package from R-universe</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"RAMEN"</span>, repos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'https://ropensci.r-universe.dev'</span>, <span class="st">'https://cloud.r-project.org'</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">## Alternatively install the RAMEN package from GitHub</span></span>
 <span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://bioconductor.github.io/BiocManager/reference/install.html" class="external-link">install</a></span><span class="op">(</span><span class="st">"ropensci/RAMEN"</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -129,10 +121,10 @@
 <span><span class="co">#&gt; Loading required package: parallel</span></span>
 <span></span>
 <span><span class="co"># Set the parallel backend to use 2 workers</span></span>
-<span><span class="fu">doParallel</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/doParallel/man/registerDoParallel.html" class="external-link">registerDoParallel</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/doParallel/man/registerDoParallel.html" class="external-link">registerDoParallel</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">VML</span> <span class="op">&lt;-</span> <span class="fu">RAMEN</span><span class="fu">::</span><span class="fu"><a href="reference/findVML.html">findVML</a></span><span class="op">(</span></span>
-<span>  methylation_data <span class="op">=</span> <span class="fu">RAMEN</span><span class="fu">::</span><span class="va"><a href="reference/test_methylation_data.html">test_methylation_data</a></span>,</span>
+<span><span class="va">VML</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/findVML.html">findVML</a></span><span class="op">(</span></span>
+<span>  methylation_data <span class="op">=</span> <span class="va">test_methylation_data</span>,</span>
 <span>  array_manifest <span class="op">=</span> <span class="st">"IlluminaHumanMethylationEPICv1"</span>,</span>
 <span>  cor_threshold <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  var_method <span class="op">=</span> <span class="st">"variance"</span>,</span>
@@ -171,7 +163,7 @@
 <li>Summarize the regional methylation state of each VML with <code><a href="reference/summarizeVML.html">summarizeVML()</a></code>.</li>
 </ol>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">summarized_methyl_VML</span> <span class="op">&lt;-</span> <span class="fu">RAMEN</span><span class="fu">::</span><span class="fu"><a href="reference/summarizeVML.html">summarizeVML</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">summarized_methyl_VML</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/summarizeVML.html">summarizeVML</a></span><span class="op">(</span></span>
 <span>  VML <span class="op">=</span> <span class="va">VML</span><span class="op">$</span><span class="va">VML</span>,</span>
 <span>  methylation_data <span class="op">=</span> <span class="va">test_methylation_data</span></span>
 <span><span class="op">)</span></span>
@@ -188,9 +180,9 @@
 <li>Identify the SNPs in <em>cis</em> of each VML with <code><a href="reference/findCisSNPs.html">findCisSNPs()</a></code>.</li>
 </ol>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">VML_cis_snps</span> <span class="op">&lt;-</span> <span class="fu">RAMEN</span><span class="fu">::</span><span class="fu"><a href="reference/findCisSNPs.html">findCisSNPs</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">VML_cis_snps</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/findCisSNPs.html">findCisSNPs</a></span><span class="op">(</span></span>
 <span>  VML <span class="op">=</span> <span class="va">VML</span><span class="op">$</span><span class="va">VML</span>,</span>
-<span>  genotype_information <span class="op">=</span> <span class="fu">RAMEN</span><span class="fu">::</span><span class="va"><a href="reference/test_genotype_information.html">test_genotype_information</a></span>,</span>
+<span>  genotype_information <span class="op">=</span> <span class="va">test_genotype_information</span>,</span>
 <span>  distance <span class="op">=</span> <span class="fl">1e+06</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; Reminder: please make sure that the positions of the VML data frame and the ones in the genotype information are from the same genome build.</span></span>
@@ -228,16 +220,16 @@
 <li>Conduct a LASSO-based feature selection strategy to identify potentially relevant <em>cis</em> SNPs and environmental variables with <code><a href="reference/selectVariables.html">selectVariables()</a></code>.</li>
 </ol>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">selected_variables</span> <span class="op">&lt;-</span> <span class="fu">RAMEN</span><span class="fu">::</span><span class="fu"><a href="reference/selectVariables.html">selectVariables</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
+<span><span class="va">selected_variables</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/selectVariables.html">selectVariables</a></span><span class="op">(</span></span>
 <span>  VML_wSNPs <span class="op">=</span> <span class="va">VML_cis_snps</span>,</span>
-<span>  genotype_matrix <span class="op">=</span> <span class="fu">RAMEN</span><span class="fu">::</span><span class="va"><a href="reference/test_genotype_matrix.html">test_genotype_matrix</a></span>,</span>
-<span>  environmental_matrix <span class="op">=</span> <span class="fu">RAMEN</span><span class="fu">::</span><span class="va"><a href="reference/test_environmental_matrix.html">test_environmental_matrix</a></span>,</span>
-<span>  covariates <span class="op">=</span> <span class="fu">RAMEN</span><span class="fu">::</span><span class="va"><a href="reference/test_covariates.html">test_covariates</a></span>,</span>
-<span>  summarized_methyl_VML <span class="op">=</span> <span class="va">summarized_methyl_VML</span>,</span>
-<span>  seed <span class="op">=</span> <span class="fl">1</span></span>
+<span>  genotype_matrix <span class="op">=</span> <span class="va">test_genotype_matrix</span>,</span>
+<span>  environmental_matrix <span class="op">=</span> <span class="va">test_environmental_matrix</span>,</span>
+<span>  covariates <span class="op">=</span> <span class="va">test_covariates</span>,</span>
+<span>  summarized_methyl_VML <span class="op">=</span> <span class="va">summarized_methyl_VML</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; Loading required package: Matrix</span></span>
-<span><span class="co">#&gt; Loaded glmnet 5.0</span></span>
+<span><span class="co">#&gt; Loaded glmnet 5.1</span></span>
 <span><span class="co">#&gt; Loading required package: rngtools</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">selected_variables</span><span class="op">)</span></span>
@@ -252,12 +244,12 @@
 <li>Fit linear single-variable genetic (G), environmental (E), pairwise additive (G+E) and pairwise interaction (GxE) linear models, and select the best explanatory model for each VML with <code><a href="reference/lmGE.html">lmGE()</a></code>.</li>
 </ol>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">lmge_res</span> <span class="op">&lt;-</span> <span class="fu">RAMEN</span><span class="fu">::</span><span class="fu"><a href="reference/lmGE.html">lmGE</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">lmge_res</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/lmGE.html">lmGE</a></span><span class="op">(</span></span>
 <span>  selected_variables <span class="op">=</span> <span class="va">selected_variables</span>,</span>
 <span>  summarized_methyl_VML <span class="op">=</span> <span class="va">summarized_methyl_VML</span>,</span>
-<span>  genotype_matrix <span class="op">=</span> <span class="fu">RAMEN</span><span class="fu">::</span><span class="va"><a href="reference/test_genotype_matrix.html">test_genotype_matrix</a></span>,</span>
-<span>  environmental_matrix <span class="op">=</span> <span class="fu">RAMEN</span><span class="fu">::</span><span class="va"><a href="reference/test_environmental_matrix.html">test_environmental_matrix</a></span>,</span>
-<span>  covariates <span class="op">=</span> <span class="fu">RAMEN</span><span class="fu">::</span><span class="va"><a href="reference/test_covariates.html">test_covariates</a></span>,</span>
+<span>  genotype_matrix <span class="op">=</span> <span class="va">test_genotype_matrix</span>,</span>
+<span>  environmental_matrix <span class="op">=</span> <span class="va">test_environmental_matrix</span>,</span>
+<span>  covariates <span class="op">=</span> <span class="va">test_covariates</span>,</span>
 <span>  model_selection <span class="op">=</span> <span class="st">"AIC"</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -279,14 +271,14 @@
 <li>Simulate a null distribution of G and E effects on DNAme variability with <code><a href="reference/nullDistGE.html">nullDistGE()</a></code>, and use it to filter out poor-performing best explanatory models selected by <em>lmGE()</em>.</li>
 </ol>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">null_dist</span> <span class="op">&lt;-</span> <span class="fu">RAMEN</span><span class="fu">::</span><span class="fu"><a href="reference/nullDistGE.html">nullDistGE</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
+<span><span class="va">null_dist</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/nullDistGE.html">nullDistGE</a></span><span class="op">(</span></span>
 <span>  VML_wSNPs <span class="op">=</span> <span class="va">VML_cis_snps</span>,</span>
-<span>  genotype_matrix <span class="op">=</span> <span class="fu">RAMEN</span><span class="fu">::</span><span class="va"><a href="reference/test_genotype_matrix.html">test_genotype_matrix</a></span>,</span>
-<span>  environmental_matrix <span class="op">=</span> <span class="fu">RAMEN</span><span class="fu">::</span><span class="va"><a href="reference/test_environmental_matrix.html">test_environmental_matrix</a></span>,</span>
+<span>  genotype_matrix <span class="op">=</span> <span class="va">test_genotype_matrix</span>,</span>
+<span>  environmental_matrix <span class="op">=</span> <span class="va">test_environmental_matrix</span>,</span>
 <span>  summarized_methyl_VML <span class="op">=</span> <span class="va">summarized_methyl_VML</span>,</span>
 <span>  permutations <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  covariates <span class="op">=</span> <span class="fu">RAMEN</span><span class="fu">::</span><span class="va"><a href="reference/test_covariates.html">test_covariates</a></span>,</span>
-<span>  seed <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  covariates <span class="op">=</span> <span class="va">test_covariates</span>,</span>
 <span>  model_selection <span class="op">=</span> <span class="st">"AIC"</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; Starting permutation 1 of 1</span></span>
@@ -310,7 +302,7 @@
 <span></span>
 <span><span class="co"># Get a data frame with the final results</span></span>
 <span><span class="va">final_res</span> <span class="op">&lt;-</span> <span class="va">lmge_res</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
 <span>    r2_difference_basal <span class="op">=</span> <span class="va">tot_r_squared</span> <span class="op">-</span> <span class="va">basal_rsquared</span>,</span>
 <span>    <span class="co"># Label if the best explanatory model passes its corresponding threshold</span></span>
 <span>    pass_cutoff_threshold <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case-and-replace-when.html" class="external-link">case_when</a></span><span class="op">(</span></span>
@@ -324,20 +316,20 @@
 <span>      <span class="cn">TRUE</span> <span class="op">~</span> <span class="st">"B"</span></span>
 <span>    <span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">pass_cutoff_threshold</span><span class="op">)</span> <span class="co"># Drop temporary column</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">pass_cutoff_threshold</span><span class="op">)</span> <span class="co"># Drop temporary column</span></span>
 <span></span>
 <span><span class="co"># Keep only VML that have informative models with out data</span></span>
 <span><span class="va">filtered_res</span> <span class="op">&lt;-</span> <span class="va">final_res</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="op">!</span><span class="va">model_group</span> <span class="op">==</span> <span class="st">"B"</span><span class="op">)</span> <span class="co"># Filter based on the cutoff threshold</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="op">!</span><span class="va">model_group</span> <span class="op">==</span> <span class="st">"B"</span><span class="op">)</span> <span class="co"># Filter based on the cutoff threshold</span></span>
 <span></span>
 <span><span class="va">final_res</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">model_group</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>count <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">model_group</span>, y <span class="op">=</span> <span class="va">count</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_col</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">xlab</a></span><span class="op">(</span><span class="st">"Best explanatory model"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">"VML"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_classic</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">model_group</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>count <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">model_group</span>, y <span class="op">=</span> <span class="va">count</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_col</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">xlab</a></span><span class="op">(</span><span class="st">"Best explanatory model"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">"VML"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_classic</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-7-1.png" alt="" width="100%"></p>
 <p>It is worth mentioning that RAMEN assumes that all data sets (genome, exposome and methylome) have undergone quality control, pre-processing and normalization steps when required. The choice of methods for these steps are out of the scope of this package, but we provide some resources and guidance in the <a href="https://ropensci.github.io/RAMEN/articles/RAMEN.html">tutorial</a>.</p>
 </div>

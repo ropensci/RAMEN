@@ -1,18 +1,53 @@
 # Changelog
 
-## RAMEN 2.99.0
+## RAMEN 3.0.0
 
-This minor version prepares RAMEN for submission to Bioconductor. It is
-mostly a formatting and packaging release: apart from the change to the
-seed described below, the analysis functions return the same results as
-in 2.1.2, and the error and warning messages are unchanged.
+This version reflects RAMEN’s [incorporation to
+Bioconductor](https://github.com/Bioconductor/BiocContributions/issues/175).
+Apart from the removal of the `seed` argument described below, the
+analysis functionsreturn the same results as in 2.1.2, and the error and
+warning messages are unchanged.
 
-- [`selectVariables()`](https://ropensci.github.io/RAMEN/reference/selectVariables.md)
+- The `seed` argument was removed from
+  [`selectVariables()`](https://ropensci.github.io/RAMEN/reference/selectVariables.md)
   and
+  [`nullDistGE()`](https://ropensci.github.io/RAMEN/reference/nullDistGE.md).
+  Call [`set.seed()`](https://rdrr.io/r/base/Random.html) before either
+  function instead. As a consequence,
   [`nullDistGE()`](https://ropensci.github.io/RAMEN/reference/nullDistGE.md)
-  no longer leave the global random number generator reseeded. The
-  `seed` argument now applies for the duration of the call only: the RNG
-  state found on entry is restored when the function returns.
+  no longer hands the same seed to
+  [`selectVariables()`](https://ropensci.github.io/RAMEN/reference/selectVariables.md)
+  in every permutation, so the cross-validation folds now differ from
+  one permutation to the next instead of being held fixed. Null
+  distributions computed with this version therefore differ numerically
+  from those computed with earlier ones.
+- big fix:
+  [`selectVariables()`](https://ropensci.github.io/RAMEN/reference/selectVariables.md)
+  no longer fails when `environmental_matrix` holds a single variable
+  and no covariates are given.
+- [`findVML()`](https://ropensci.github.io/RAMEN/reference/findVML.md),
+  [`selectVariables()`](https://ropensci.github.io/RAMEN/reference/selectVariables.md)
+  and [`lmGE()`](https://ropensci.github.io/RAMEN/reference/lmGE.md)
+  were split into internal helper functions, so that each step of their
+  work can be read on its own. The three are now roughly half their
+  former length. This is a refactoring only: all three return exactly
+  what they returned before.
+- Every package listed in `Imports` now has a matching `importFrom()`
+  entry in NAMESPACE. These are collected in `R/RAMEN-package.R` rather
+  than spread across the individual function files.
+- The vignette calls functions by name instead of prefixing them with
+  `package::`, and every one of its chunks now has a label.
+- The vignette Introduction describes how RAMEN fits into the
+  Bioconductor ecosystem and how it relates to other Bioconductor
+  packages.
+- Package metadata was updated: `biocViews` terms were added, the R
+  dependency was raised to 4.6.0, and the `Title` and `Description`
+  fields were revised.
+
+Claude Opus 5 was used to assist the function refactoring, using
+specific prompts for the blocks that were to be moved to internal
+helpers. All modifications were manually reviewed, corrected where
+necessary, and fully validated by the package developer.
 
 ## RAMEN 2.1.2
 
@@ -126,21 +161,23 @@ duplicate-index check noted above.
 ## RAMEN 2.1.0 - July 14, 2026
 
 This minor version presents a couple of changes that improve the
-integration of RAMEN with GenomicRanges objects and Bioconductor: -
-[`findVML()`](https://ropensci.github.io/RAMEN/reference/findVML.md)
-outputs a GRanges object for the identified VML instead of a data
-frame. - Downstream functions (i.e.,
-[`summarizeVML()`](https://ropensci.github.io/RAMEN/reference/summarizeVML.md),
-[`findCisSNPs()`](https://ropensci.github.io/RAMEN/reference/findCisSNPs.md),
-[`selectVariables()`](https://ropensci.github.io/RAMEN/reference/selectVariables.md),
-[`medCorVMR()`](https://ropensci.github.io/RAMEN/reference/medCorVMR.md)
-and
-[`nullDistGE()`](https://ropensci.github.io/RAMEN/reference/nullDistGE.md))
-now take GRanges objects as an input, instead of data frames. The
-argument name changed from “VML_df” to “VML”. When appropriate, the
-output is now also a GRanges object. -
-[`summarizeVML()`](https://ropensci.github.io/RAMEN/reference/summarizeVML.md)
-now outputs a matrix instead of a data frame.
+integration of RAMEN with GenomicRanges objects and Bioconductor:
+
+- [`findVML()`](https://ropensci.github.io/RAMEN/reference/findVML.md)
+  outputs a GRanges object for the identified VML instead of a data
+  frame.
+- Downstream functions (i.e.,
+  [`summarizeVML()`](https://ropensci.github.io/RAMEN/reference/summarizeVML.md),
+  [`findCisSNPs()`](https://ropensci.github.io/RAMEN/reference/findCisSNPs.md),
+  [`selectVariables()`](https://ropensci.github.io/RAMEN/reference/selectVariables.md),
+  [`medCorVMR()`](https://ropensci.github.io/RAMEN/reference/medCorVMR.md)
+  and
+  [`nullDistGE()`](https://ropensci.github.io/RAMEN/reference/nullDistGE.md))
+  now take GRanges objects as an input, instead of data frames. The
+  argument name changed from “VML_df” to “VML”. When appropriate, the
+  output is now also a GRanges object.
+- [`summarizeVML()`](https://ropensci.github.io/RAMEN/reference/summarizeVML.md)
+  now outputs a matrix instead of a data frame.
 
 In addition to that, the Vignette has been improved. New sections have
 been added to provide guidance and recommendations to the users (e.g
@@ -160,7 +197,10 @@ internal functioning of the package, such as:
 - Reduced data casting and conditionals inside the functions.
 - Improved error messages across all functions.
 
-These changes were motivated by the rOpenSci peer review process.
+These changes were motivated by the [rOpenSci peer review
+process](https://github.com/ropensci/software-review/issues/743), and
+reflect the incorporation of RAMEN to
+[R-universe](https://ropensci.r-universe.dev/RAMEN).
 
 ## RAMEN 2.0.1 - June 30, 2026
 

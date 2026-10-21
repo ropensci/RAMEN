@@ -20,7 +20,6 @@ nullDistGE(
   summarized_methyl_VML,
   permutations = 5,
   covariates = NULL,
-  seed = NULL,
   model_selection = "AIC"
 )
 ```
@@ -75,15 +74,6 @@ nullDistGE(
   adjusted for in the final GxE models (e.g., cell type proportions,
   age, etc.). Each column should correspond to a covariate and each row
   to an individual. Row names must correspond to the individual IDs.
-
-- seed:
-
-  An integer number that initializes a pseudo-random number generator.
-  Random numbers in this function are created during the lambda cross
-  validation and the LASSO stages. Setting a seed is highly encouraged
-  for result reproducibility. **The seed is applied for the duration of
-  this call only; the global random stream is restored when the function
-  returns**.
 
 - model_selection:
 
@@ -140,28 +130,13 @@ required to create a null distribution and reduces the computational
 time. For further information please read the RAMEN paper
 (https://doi.org/10.1186/s13059-025-03864-4).
 
-**Reproducibility and the use of the seed**
+**Reproducibility**
 
 Random numbers are drawn in this function when the permutation orders
 are created, and again inside each permutation during the
-cross-validation and LASSO stages of *selectVariables()*. Setting *seed*
-makes the whole run reproducible.
-
-Note that the same *seed* value is handed to *selectVariables()* in
-every permutation. For a given VML the cross-validation folds are
-therefore identical from one permutation to the next, and what differs
-between permutations is the shuffled G and E data. The permutations are,
-in that sense, not fully independent draws with respect to the
-cross-validation randomness. This holds one source of variability fixed
-rather than biasing the delta R squared values, and its practical effect
-is small because the null distribution pools delta R squared across all
-the VML in the dataset, which is where nearly all of its draws come
-from. It is nonetheless worth keeping in mind when interpreting the
-spread of the distribution.
-
-The seed is applied for the duration of this call only: the random
-number generator state found on entry is restored when the function
-returns, so a seeded run leaves the global random stream untouched.
+cross-validation and LASSO stages of *selectVariables()*. Calling
+*set.seed()* before this function is highly recommended, so that the
+whole run is reproducible.
 
 ## Examples
 
@@ -199,6 +174,8 @@ summarized_methyl_VML <- summarizeVML(
 
 ## Simulate null distribution of G and E contributions on DNAme variability
 ## We will only run one permutation for demonstration purposes
+## Setting a seed beforehand makes the permutations reproducible
+set.seed(1)
 null_dist <- nullDistGE(
   VML_wSNPs = VML_with_cis_snps,
   genotype_matrix = test_genotype_matrix,
@@ -207,7 +184,6 @@ null_dist <- nullDistGE(
   # Use one permutation for demonstration purposes
   permutations = 1,
   covariates = test_covariates,
-  seed = 1,
   model_selection = "AIC"
 )
 #> Starting permutation 1 of 1

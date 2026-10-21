@@ -27,7 +27,7 @@ For guidance on interpretation, please build and read the package's vignette."><
 
     <a class="navbar-brand me-2" href="../index.html">RAMEN</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.99.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.99.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -257,16 +257,16 @@ publication of the relaimpo R package (Grömping, 2006).</p>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Select relevant genotype and environmental variables</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">selected_vars</span> <span class="op">&lt;-</span> <span class="fu">RAMEN</span><span class="fu">::</span><span class="fu"><a href="selectVariables.html">selectVariables</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  VML_wSNPs <span class="op">=</span> <span class="va">VML_with_cis_snps</span>,</span></span>
 <span class="r-in"><span>  genotype_matrix <span class="op">=</span> <span class="fu">RAMEN</span><span class="fu">::</span><span class="va"><a href="test_genotype_matrix.html">test_genotype_matrix</a></span>,</span></span>
 <span class="r-in"><span>  environmental_matrix <span class="op">=</span> <span class="fu">RAMEN</span><span class="fu">::</span><span class="va"><a href="test_environmental_matrix.html">test_environmental_matrix</a></span>,</span></span>
 <span class="r-in"><span>  covariates <span class="op">=</span> <span class="fu">RAMEN</span><span class="fu">::</span><span class="va"><a href="test_covariates.html">test_covariates</a></span>,</span></span>
-<span class="r-in"><span>  summarized_methyl_VML <span class="op">=</span> <span class="va">summarized_methyl_VML</span>,</span></span>
-<span class="r-in"><span>  seed <span class="op">=</span> <span class="fl">1</span></span></span>
+<span class="r-in"><span>  summarized_methyl_VML <span class="op">=</span> <span class="va">summarized_methyl_VML</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: Matrix</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Loaded glmnet 5.0</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Loaded glmnet 5.1</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: foreach</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: rngtools</span>
 <span class="r-in"><span></span></span>

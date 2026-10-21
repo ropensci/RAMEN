@@ -21,7 +21,7 @@ observed in random data using the RAMEN methodology."><meta property="og:image" 
 
     <a class="navbar-brand me-2" href="../index.html">RAMEN</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.99.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.99.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -67,7 +67,6 @@ observed in random data using the RAMEN methodology.</p>
 <span>  <span class="va">summarized_methyl_VML</span>,</span>
 <span>  permutations <span class="op">=</span> <span class="fl">5</span>,</span>
 <span>  covariates <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  seed <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  model_selection <span class="op">=</span> <span class="st">"AIC"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -124,15 +123,6 @@ etc.). Each column should correspond to a covariate and each row to an
 individual. Row names must correspond to the individual IDs.</p></dd>
 
 
-<dt id="arg-seed">seed<a class="anchor" aria-label="anchor" href="#arg-seed"></a></dt>
-<dd><p>An integer number that initializes a pseudo-random number
-generator. Random numbers in this function are created during the lambda
-cross validation and the LASSO stages. Setting a seed is highly encouraged
-for result reproducibility.
-<strong>The seed is applied for the duration of this call only; the global random
-stream is restored when the function returns</strong>.</p></dd>
-
-
 <dt id="arg-model-selection">model_selection<a class="anchor" aria-label="anchor" href="#arg-model-selection"></a></dt>
 <dd><p>Which metric to use to select the best model for each
 VML. Supported options are "AIC" or BIC".</p></dd>
@@ -176,24 +166,11 @@ of the high number of VML in the dataset. This assumption decreases
 significantly the number of permutations required to create a null
 distribution and reduces the computational time. For further information
 please read the RAMEN paper (https://doi.org/10.1186/s13059-025-03864-4).</p>
-<p><strong>Reproducibility and the use of the seed</strong></p>
+<p><strong>Reproducibility</strong></p>
 <p>Random numbers are drawn in this function when the permutation orders are
 created, and again inside each permutation during the cross-validation and
-LASSO stages of <em>selectVariables()</em>. Setting <em>seed</em> makes the whole run
-reproducible.</p>
-<p>Note that the same <em>seed</em> value is handed to <em>selectVariables()</em> in every
-permutation. For a given VML the cross-validation folds are therefore
-identical from one permutation to the next, and what differs between
-permutations is the shuffled G and E data. The permutations are, in that
-sense, not fully independent draws with respect to the cross-validation
-randomness. This holds one source of variability fixed rather than biasing
-the delta R squared values, and its practical effect is small because the
-null distribution pools delta R squared across all the VML in the dataset,
-which is where nearly all of its draws come from. It is nonetheless worth
-keeping in mind when interpreting the spread of the distribution.</p>
-<p>The seed is applied for the duration of this call only: the random number
-generator state found on entry is restored when the function returns, so a
-seeded run leaves the global random stream untouched.</p>
+LASSO stages of <em>selectVariables()</em>. Calling <em>set.seed()</em> before this
+function is highly recommended, so that the whole run is reproducible.</p>
     </div>
 
     <div class="section level2">
@@ -231,6 +208,8 @@ seeded run leaves the global random stream untouched.</p>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Simulate null distribution of G and E contributions on DNAme variability</span></span></span>
 <span class="r-in"><span><span class="co">## We will only run one permutation for demonstration purposes</span></span></span>
+<span class="r-in"><span><span class="co">## Setting a seed beforehand makes the permutations reproducible</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">null_dist</span> <span class="op">&lt;-</span> <span class="fu">nullDistGE</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  VML_wSNPs <span class="op">=</span> <span class="va">VML_with_cis_snps</span>,</span></span>
 <span class="r-in"><span>  genotype_matrix <span class="op">=</span> <span class="va">test_genotype_matrix</span>,</span></span>
@@ -239,7 +218,6 @@ seeded run leaves the global random stream untouched.</p>
 <span class="r-in"><span>  <span class="co"># Use one permutation for demonstration purposes</span></span></span>
 <span class="r-in"><span>  permutations <span class="op">=</span> <span class="fl">1</span>,</span></span>
 <span class="r-in"><span>  covariates <span class="op">=</span> <span class="va">test_covariates</span>,</span></span>
-<span class="r-in"><span>  seed <span class="op">=</span> <span class="fl">1</span>,</span></span>
 <span class="r-in"><span>  model_selection <span class="op">=</span> <span class="st">"AIC"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Starting permutation 1 of 1</span>

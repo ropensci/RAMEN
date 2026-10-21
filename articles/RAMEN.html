@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">RAMEN</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.99.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.99.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -164,6 +164,40 @@ analyses (see <a href="#variations-to-the-standard-workflow">Variations
 to the standard workflow</a>), such as reducing the tested sites in
 Epigenome Wide Association Studies, grouping DNAme probes into regions,
 identifying SNPs near a probe, etc.</p>
+<div class="section level3">
+<h3 id="integration-with-the-bioconductor-ecosystem">Integration with the Bioconductor ecosystem<a class="anchor" aria-label="anchor" href="#integration-with-the-bioconductor-ecosystem"></a>
+</h3>
+<p>RAMEN is designed to sit downstream of the standard Bioconductor DNA
+methylation array pre-processing workflows. It takes the normalized,
+quality-controlled M or B value matrices produced by packages such as <a href="https://bioconductor.org/packages/minfi/" class="external-link">minfi</a> or <a href="https://bioconductor.org/packages/sesame/" class="external-link">sesame</a>, and reads
+probe annotation directly from the Illumina manifest annotation packages
+(<code>IlluminaHumanMethylation450kanno.ilmn12.hg19</code>,
+<code>IlluminaHumanMethylationEPICanno.ilm10b4.hg19</code> and
+<code>IlluminaHumanMethylationEPICv2anno.20a1.hg38</code>). VML are
+represented as <a href="https://bioconductor.org/packages/GenomicRanges/" class="external-link">GenomicRanges</a>
+<code>GRanges</code> objects, so the outputs of RAMEN can be passed
+directly to any <code>GRanges</code>-compatible Bioconductor
+package.</p>
+<p>To our knowledge, no Bioconductor package provides a suite of
+functions to directly compare G, E, G+E and GxE models, and estimate the
+contribution of the factors within these models. The closest package
+conceptually is <a href="https://bioconductor.org/packages/GEM/" class="external-link">GEM</a>, which
+exhaustively fits epigenome-wide G, E and GxE models through independent
+functions. In comparison, RAMEN provides a function to group CpGs into
+loci and, additionally, fits all G, E and GxE models, plus G+E, directly
+compares them, and selects the best one through a model-selection
+framework. GEM provides a memory-efficient option to fit linear models
+and obtain p values for specific <em>SNP</em>, <em>E</em> or
+<em>SNPxE</em> terms. GEM could be paired with RAMEN results to conduct
+hypothesis testing for GxE associations in candidate VML best explained
+by GxE models if desired.</p>
+<p>RAMEN also differs to region-finding packages that identify
+Differentially Methylated Regions (DMRs), such as <a href="https://bioconductor.org/packages/DMRcate/" class="external-link">DMRcate</a>, <a href="https://bioconductor.org/packages/dmrseq/" class="external-link">dmrseq</a>, or <a href="https://bioconductor.org/packages/bumphunter/" class="external-link">bumphunter</a>, as
+RAMEN identifies VML. In comparison, VML represent genomic loci with
+high inter-individual variability in methylation levels within a single
+population, while DMRs represent regions where DNA methylation differs
+significantly across predefined groups.</p>
+</div>
 <div class="section level3">
 <h3 id="citation">Citation<a class="anchor" aria-label="anchor" href="#citation"></a>
 </h3>
@@ -417,21 +451,11 @@ These data sets are already available in the RAMEN package.</p>
 <h3 id="install-ramen-and-set-up-environment">Install RAMEN and set up environment<a class="anchor" aria-label="anchor" href="#install-ramen-and-set-up-environment"></a>
 </h3>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">## Install dependencies</span></span>
-<span><span class="co"># install.packages("BiocManager")</span></span>
-<span><span class="co"># BiocManager::install("S4Vectors")</span></span>
-<span><span class="co"># BiocManager::install("IRanges")</span></span>
-<span><span class="co"># BiocManager::install("GenomicRanges")</span></span>
-<span><span class="co"># BiocManager::install("IlluminaHumanMethylationEPICanno.ilm10b4.hg19")</span></span>
+<code class="sourceCode R"><span><span class="co">## Install RAMEN</span></span>
+<span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="st"><a href="https://bioconductor.github.io/BiocManager/" class="external-link">"BiocManager"</a></span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"BiocManager"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co">## Install if these manifests are used</span></span>
-<span><span class="co"># BiocManager::install("IlluminaHumanMethylation450kanno.ilmn12.hg19")</span></span>
-<span><span class="co"># BiocManager::install("IlluminaHumanMethylationEPICv2anno.20a1.hg38")</span></span>
-<span></span>
-<span><span class="co">## Install the RAMEN package from R-universe</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"RAMEN"</span>, repos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'https://ropensci.r-universe.dev'</span>, <span class="st">'https://cloud.r-project.org'</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">## Alternatively install the RAMEN package from GitHub</span></span>
-<span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://bioconductor.github.io/BiocManager/reference/install.html" class="external-link">install</a></span><span class="op">(</span><span class="st">"ropensci/RAMEN"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://bioconductor.github.io/BiocManager/reference/install.html" class="external-link">install</a></span><span class="op">(</span><span class="st">"RAMEN"</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Load the packages used throughout the vignette</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ropensci.github.io/RAMEN/">RAMEN</a></span><span class="op">)</span></span>
@@ -441,7 +465,7 @@ These data sets are already available in the RAMEN package.</p>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/RevolutionAnalytics/doparallel" class="external-link">doParallel</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Set the parallel backend to use 2 workers</span></span>
-<span><span class="fu">doParallel</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/doParallel/man/registerDoParallel.html" class="external-link">registerDoParallel</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/pkg/doParallel/man/registerDoParallel.html" class="external-link">registerDoParallel</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="identify-vml-and-summarize-their-methylation-state">Identify VML and summarize their methylation state<a class="anchor" aria-label="anchor" href="#identify-vml-and-summarize-their-methylation-state"></a>
@@ -481,12 +505,8 @@ than 1 kilobase). Some of these advantages include increasing
 statistical power by testing redundant probes only once, reducing
 false-positives driven by one problematic probe in a region, and
 improving comparability between studies that analyze the same genomic
-region but measure distinct CpGs due to microarray design differences.
-In contrast with Differentially Methylated Regions (DMRs), a different
-class of regional construct used in the field, VMRs denote regions with
-high inter-individual variability in methylation levels within a single
-population, while DMRs represent regions where DNA methylation differs
-significantly across a variable of interest.</p></li>
+region but measure distinct CpGs due to microarray design
+differences.</p></li>
 <li><p>sparse Variably Methylated Probe (sVMP): Genomic loci that are
 composed of a Highly Variable Probe that has no nearby probes measured
 in the array (according to the distance parameter specified by the
@@ -541,9 +561,9 @@ example:</p>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0.2</span>, <span class="fl">110</span><span class="op">)</span>,</span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">10</span>, size <span class="op">=</span> <span class="fl">90</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">/</span> <span class="fl">10</span></span>
 <span><span class="op">)</span></span>
-<span><span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">var</a></span><span class="op">(</span><span class="va">sample</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">var</a></span><span class="op">(</span><span class="va">sample</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 0.06368819</span></span>
-<span><span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/mad.html" class="external-link">mad</a></span><span class="op">(</span><span class="va">sample</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/stats/mad.html" class="external-link">mad</a></span><span class="op">(</span><span class="va">sample</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 0</span></span></code></pre></div>
 <p>You can see in this simplified example that variability that is not
 shared by at least 50% of the individuals is ignored by MAD (i.e. it is
@@ -620,7 +640,7 @@ other, and a definition of HVPs unique to each data set.</p>
 works, we can start our analysis! Let’s give it a try.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># See the structure of the input DNA methylation data set</span></span>
-<span><span class="fu">RAMEN</span><span class="fu">::</span><span class="va"><a href="../reference/test_methylation_data.html">test_methylation_data</a></span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span>
+<span><span class="va">test_methylation_data</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span>
 <span><span class="co">#&gt;                 ID1       ID2      ID3      ID4       ID5</span></span>
 <span><span class="co">#&gt; cg15043638 1.013146 0.8896531 2.383141 3.895050 0.5386210</span></span>
 <span><span class="co">#&gt; cg18287590 1.790733 7.1935886 3.424606 7.977842 2.3162206</span></span>
@@ -628,8 +648,8 @@ works, we can start our analysis! Let’s give it a try.</p>
 <span><span class="co">#&gt; cg13893907 2.484290 5.1021851 2.345912 3.818753 3.0298476</span></span>
 <span><span class="co">#&gt; cg17035109 2.619802 3.7840938 4.553303 4.167235 5.6304186</span></span>
 <span></span>
-<span><span class="va">VML</span> <span class="op">&lt;-</span> <span class="fu">RAMEN</span><span class="fu">::</span><span class="fu"><a href="../reference/findVML.html">findVML</a></span><span class="op">(</span></span>
-<span>  methylation_data <span class="op">=</span> <span class="fu">RAMEN</span><span class="fu">::</span><span class="va"><a href="../reference/test_methylation_data.html">test_methylation_data</a></span>,</span>
+<span><span class="va">VML</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/findVML.html">findVML</a></span><span class="op">(</span></span>
+<span>  methylation_data <span class="op">=</span> <span class="va">test_methylation_data</span>,</span>
 <span>  array_manifest <span class="op">=</span> <span class="st">"IlluminaHumanMethylationEPICv1"</span>,</span>
 <span>  cor_threshold <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  var_method <span class="op">=</span> <span class="st">"variance"</span>,</span>
@@ -638,10 +658,6 @@ works, we can start our analysis! Let’s give it a try.</p>
 <span>  max_distance <span class="op">=</span> <span class="fl">1000</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; Identifying Highly Variable Probes...</span></span>
-<span><span class="co">#&gt; Warning: replacing previous import 'S4Arrays::makeNindexFromArrayViewport' by</span></span>
-<span><span class="co">#&gt; 'DelayedArray::makeNindexFromArrayViewport' when loading 'SummarizedExperiment'</span></span>
-<span><span class="co">#&gt; Warning: replacing previous import 'S4Arrays::makeNindexFromArrayViewport' by</span></span>
-<span><span class="co">#&gt; 'DelayedArray::makeNindexFromArrayViewport' when loading 'HDF5Array'</span></span>
 <span><span class="co">#&gt; Setting options('download.file.method.GEOquery'='auto')</span></span>
 <span><span class="co">#&gt; Setting options('GEOquery.inmemory.gpl'=FALSE)</span></span>
 <span><span class="co">#&gt; Identifying sparse Variable Methylated Probes</span></span>
@@ -650,7 +666,7 @@ works, we can start our analysis! Let’s give it a try.</p>
 <span></span>
 <span><span class="co"># Take a look at the resulting object</span></span>
 <span><span class="co"># check the specific threshold that was used to label HVPs</span></span>
-<span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="va">VML</span><span class="op">$</span><span class="va">var_score_threshold</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="va">VML</span><span class="op">$</span><span class="va">var_score_threshold</span><span class="op">)</span></span>
 <span><span class="co">#&gt;  Named num 13.9</span></span>
 <span><span class="co">#&gt;  - attr(*, "names")= chr "99%"</span></span>
 <span><span class="co"># check the HVPs identified and their variability score</span></span>
@@ -706,11 +722,11 @@ for the following parts of the pipeline.</p>
 <span></span>
 <span><span class="co"># Example of an epxloration plot</span></span>
 <span><span class="fu">as</span><span class="op">(</span><span class="va">VML_gr</span>, <span class="st">"data.frame"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">width</span> <span class="op">&gt;</span> <span class="fl">1</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="co"># Only plot VMRs, since sVMPs all have a lenght of 1</span></span>
-<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">width</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html" class="external-link">geom_histogram</a></span><span class="op">(</span>binwidth <span class="op">=</span> <span class="fl">50</span>, fill <span class="op">=</span> <span class="st">"#BAB4D8"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_classic</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"VMRs width (bp)"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">width</span> <span class="op">&gt;</span> <span class="fl">1</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="co"># Only plot VMRs, since sVMPs all have a lenght of 1</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">width</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html" class="external-link">geom_histogram</a></span><span class="op">(</span>binwidth <span class="op">=</span> <span class="fl">50</span>, fill <span class="op">=</span> <span class="st">"#BAB4D8"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_classic</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"VMRs width (bp)"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="RAMEN_files/figure-html/explore-vml-1.png" class="r-plt" alt="" width="700"></p>
 <p>Next, we want to summarize the DNAme level of each VML per
 individual. To do this, we use <code><a href="../reference/summarizeVML.html">RAMEN::summarizeVML()</a></code>. For
@@ -719,7 +735,7 @@ loci, so the DNAme level of the corresponding probe is returned. For
 VMRs, the median DNAme level of all the probes in the region is returned
 per individual as the representative value.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">summarized_methyl_VML</span> <span class="op">&lt;-</span> <span class="fu">RAMEN</span><span class="fu">::</span><span class="fu"><a href="../reference/summarizeVML.html">summarizeVML</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">summarized_methyl_VML</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/summarizeVML.html">summarizeVML</a></span><span class="op">(</span></span>
 <span>  VML <span class="op">=</span> <span class="va">VML_gr</span>,</span>
 <span>  methylation_data <span class="op">=</span> <span class="va">test_methylation_data</span></span>
 <span><span class="op">)</span></span>
@@ -755,7 +771,7 @@ DNAme.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Take a look at the structure of the genotype information data set, which</span></span>
 <span><span class="co"># contains the genomic location of the SNPs in our genotype data set</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">RAMEN</span><span class="fu">::</span><span class="va"><a href="../reference/test_genotype_information.html">test_genotype_information</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">test_genotype_information</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   CHROM      POS              ID</span></span>
 <span><span class="co">#&gt; 1 chr21 10873592 21:10873592:G:A</span></span>
 <span><span class="co">#&gt; 2 chr21 14595742 21:14595742:G:A</span></span>
@@ -764,9 +780,9 @@ DNAme.</p>
 <span><span class="co">#&gt; 5 chr21 14676907 21:14676907:A:G</span></span>
 <span><span class="co">#&gt; 6 chr21 14681195 21:14681195:G:T</span></span>
 <span></span>
-<span><span class="va">VML_cis_snps</span> <span class="op">&lt;-</span> <span class="fu">RAMEN</span><span class="fu">::</span><span class="fu"><a href="../reference/findCisSNPs.html">findCisSNPs</a></span><span class="op">(</span></span>
+<span><span class="va">VML_cis_snps</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/findCisSNPs.html">findCisSNPs</a></span><span class="op">(</span></span>
 <span>  VML <span class="op">=</span> <span class="va">VML_gr</span>,</span>
-<span>  genotype_information <span class="op">=</span> <span class="fu">RAMEN</span><span class="fu">::</span><span class="va"><a href="../reference/test_genotype_information.html">test_genotype_information</a></span>,</span>
+<span>  genotype_information <span class="op">=</span> <span class="va">test_genotype_information</span>,</span>
 <span>  distance <span class="op">=</span> <span class="fl">1e+06</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; Reminder: please make sure that the positions of the VML data frame and the ones in the genotype information are from the same genome build.</span></span>
@@ -815,15 +831,15 @@ following:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">VML_cis_snps</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">as</span><span class="op">(</span><span class="st">"data.frame"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>surrounding_SNPs <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case-and-replace-when.html" class="external-link">case_when</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>surrounding_SNPs <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case-and-replace-when.html" class="external-link">case_when</a></span><span class="op">(</span></span>
 <span>    <span class="va">surrounding_SNPs</span> <span class="op">&gt;</span> <span class="fl">3000</span> <span class="op">~</span> <span class="fl">3000</span>,</span>
 <span>    <span class="cn">TRUE</span> <span class="op">~</span> <span class="va">surrounding_SNPs</span></span>
 <span>  <span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">surrounding_SNPs</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_density.html" class="external-link">geom_density</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html" class="external-link">facet_grid</a></span><span class="op">(</span><span class="st">"type"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">xlab</a></span><span class="op">(</span><span class="st">"Number of cis SNPs"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_classic</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">surrounding_SNPs</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_density.html" class="external-link">geom_density</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html" class="external-link">facet_grid</a></span><span class="op">(</span><span class="st">"type"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">xlab</a></span><span class="op">(</span><span class="st">"Number of cis SNPs"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_classic</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
 <img src="RAMEN_files/figure-html/cissnps-1.png" class="r-plt" alt="Disribution of SNPs in cis of VML." width="700"><p class="caption">
 Disribution of SNPs in cis of VML.
@@ -877,14 +893,14 @@ all values are numeric. If your data has missing values, consider <a href="https
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Take a look at the structure of the genotype, environment and covariate data</span></span>
 <span><span class="co"># sets, which will be used as input for the variable selection stage</span></span>
-<span><span class="fu">RAMEN</span><span class="fu">::</span><span class="va"><a href="../reference/test_genotype_matrix.html">test_genotype_matrix</a></span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span>
+<span><span class="va">test_genotype_matrix</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span>
 <span><span class="co">#&gt;                 ID1 ID2 ID3 ID4 ID5</span></span>
 <span><span class="co">#&gt; 21:10873592:G:A   1   1   1   2   1</span></span>
 <span><span class="co">#&gt; 21:14595742:G:A   2   0   1   0   1</span></span>
 <span><span class="co">#&gt; 21:14650564:T:C   1   1   0   1   1</span></span>
 <span><span class="co">#&gt; 21:14670124:A:G   2   2   0   0   1</span></span>
 <span><span class="co">#&gt; 21:14676907:A:G   2   2   0   0   1</span></span>
-<span><span class="fu">RAMEN</span><span class="fu">::</span><span class="va"><a href="../reference/test_environmental_matrix.html">test_environmental_matrix</a></span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span>
+<span><span class="va">test_environmental_matrix</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span>
 <span><span class="co">#&gt;              E1         E2         E3         E4         E5</span></span>
 <span><span class="co">#&gt; ID1 -0.56047565  0.4264642  0.3796395  0.9935039  0.1176466</span></span>
 <span><span class="co">#&gt; ID2 -0.23017749 -0.2950715 -0.5023235  0.5483970 -0.9474746</span></span>
@@ -900,14 +916,15 @@ all values are numeric. If your data has missing values, consider <a href="https
 <span><span class="co">#&gt; ID5  0.12928774</span></span>
 <span><span class="co">#&gt; ID6  1.71506499</span></span>
 <span></span>
-<span><span class="co"># Now let's run the function</span></span>
-<span><span class="va">selected_variables</span> <span class="op">&lt;-</span> <span class="fu">RAMEN</span><span class="fu">::</span><span class="fu"><a href="../reference/selectVariables.html">selectVariables</a></span><span class="op">(</span></span>
+<span><span class="co"># Now let's run the function. Setting a seed beforehand makes the variable</span></span>
+<span><span class="co"># selection reproducible</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
+<span><span class="va">selected_variables</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/selectVariables.html">selectVariables</a></span><span class="op">(</span></span>
 <span>  VML_wSNPs <span class="op">=</span> <span class="va">VML_cis_snps</span>,</span>
-<span>  genotype_matrix <span class="op">=</span> <span class="fu">RAMEN</span><span class="fu">::</span><span class="va"><a href="../reference/test_genotype_matrix.html">test_genotype_matrix</a></span>,</span>
-<span>  environmental_matrix <span class="op">=</span> <span class="fu">RAMEN</span><span class="fu">::</span><span class="va"><a href="../reference/test_environmental_matrix.html">test_environmental_matrix</a></span>,</span>
-<span>  covariates <span class="op">=</span> <span class="fu">RAMEN</span><span class="fu">::</span><span class="va"><a href="../reference/test_covariates.html">test_covariates</a></span>,</span>
-<span>  summarized_methyl_VML <span class="op">=</span> <span class="va">summarized_methyl_VML</span>,</span>
-<span>  seed <span class="op">=</span> <span class="fl">1</span></span>
+<span>  genotype_matrix <span class="op">=</span> <span class="va">test_genotype_matrix</span>,</span>
+<span>  environmental_matrix <span class="op">=</span> <span class="va">test_environmental_matrix</span>,</span>
+<span>  covariates <span class="op">=</span> <span class="va">test_covariates</span>,</span>
+<span>  summarized_methyl_VML <span class="op">=</span> <span class="va">summarized_methyl_VML</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; Loading required package: Matrix</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -915,16 +932,15 @@ all values are numeric. If your data has missing values, consider <a href="https
 <span><span class="co">#&gt; The following objects are masked from 'package:tidyr':</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;     expand, pack, unpack</span></span>
-<span><span class="co">#&gt; Loaded glmnet 5.0</span></span>
+<span><span class="co">#&gt; Loaded glmnet 5.1</span></span>
 <span><span class="co">#&gt; Loading required package: rngtools</span></span></code></pre></div>
-<p>Since LASSO makes use of Random Number Generation, setting a seed is
-highly encouraged for result’s reproducibility using the <em>seed</em>
-argument. As a note, setting a seed inside of this function modifies the
-seed globally (which is R’s default behavior).</p>
+<p>Since LASSO makes use of Random Number Generation, calling
+<code><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed()</a></code> before <code><a href="../reference/selectVariables.html">selectVariables()</a></code> is highly
+encouraged for the reproducibility of the results.</p>
 <p>The output of <code><a href="../reference/selectVariables.html">RAMEN::selectVariables()</a></code> is an object with
 the VML index, and the G and E variables selected for each VML.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="va">selected_variables</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="va">selected_variables</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Rows: 118</span></span>
 <span><span class="co">#&gt; Columns: 3</span></span>
 <span><span class="co">#&gt; $ VML_index      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "VML1"<span style="color: #949494;">, </span>"VML2"<span style="color: #949494;">, </span>"VML3"<span style="color: #949494;">, </span>"VML4"<span style="color: #949494;">, </span>"VML5"<span style="color: #949494;">, </span>"VML6"<span style="color: #949494;">, </span>"VML7"<span style="color: #949494;">,</span>…</span></span>
@@ -936,29 +952,29 @@ the number of variables (originally 100 environmental variables and
 @ref(fig:cissnps)).</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">selected_variables</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span></span>
 <span>    <span class="va">VML_cis_snps</span> <span class="op">|&gt;</span></span>
 <span>      <span class="fu">as</span><span class="op">(</span><span class="st">"data.frame"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">VML_index</span>, <span class="va">type</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>    by <span class="op">=</span> <span class="st">"VML_index"</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/transmute.html" class="external-link">transmute</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/transmute.html" class="external-link">transmute</a></span><span class="op">(</span></span>
 <span>    VML_index <span class="op">=</span> <span class="va">VML_index</span>,</span>
 <span>    type <span class="op">=</span> <span class="va">type</span>,</span>
 <span>    Genome <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/lengths.html" class="external-link">lengths</a></span><span class="op">(</span><span class="va">selected_genot</span><span class="op">)</span>,</span>
 <span>    Exposome <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/lengths.html" class="external-link">lengths</a></span><span class="op">(</span><span class="va">selected_env</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">tidyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">VML_index</span>, <span class="va">type</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">VML_index</span>, <span class="va">type</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span></span>
 <span>    group <span class="op">=</span> <span class="va">name</span>,</span>
 <span>    variables <span class="op">=</span> <span class="va">value</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">type</span>, y <span class="op">=</span> <span class="va">variables</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_violin.html" class="external-link">geom_violin</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_boxplot.html" class="external-link">geom_boxplot</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">0.1</span>, outlier.shape <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">group</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Selected variables"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_classic</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">type</span>, y <span class="op">=</span> <span class="va">variables</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_violin.html" class="external-link">geom_violin</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_boxplot.html" class="external-link">geom_boxplot</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">0.1</span>, outlier.shape <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">group</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Selected variables"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_classic</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
 <img src="RAMEN_files/figure-html/selectedvars-1.png" class="r-plt" alt="Number of G and E selected variables." width="700"><p class="caption">
 Number of G and E selected variables.
@@ -1032,17 +1048,17 @@ package, using the Lindeman, Merenda and Gold (lmg) method, which is
 based on the heuristic approach of averaging the relative R contribution
 of each variable over all input orders in the linear model.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">lmge_res</span> <span class="op">&lt;-</span> <span class="fu">RAMEN</span><span class="fu">::</span><span class="fu"><a href="../reference/lmGE.html">lmGE</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">lmge_res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/lmGE.html">lmGE</a></span><span class="op">(</span></span>
 <span>  selected_variables <span class="op">=</span> <span class="va">selected_variables</span>,</span>
 <span>  summarized_methyl_VML <span class="op">=</span> <span class="va">summarized_methyl_VML</span>,</span>
-<span>  genotype_matrix <span class="op">=</span> <span class="fu">RAMEN</span><span class="fu">::</span><span class="va"><a href="../reference/test_genotype_matrix.html">test_genotype_matrix</a></span>,</span>
-<span>  environmental_matrix <span class="op">=</span> <span class="fu">RAMEN</span><span class="fu">::</span><span class="va"><a href="../reference/test_environmental_matrix.html">test_environmental_matrix</a></span>,</span>
-<span>  covariates <span class="op">=</span> <span class="fu">RAMEN</span><span class="fu">::</span><span class="va"><a href="../reference/test_covariates.html">test_covariates</a></span>,</span>
+<span>  genotype_matrix <span class="op">=</span> <span class="va">test_genotype_matrix</span>,</span>
+<span>  environmental_matrix <span class="op">=</span> <span class="va">test_environmental_matrix</span>,</span>
+<span>  covariates <span class="op">=</span> <span class="va">test_covariates</span>,</span>
 <span>  model_selection <span class="op">=</span> <span class="st">"AIC"</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Check the output</span></span>
-<span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="va">lmge_res</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="va">lmge_res</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Rows: 118</span></span>
 <span><span class="co">#&gt; Columns: 13</span></span>
 <span><span class="co">#&gt; $ VML_index       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "VML1"<span style="color: #949494;">, </span>"VML2"<span style="color: #949494;">, </span>"VML3"<span style="color: #949494;">, </span>"VML4"<span style="color: #949494;">, </span>"VML5"<span style="color: #949494;">, </span>"VML6"<span style="color: #949494;">, </span>"VML7"…</span></span>
@@ -1174,15 +1190,16 @@ analysis!). But please make sure to run the recommended number of
 permutations in your real data analysis. In real data sets where we have
 thousands of probes, ~5-10 permutations are typically needed.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Compute the null distribution</span></span>
-<span><span class="va">null_dist</span> <span class="op">&lt;-</span> <span class="fu">RAMEN</span><span class="fu">::</span><span class="fu"><a href="../reference/nullDistGE.html">nullDistGE</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="co"># Compute the null distribution. Setting a seed beforehand makes the</span></span>
+<span><span class="co"># permutations reproducible</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
+<span><span class="va">null_dist</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nullDistGE.html">nullDistGE</a></span><span class="op">(</span></span>
 <span>  VML_wSNPs <span class="op">=</span> <span class="va">VML_cis_snps</span>,</span>
-<span>  genotype_matrix <span class="op">=</span> <span class="fu">RAMEN</span><span class="fu">::</span><span class="va"><a href="../reference/test_genotype_matrix.html">test_genotype_matrix</a></span>,</span>
-<span>  environmental_matrix <span class="op">=</span> <span class="fu">RAMEN</span><span class="fu">::</span><span class="va"><a href="../reference/test_environmental_matrix.html">test_environmental_matrix</a></span>,</span>
+<span>  genotype_matrix <span class="op">=</span> <span class="va">test_genotype_matrix</span>,</span>
+<span>  environmental_matrix <span class="op">=</span> <span class="va">test_environmental_matrix</span>,</span>
 <span>  summarized_methyl_VML <span class="op">=</span> <span class="va">summarized_methyl_VML</span>,</span>
 <span>  permutations <span class="op">=</span> <span class="fl">2</span>,</span>
-<span>  covariates <span class="op">=</span> <span class="fu">RAMEN</span><span class="fu">::</span><span class="va"><a href="../reference/test_covariates.html">test_covariates</a></span>,</span>
-<span>  seed <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  covariates <span class="op">=</span> <span class="va">test_covariates</span>,</span>
 <span>  model_selection <span class="op">=</span> <span class="st">"AIC"</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; Starting permutation 1 of 2</span></span>
@@ -1200,9 +1217,9 @@ thousands of probes, ~5-10 permutations are typically needed.</p>
 <span><span class="co">#&gt; 1      VML1           E     0.2606017     0.2495286      -6.723509           1</span></span>
 <span><span class="co">#&gt; 2      VML2           E     0.2976822     0.2671059      -7.669472           1</span></span>
 <span><span class="co">#&gt; 3      VML3         G+E     0.7167819     0.6899605     -33.030510           1</span></span>
-<span><span class="co">#&gt; 4      VML5         G+E     0.6303330     0.5234351     -22.462952           1</span></span>
-<span><span class="co">#&gt; 5      VML6           G     0.4951590     0.3368695     -13.335778           1</span></span>
-<span><span class="co">#&gt; 6      VML8           G     0.5316458     0.4508688     -18.229118           1</span></span></code></pre></div>
+<span><span class="co">#&gt; 4      VML4         G+E     0.5674087     0.4948388     -18.878721           1</span></span>
+<span><span class="co">#&gt; 5      VML5         G+E     0.6303330     0.5234351     -22.462952           1</span></span>
+<span><span class="co">#&gt; 6      VML6           G     0.4951590     0.3368695     -13.335778           1</span></span></code></pre></div>
 <p>The output is a data frame where the most useful column for our
 purpose is <em>R2_difference</em>, which corresponds to the increase in
 R squared obtained by including the SNP/EE variable(s) from the best
@@ -1222,11 +1239,11 @@ their probability of having a higher R2_difference.</p>
 <span><span class="va">null_dist</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/drop_na.html" class="external-link">drop_na</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="co"># Remove Basal models from the results, where there is no</span></span>
 <span>  <span class="co"># difference between chosen model and basal model</span></span>
-<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">R2_difference</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html" class="external-link">geom_histogram</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html" class="external-link">facet_grid</a></span><span class="op">(</span><span class="st">"model_group"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">xlab</a></span><span class="op">(</span><span class="st">"R2 difference"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_classic</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">R2_difference</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html" class="external-link">geom_histogram</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html" class="external-link">facet_grid</a></span><span class="op">(</span><span class="st">"model_group"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">xlab</a></span><span class="op">(</span><span class="st">"R2 difference"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_classic</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; `stat_bin()` using `bins = 30`. Pick better value `binwidth`.</span></span></code></pre></div>
 <div class="figure">
 <img src="RAMEN_files/figure-html/nulldist-fig-1.png" class="r-plt" alt="R2 difference (winner - basal) in a suffled data set." width="700"><p class="caption">
@@ -1254,7 +1271,7 @@ data.</p>
 <span></span>
 <span><span class="co"># Get a data frame with the final results results</span></span>
 <span><span class="va">final_res</span> <span class="op">&lt;-</span> <span class="va">lmge_res</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
 <span>    r2_difference_basal <span class="op">=</span> <span class="va">tot_r_squared</span> <span class="op">-</span> <span class="va">basal_rsquared</span>,</span>
 <span>    <span class="co"># Label if the best explanatory model passes its corresponding threshold</span></span>
 <span>    pass_cutoff_threshold <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case-and-replace-when.html" class="external-link">case_when</a></span><span class="op">(</span></span>
@@ -1268,32 +1285,32 @@ data.</p>
 <span>      <span class="cn">TRUE</span> <span class="op">~</span> <span class="st">"B"</span></span>
 <span>    <span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">pass_cutoff_threshold</span><span class="op">)</span> <span class="co"># Drop temporary column</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">pass_cutoff_threshold</span><span class="op">)</span> <span class="co"># Drop temporary column</span></span>
 <span></span>
 <span><span class="co"># Keep only VML that have informative models with out data</span></span>
 <span><span class="va">filtered_res</span> <span class="op">&lt;-</span> <span class="va">final_res</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="op">!</span><span class="va">model_group</span> <span class="op">==</span> <span class="st">"B"</span><span class="op">)</span> <span class="co"># Filter based on the cutoff threshold</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="op">!</span><span class="va">model_group</span> <span class="op">==</span> <span class="st">"B"</span><span class="op">)</span> <span class="co"># Filter based on the cutoff threshold</span></span>
 <span></span>
 <span><span class="co"># Check the VML with informative models</span></span>
-<span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="va">filtered_res</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Rows: 7</span></span>
+<span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="va">filtered_res</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Rows: 8</span></span>
 <span><span class="co">#&gt; Columns: 14</span></span>
-<span><span class="co">#&gt; $ VML_index           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "VML48"<span style="color: #949494;">, </span>"VML60"<span style="color: #949494;">, </span>"VML72"<span style="color: #949494;">, </span>"VML76"<span style="color: #949494;">, </span>"VML93"<span style="color: #949494;">, </span>"VML1…</span></span>
-<span><span class="co">#&gt; $ model_group         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "G+E"<span style="color: #949494;">, </span>"E"<span style="color: #949494;">, </span>"GxE"<span style="color: #949494;">, </span>"G"<span style="color: #949494;">, </span>"G"<span style="color: #949494;">, </span>"GxE"<span style="color: #949494;">, </span>"GxE"</span></span>
-<span><span class="co">#&gt; $ variables           <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;"21:27797178:A:T", "E35"&gt;<span style="color: #949494;">, </span>"E43"<span style="color: #949494;">, </span>&lt;"21:15834113:T…</span></span>
-<span><span class="co">#&gt; $ tot_r_squared       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 0.6852111<span style="color: #949494;">, </span>0.5044772<span style="color: #949494;">, </span>0.7293201<span style="color: #949494;">, </span>0.4571953<span style="color: #949494;">, </span>0.415…</span></span>
-<span><span class="co">#&gt; $ g_r_squared         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 0.5909553<span style="color: #949494;">, </span><span style="color: #BB0000;">NA</span><span style="color: #949494;">, </span>0.1189250<span style="color: #949494;">, </span>0.4101508<span style="color: #949494;">, </span>0.4098892<span style="color: #949494;">, </span>0.…</span></span>
-<span><span class="co">#&gt; $ e_r_squared         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 0.09091405<span style="color: #949494;">, </span>0.48759879<span style="color: #949494;">, </span>0.42360869<span style="color: #949494;">, </span><span style="color: #BB0000;">NA</span><span style="color: #949494;">, </span><span style="color: #BB0000;">NA</span><span style="color: #949494;">, </span>0.3618…</span></span>
-<span><span class="co">#&gt; $ gxe_r_squared       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #BB0000;">NA</span><span style="color: #949494;">, </span><span style="color: #BB0000;">NA</span><span style="color: #949494;">, </span>0.1609023<span style="color: #949494;">, </span><span style="color: #BB0000;">NA</span><span style="color: #949494;">, </span><span style="color: #BB0000;">NA</span><span style="color: #949494;">, </span>0.1515714<span style="color: #949494;">, </span>0.2146670</span></span>
-<span><span class="co">#&gt; $ AIC                 <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 139.0928<span style="color: #949494;">, </span>151.7701<span style="color: #949494;">, </span>145.2265<span style="color: #949494;">, </span>152.9703<span style="color: #949494;">, </span>155.9203<span style="color: #949494;">, </span>…</span></span>
-<span><span class="co">#&gt; $ second_winner       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "GxE"<span style="color: #949494;">, </span><span style="color: #BB0000;">NA</span><span style="color: #949494;">, </span>"G+E"<span style="color: #949494;">, </span><span style="color: #BB0000;">NA</span><span style="color: #949494;">, </span><span style="color: #BB0000;">NA</span><span style="color: #949494;">, </span>"G+E"<span style="color: #949494;">, </span>"G+E"</span></span>
-<span><span class="co">#&gt; $ delta_aic           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 1.753135<span style="color: #949494;">, </span><span style="color: #BB0000;">NA</span><span style="color: #949494;">, </span>4.641825<span style="color: #949494;">, </span><span style="color: #BB0000;">NA</span><span style="color: #949494;">, </span><span style="color: #BB0000;">NA</span><span style="color: #949494;">, </span>1.166166<span style="color: #949494;">, </span>3.561362</span></span>
-<span><span class="co">#&gt; $ delta_r_squared     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> -0.002579712<span style="color: #949494;">, </span><span style="color: #BB0000;">NA</span><span style="color: #949494;">, </span>0.067078581<span style="color: #949494;">, </span><span style="color: #BB0000;">NA</span><span style="color: #949494;">, </span><span style="color: #BB0000;">NA</span><span style="color: #949494;">, </span>0.029360694…</span></span>
-<span><span class="co">#&gt; $ basal_AIC           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 169.6680<span style="color: #949494;">, </span>170.3237<span style="color: #949494;">, </span>177.6443<span style="color: #949494;">, </span>167.8548<span style="color: #949494;">, </span>169.8651<span style="color: #949494;">, </span>…</span></span>
-<span><span class="co">#&gt; $ basal_rsquared      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 0.003341714<span style="color: #949494;">, </span>0.016878434<span style="color: #949494;">, </span>0.025884145<span style="color: #949494;">, </span>0.047044456…</span></span>
-<span><span class="co">#&gt; $ r2_difference_basal <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 0.6818694<span style="color: #949494;">, </span>0.4875988<span style="color: #949494;">, </span>0.7034360<span style="color: #949494;">, </span>0.4101508<span style="color: #949494;">, </span>0.4098…</span></span></code></pre></div>
+<span><span class="co">#&gt; $ VML_index           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "VML37"<span style="color: #949494;">, </span>"VML48"<span style="color: #949494;">, </span>"VML60"<span style="color: #949494;">, </span>"VML72"<span style="color: #949494;">, </span>"VML76"<span style="color: #949494;">, </span>"VML9…</span></span>
+<span><span class="co">#&gt; $ model_group         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "G+E"<span style="color: #949494;">, </span>"G+E"<span style="color: #949494;">, </span>"E"<span style="color: #949494;">, </span>"GxE"<span style="color: #949494;">, </span>"G"<span style="color: #949494;">, </span>"G"<span style="color: #949494;">, </span>"GxE"<span style="color: #949494;">, </span>"GxE"</span></span>
+<span><span class="co">#&gt; $ variables           <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;"21:21738205:CT:C", "E43"&gt;<span style="color: #949494;">, </span>&lt;"21:27797178:A:T", "…</span></span>
+<span><span class="co">#&gt; $ tot_r_squared       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 0.6917909<span style="color: #949494;">, </span>0.6852111<span style="color: #949494;">, </span>0.5044772<span style="color: #949494;">, </span>0.7293201<span style="color: #949494;">, </span>0.457…</span></span>
+<span><span class="co">#&gt; $ g_r_squared         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 0.2884729<span style="color: #949494;">, </span>0.5909553<span style="color: #949494;">, </span><span style="color: #BB0000;">NA</span><span style="color: #949494;">, </span>0.1189250<span style="color: #949494;">, </span>0.4101508<span style="color: #949494;">, </span>0.…</span></span>
+<span><span class="co">#&gt; $ e_r_squared         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 0.37538623<span style="color: #949494;">, </span>0.09091405<span style="color: #949494;">, </span>0.48759879<span style="color: #949494;">, </span>0.42360869<span style="color: #949494;">, </span><span style="color: #BB0000;">NA</span>…</span></span>
+<span><span class="co">#&gt; $ gxe_r_squared       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #BB0000;">NA</span><span style="color: #949494;">, </span><span style="color: #BB0000;">NA</span><span style="color: #949494;">, </span><span style="color: #BB0000;">NA</span><span style="color: #949494;">, </span>0.1609023<span style="color: #949494;">, </span><span style="color: #BB0000;">NA</span><span style="color: #949494;">, </span><span style="color: #BB0000;">NA</span><span style="color: #949494;">, </span>0.1515714<span style="color: #949494;">, </span>0.2146670</span></span>
+<span><span class="co">#&gt; $ AIC                 <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 140.6662<span style="color: #949494;">, </span>139.0928<span style="color: #949494;">, </span>151.7701<span style="color: #949494;">, </span>145.2265<span style="color: #949494;">, </span>152.9703<span style="color: #949494;">, </span>…</span></span>
+<span><span class="co">#&gt; $ second_winner       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "GxE"<span style="color: #949494;">, </span>"GxE"<span style="color: #949494;">, </span><span style="color: #BB0000;">NA</span><span style="color: #949494;">, </span>"G+E"<span style="color: #949494;">, </span><span style="color: #BB0000;">NA</span><span style="color: #949494;">, </span><span style="color: #BB0000;">NA</span><span style="color: #949494;">, </span>"G+E"<span style="color: #949494;">, </span>"G+E"</span></span>
+<span><span class="co">#&gt; $ delta_aic           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 1.890531<span style="color: #949494;">, </span>1.753135<span style="color: #949494;">, </span><span style="color: #BB0000;">NA</span><span style="color: #949494;">, </span>4.641825<span style="color: #949494;">, </span><span style="color: #BB0000;">NA</span><span style="color: #949494;">, </span><span style="color: #BB0000;">NA</span><span style="color: #949494;">, </span>1.166166…</span></span>
+<span><span class="co">#&gt; $ delta_r_squared     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> -0.001122592<span style="color: #949494;">, </span>-0.002579712<span style="color: #949494;">, </span><span style="color: #BB0000;">NA</span><span style="color: #949494;">, </span>0.067078581<span style="color: #949494;">, </span><span style="color: #BB0000;">NA</span><span style="color: #949494;">, </span><span style="color: #BB0000;">N</span>…</span></span>
+<span><span class="co">#&gt; $ basal_AIC           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 171.1256<span style="color: #949494;">, </span>169.6680<span style="color: #949494;">, </span>170.3237<span style="color: #949494;">, </span>177.6443<span style="color: #949494;">, </span>167.8548<span style="color: #949494;">, </span>…</span></span>
+<span><span class="co">#&gt; $ basal_rsquared      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 0.027931812<span style="color: #949494;">, </span>0.003341714<span style="color: #949494;">, </span>0.016878434<span style="color: #949494;">, </span>0.025884145…</span></span>
+<span><span class="co">#&gt; $ r2_difference_basal <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 0.6638591<span style="color: #949494;">, </span>0.6818694<span style="color: #949494;">, </span>0.4875988<span style="color: #949494;">, </span>0.7034360<span style="color: #949494;">, </span>0.4101…</span></span></code></pre></div>
 <p>We can see that the final data set in this example dropped almost all
-of the VMRs we had (only <code>7</code>/<code>118</code> survived!).
+of the VMRs we had (only <code>8</code>/<code>118</code> survived!).
 This is something expected (and desired) since we are working with a toy
 data coming from random sampling, so we should end up with almost no
 good-performing chosen models.</p>
@@ -1306,13 +1323,13 @@ R2_difference threshold obtained with
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Plot final results</span></span>
 <span><span class="va">final_res</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">model_group</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>count <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">model_group</span>, y <span class="op">=</span> <span class="va">count</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_col</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">xlab</a></span><span class="op">(</span><span class="st">"Best explanatory model"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">"VML"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_classic</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">model_group</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>count <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">model_group</span>, y <span class="op">=</span> <span class="va">count</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_col</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">xlab</a></span><span class="op">(</span><span class="st">"Best explanatory model"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">"VML"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_classic</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
 <img src="RAMEN_files/figure-html/finalresults-1.png" class="r-plt" alt="Variable Methylated Loci best explanatory models" width="700"><p class="caption">
 Variable Methylated Loci best explanatory models
@@ -1323,7 +1340,7 @@ Variable Methylated Loci best explanatory models
 <span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">final_res</span><span class="op">$</span><span class="va">model_group</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   B   E   G G+E GxE </span></span>
-<span><span class="co">#&gt; 111   1   2   1   3</span></span></code></pre></div>
+<span><span class="co">#&gt; 110   1   2   2   3</span></span></code></pre></div>
 <p>So, we can see that for this toy example, we got the following
 results:</p>
 <ul>
@@ -1488,7 +1505,7 @@ use the <code>doParallel</code> package:</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; R version 4.6.1 (2026-06-24)</span></span>
 <span><span class="co">#&gt; Platform: x86_64-pc-linux-gnu</span></span>
-<span><span class="co">#&gt; Running under: Ubuntu 24.04.4 LTS</span></span>
+<span><span class="co">#&gt; Running under: Ubuntu 24.04.5 LTS</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Matrix products: default</span></span>
 <span><span class="co">#&gt; BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3 </span></span>
@@ -1508,141 +1525,146 @@ use the <code>doParallel</code> package:</p>
 <span><span class="co">#&gt; [8] base     </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; other attached packages:</span></span>
-<span><span class="co">#&gt;  [1] doRNG_1.8.6.3     rngtools_1.5.2    glmnet_5.0        Matrix_1.7-5     </span></span>
+<span><span class="co">#&gt;  [1] doRNG_1.8.6.3     rngtools_1.5.2    glmnet_5.1        Matrix_1.7-5     </span></span>
 <span><span class="co">#&gt;  [5] doParallel_1.0.17 iterators_1.0.14  foreach_1.5.2     tidyr_1.3.2      </span></span>
-<span><span class="co">#&gt;  [9] ggplot2_4.0.3     dplyr_1.2.1       RAMEN_2.99.0      knitr_1.51       </span></span>
+<span><span class="co">#&gt;  [9] ggplot2_4.0.3     dplyr_1.2.1       RAMEN_2.99.2      knitr_1.52       </span></span>
 <span><span class="co">#&gt; [13] BiocStyle_2.40.0 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
 <span><span class="co">#&gt;   [1] RColorBrewer_1.1-3                                 </span></span>
-<span><span class="co">#&gt;   [2] shape_1.4.6.1                                      </span></span>
-<span><span class="co">#&gt;   [3] jsonlite_2.0.0                                     </span></span>
+<span><span class="co">#&gt;   [2] jsonlite_2.0.0                                     </span></span>
+<span><span class="co">#&gt;   [3] shape_1.4.6.1                                      </span></span>
 <span><span class="co">#&gt;   [4] magrittr_2.0.5                                     </span></span>
 <span><span class="co">#&gt;   [5] GenomicFeatures_1.64.0                             </span></span>
 <span><span class="co">#&gt;   [6] farver_2.1.2                                       </span></span>
-<span><span class="co">#&gt;   [7] rmarkdown_2.31                                     </span></span>
-<span><span class="co">#&gt;   [8] fs_2.1.0                                           </span></span>
-<span><span class="co">#&gt;   [9] BiocIO_1.22.0                                      </span></span>
+<span><span class="co">#&gt;   [7] rmarkdown_2.32                                     </span></span>
+<span><span class="co">#&gt;   [8] BiocIO_1.22.0                                      </span></span>
+<span><span class="co">#&gt;   [9] fs_2.1.0                                           </span></span>
 <span><span class="co">#&gt;  [10] ragg_1.5.2                                         </span></span>
 <span><span class="co">#&gt;  [11] vctrs_0.7.3                                        </span></span>
 <span><span class="co">#&gt;  [12] multtest_2.68.0                                    </span></span>
-<span><span class="co">#&gt;  [13] memoise_2.0.1                                      </span></span>
-<span><span class="co">#&gt;  [14] Rsamtools_2.28.0                                   </span></span>
+<span><span class="co">#&gt;  [13] Rsamtools_2.28.0                                   </span></span>
+<span><span class="co">#&gt;  [14] memoise_2.0.1                                      </span></span>
 <span><span class="co">#&gt;  [15] DelayedMatrixStats_1.34.0                          </span></span>
 <span><span class="co">#&gt;  [16] RCurl_1.98-1.20                                    </span></span>
 <span><span class="co">#&gt;  [17] askpass_1.2.1                                      </span></span>
 <span><span class="co">#&gt;  [18] htmltools_0.5.9                                    </span></span>
-<span><span class="co">#&gt;  [19] S4Arrays_1.12.0                                    </span></span>
-<span><span class="co">#&gt;  [20] curl_8.0.0                                         </span></span>
-<span><span class="co">#&gt;  [21] Rhdf5lib_2.0.0                                     </span></span>
-<span><span class="co">#&gt;  [22] SparseArray_1.12.2                                 </span></span>
-<span><span class="co">#&gt;  [23] rhdf5_2.56.0                                       </span></span>
-<span><span class="co">#&gt;  [24] sass_0.4.10                                        </span></span>
-<span><span class="co">#&gt;  [25] nor1mix_1.3-3                                      </span></span>
-<span><span class="co">#&gt;  [26] bslib_0.12.0                                       </span></span>
-<span><span class="co">#&gt;  [27] desc_1.4.3                                         </span></span>
-<span><span class="co">#&gt;  [28] plyr_1.8.9                                         </span></span>
-<span><span class="co">#&gt;  [29] cachem_1.1.0                                       </span></span>
-<span><span class="co">#&gt;  [30] GenomicAlignments_1.48.0                           </span></span>
-<span><span class="co">#&gt;  [31] lifecycle_1.0.5                                    </span></span>
-<span><span class="co">#&gt;  [32] IlluminaHumanMethylationEPICanno.ilm10b4.hg19_0.6.0</span></span>
-<span><span class="co">#&gt;  [33] pkgconfig_2.0.3                                    </span></span>
-<span><span class="co">#&gt;  [34] R6_2.6.1                                           </span></span>
-<span><span class="co">#&gt;  [35] fastmap_1.2.0                                      </span></span>
-<span><span class="co">#&gt;  [36] MatrixGenerics_1.24.0                              </span></span>
-<span><span class="co">#&gt;  [37] digest_0.6.39                                      </span></span>
-<span><span class="co">#&gt;  [38] siggenes_1.86.0                                    </span></span>
-<span><span class="co">#&gt;  [39] reshape_0.8.10                                     </span></span>
-<span><span class="co">#&gt;  [40] AnnotationDbi_1.74.0                               </span></span>
-<span><span class="co">#&gt;  [41] S4Vectors_0.50.2                                   </span></span>
-<span><span class="co">#&gt;  [42] textshaping_1.0.5                                  </span></span>
-<span><span class="co">#&gt;  [43] GenomicRanges_1.64.0                               </span></span>
-<span><span class="co">#&gt;  [44] RSQLite_3.53.3                                     </span></span>
-<span><span class="co">#&gt;  [45] base64_2.0.2                                       </span></span>
-<span><span class="co">#&gt;  [46] labeling_0.4.3                                     </span></span>
-<span><span class="co">#&gt;  [47] httr_1.4.8                                         </span></span>
-<span><span class="co">#&gt;  [48] abind_1.4-8                                        </span></span>
-<span><span class="co">#&gt;  [49] compiler_4.6.1                                     </span></span>
-<span><span class="co">#&gt;  [50] beanplot_1.3.1                                     </span></span>
-<span><span class="co">#&gt;  [51] bit64_4.8.4                                        </span></span>
-<span><span class="co">#&gt;  [52] withr_3.0.3                                        </span></span>
-<span><span class="co">#&gt;  [53] S7_0.2.2                                           </span></span>
-<span><span class="co">#&gt;  [54] BiocParallel_1.46.0                                </span></span>
-<span><span class="co">#&gt;  [55] DBI_1.3.0                                          </span></span>
-<span><span class="co">#&gt;  [56] HDF5Array_1.40.0                                   </span></span>
-<span><span class="co">#&gt;  [57] MASS_7.3-65                                        </span></span>
-<span><span class="co">#&gt;  [58] openssl_2.4.2                                      </span></span>
-<span><span class="co">#&gt;  [59] DelayedArray_0.38.2                                </span></span>
-<span><span class="co">#&gt;  [60] rjson_0.2.23                                       </span></span>
-<span><span class="co">#&gt;  [61] tools_4.6.1                                        </span></span>
-<span><span class="co">#&gt;  [62] otel_0.2.0                                         </span></span>
-<span><span class="co">#&gt;  [63] rentrez_1.2.4                                      </span></span>
-<span><span class="co">#&gt;  [64] glue_1.8.1                                         </span></span>
-<span><span class="co">#&gt;  [65] quadprog_1.5-8                                     </span></span>
-<span><span class="co">#&gt;  [66] h5mread_1.4.1                                      </span></span>
-<span><span class="co">#&gt;  [67] restfulr_0.0.17                                    </span></span>
-<span><span class="co">#&gt;  [68] nlme_3.1-169                                       </span></span>
-<span><span class="co">#&gt;  [69] rhdf5filters_1.24.1                                </span></span>
-<span><span class="co">#&gt;  [70] grid_4.6.1                                         </span></span>
-<span><span class="co">#&gt;  [71] generics_0.1.4                                     </span></span>
-<span><span class="co">#&gt;  [72] gtable_0.3.6                                       </span></span>
-<span><span class="co">#&gt;  [73] tzdb_0.5.0                                         </span></span>
-<span><span class="co">#&gt;  [74] preprocessCore_1.74.0                              </span></span>
-<span><span class="co">#&gt;  [75] hms_1.1.4                                          </span></span>
-<span><span class="co">#&gt;  [76] data.table_1.18.6.1                                </span></span>
-<span><span class="co">#&gt;  [77] xml2_1.6.0                                         </span></span>
-<span><span class="co">#&gt;  [78] XVector_0.52.0                                     </span></span>
-<span><span class="co">#&gt;  [79] BiocGenerics_0.58.1                                </span></span>
-<span><span class="co">#&gt;  [80] pillar_1.11.1                                      </span></span>
-<span><span class="co">#&gt;  [81] limma_3.68.5                                       </span></span>
-<span><span class="co">#&gt;  [82] genefilter_1.94.0                                  </span></span>
-<span><span class="co">#&gt;  [83] splines_4.6.1                                      </span></span>
-<span><span class="co">#&gt;  [84] lattice_0.22-9                                     </span></span>
-<span><span class="co">#&gt;  [85] survival_3.8-6                                     </span></span>
-<span><span class="co">#&gt;  [86] rtracklayer_1.72.0                                 </span></span>
-<span><span class="co">#&gt;  [87] bit_4.6.0                                          </span></span>
-<span><span class="co">#&gt;  [88] GEOquery_2.80.0                                    </span></span>
-<span><span class="co">#&gt;  [89] annotate_1.90.0                                    </span></span>
-<span><span class="co">#&gt;  [90] tidyselect_1.2.1                                   </span></span>
-<span><span class="co">#&gt;  [91] locfit_1.5-9.12                                    </span></span>
-<span><span class="co">#&gt;  [92] Biostrings_2.80.1                                  </span></span>
-<span><span class="co">#&gt;  [93] bookdown_0.47                                      </span></span>
-<span><span class="co">#&gt;  [94] IRanges_2.46.0                                     </span></span>
-<span><span class="co">#&gt;  [95] Seqinfo_1.2.0                                      </span></span>
-<span><span class="co">#&gt;  [96] SummarizedExperiment_1.42.0                        </span></span>
-<span><span class="co">#&gt;  [97] stats4_4.6.1                                       </span></span>
-<span><span class="co">#&gt;  [98] xfun_0.60                                          </span></span>
-<span><span class="co">#&gt;  [99] Biobase_2.72.0                                     </span></span>
-<span><span class="co">#&gt; [100] scrime_1.3.7                                       </span></span>
-<span><span class="co">#&gt; [101] statmod_1.5.2                                      </span></span>
-<span><span class="co">#&gt; [102] matrixStats_1.5.0                                  </span></span>
-<span><span class="co">#&gt; [103] yaml_2.3.12                                        </span></span>
-<span><span class="co">#&gt; [104] evaluate_1.0.5                                     </span></span>
-<span><span class="co">#&gt; [105] codetools_0.2-20                                   </span></span>
-<span><span class="co">#&gt; [106] cigarillo_1.2.1                                    </span></span>
-<span><span class="co">#&gt; [107] tibble_3.3.1                                       </span></span>
-<span><span class="co">#&gt; [108] minfi_1.58.0                                       </span></span>
-<span><span class="co">#&gt; [109] BiocManager_1.30.27                                </span></span>
-<span><span class="co">#&gt; [110] cli_3.6.6                                          </span></span>
-<span><span class="co">#&gt; [111] bumphunter_1.54.0                                  </span></span>
-<span><span class="co">#&gt; [112] xtable_1.8-8                                       </span></span>
-<span><span class="co">#&gt; [113] systemfonts_1.3.2                                  </span></span>
-<span><span class="co">#&gt; [114] jquerylib_0.1.4                                    </span></span>
-<span><span class="co">#&gt; [115] Rcpp_1.1.2                                         </span></span>
-<span><span class="co">#&gt; [116] png_0.1-9                                          </span></span>
-<span><span class="co">#&gt; [117] XML_3.99-0.24                                      </span></span>
-<span><span class="co">#&gt; [118] readr_2.2.0                                        </span></span>
-<span><span class="co">#&gt; [119] pkgdown_2.2.1                                      </span></span>
-<span><span class="co">#&gt; [120] blob_1.3.0                                         </span></span>
-<span><span class="co">#&gt; [121] mclust_6.1.3                                       </span></span>
-<span><span class="co">#&gt; [122] sparseMatrixStats_1.24.0                           </span></span>
-<span><span class="co">#&gt; [123] bitops_1.1-0                                       </span></span>
-<span><span class="co">#&gt; [124] scales_1.4.0                                       </span></span>
-<span><span class="co">#&gt; [125] illuminaio_0.54.0                                  </span></span>
-<span><span class="co">#&gt; [126] purrr_1.2.2                                        </span></span>
-<span><span class="co">#&gt; [127] crayon_1.5.3                                       </span></span>
-<span><span class="co">#&gt; [128] rlang_1.3.0                                        </span></span>
-<span><span class="co">#&gt; [129] KEGGREST_1.52.2</span></span></code></pre></div>
+<span><span class="co">#&gt;  [19] S4Arrays_1.12.1                                    </span></span>
+<span><span class="co">#&gt;  [20] curl_8.1.0                                         </span></span>
+<span><span class="co">#&gt;  [21] survey_4.5                                         </span></span>
+<span><span class="co">#&gt;  [22] Rhdf5lib_2.0.0                                     </span></span>
+<span><span class="co">#&gt;  [23] SparseArray_1.12.3                                 </span></span>
+<span><span class="co">#&gt;  [24] rhdf5_2.56.1                                       </span></span>
+<span><span class="co">#&gt;  [25] sass_0.4.10                                        </span></span>
+<span><span class="co">#&gt;  [26] nor1mix_1.3-3                                      </span></span>
+<span><span class="co">#&gt;  [27] bslib_0.12.0                                       </span></span>
+<span><span class="co">#&gt;  [28] desc_1.4.3                                         </span></span>
+<span><span class="co">#&gt;  [29] plyr_1.8.9                                         </span></span>
+<span><span class="co">#&gt;  [30] cachem_1.1.0                                       </span></span>
+<span><span class="co">#&gt;  [31] GenomicAlignments_1.48.0                           </span></span>
+<span><span class="co">#&gt;  [32] lifecycle_1.0.5                                    </span></span>
+<span><span class="co">#&gt;  [33] IlluminaHumanMethylationEPICanno.ilm10b4.hg19_0.6.0</span></span>
+<span><span class="co">#&gt;  [34] pkgconfig_2.0.3                                    </span></span>
+<span><span class="co">#&gt;  [35] R6_2.6.1                                           </span></span>
+<span><span class="co">#&gt;  [36] fastmap_1.2.0                                      </span></span>
+<span><span class="co">#&gt;  [37] MatrixGenerics_1.24.0                              </span></span>
+<span><span class="co">#&gt;  [38] digest_0.6.39                                      </span></span>
+<span><span class="co">#&gt;  [39] siggenes_1.86.0                                    </span></span>
+<span><span class="co">#&gt;  [40] reshape_0.8.10                                     </span></span>
+<span><span class="co">#&gt;  [41] AnnotationDbi_1.74.0                               </span></span>
+<span><span class="co">#&gt;  [42] S4Vectors_0.50.3                                   </span></span>
+<span><span class="co">#&gt;  [43] textshaping_1.0.5                                  </span></span>
+<span><span class="co">#&gt;  [44] GenomicRanges_1.64.0                               </span></span>
+<span><span class="co">#&gt;  [45] RSQLite_3.53.3                                     </span></span>
+<span><span class="co">#&gt;  [46] base64_2.0.2                                       </span></span>
+<span><span class="co">#&gt;  [47] labeling_0.4.3                                     </span></span>
+<span><span class="co">#&gt;  [48] httr_1.4.9                                         </span></span>
+<span><span class="co">#&gt;  [49] abind_1.4-8                                        </span></span>
+<span><span class="co">#&gt;  [50] compiler_4.6.1                                     </span></span>
+<span><span class="co">#&gt;  [51] beanplot_1.3.1                                     </span></span>
+<span><span class="co">#&gt;  [52] bit64_4.8.6                                        </span></span>
+<span><span class="co">#&gt;  [53] withr_3.0.3                                        </span></span>
+<span><span class="co">#&gt;  [54] S7_0.2.2                                           </span></span>
+<span><span class="co">#&gt;  [55] BiocParallel_1.46.0                                </span></span>
+<span><span class="co">#&gt;  [56] DBI_1.3.0                                          </span></span>
+<span><span class="co">#&gt;  [57] HDF5Array_1.40.0                                   </span></span>
+<span><span class="co">#&gt;  [58] MASS_7.3-65                                        </span></span>
+<span><span class="co">#&gt;  [59] openssl_2.4.2                                      </span></span>
+<span><span class="co">#&gt;  [60] DelayedArray_0.38.2                                </span></span>
+<span><span class="co">#&gt;  [61] rjson_0.2.23                                       </span></span>
+<span><span class="co">#&gt;  [62] corpcor_1.6.10                                     </span></span>
+<span><span class="co">#&gt;  [63] tools_4.6.1                                        </span></span>
+<span><span class="co">#&gt;  [64] otel_0.2.0                                         </span></span>
+<span><span class="co">#&gt;  [65] rentrez_1.2.4                                      </span></span>
+<span><span class="co">#&gt;  [66] quadprog_1.5-8                                     </span></span>
+<span><span class="co">#&gt;  [67] glue_1.8.1                                         </span></span>
+<span><span class="co">#&gt;  [68] h5mread_1.4.1                                      </span></span>
+<span><span class="co">#&gt;  [69] restfulr_0.0.17                                    </span></span>
+<span><span class="co">#&gt;  [70] nlme_3.1-169                                       </span></span>
+<span><span class="co">#&gt;  [71] rhdf5filters_1.24.1                                </span></span>
+<span><span class="co">#&gt;  [72] grid_4.6.1                                         </span></span>
+<span><span class="co">#&gt;  [73] generics_0.1.4                                     </span></span>
+<span><span class="co">#&gt;  [74] gtable_0.3.6                                       </span></span>
+<span><span class="co">#&gt;  [75] tzdb_0.5.0                                         </span></span>
+<span><span class="co">#&gt;  [76] preprocessCore_1.74.0                              </span></span>
+<span><span class="co">#&gt;  [77] hms_1.1.4                                          </span></span>
+<span><span class="co">#&gt;  [78] data.table_1.18.6.1                                </span></span>
+<span><span class="co">#&gt;  [79] xml2_1.6.0                                         </span></span>
+<span><span class="co">#&gt;  [80] XVector_0.52.0                                     </span></span>
+<span><span class="co">#&gt;  [81] BiocGenerics_0.58.1                                </span></span>
+<span><span class="co">#&gt;  [82] pillar_1.11.1                                      </span></span>
+<span><span class="co">#&gt;  [83] limma_3.68.5                                       </span></span>
+<span><span class="co">#&gt;  [84] genefilter_1.94.0                                  </span></span>
+<span><span class="co">#&gt;  [85] mitools_2.7                                        </span></span>
+<span><span class="co">#&gt;  [86] splines_4.6.1                                      </span></span>
+<span><span class="co">#&gt;  [87] lattice_0.22-9                                     </span></span>
+<span><span class="co">#&gt;  [88] survival_3.8-6                                     </span></span>
+<span><span class="co">#&gt;  [89] rtracklayer_1.72.0                                 </span></span>
+<span><span class="co">#&gt;  [90] bit_4.6.0                                          </span></span>
+<span><span class="co">#&gt;  [91] GEOquery_2.80.0                                    </span></span>
+<span><span class="co">#&gt;  [92] annotate_1.90.0                                    </span></span>
+<span><span class="co">#&gt;  [93] tidyselect_1.2.1                                   </span></span>
+<span><span class="co">#&gt;  [94] locfit_1.5-9.12                                    </span></span>
+<span><span class="co">#&gt;  [95] Biostrings_2.80.2                                  </span></span>
+<span><span class="co">#&gt;  [96] bookdown_0.48                                      </span></span>
+<span><span class="co">#&gt;  [97] IRanges_2.46.0                                     </span></span>
+<span><span class="co">#&gt;  [98] Seqinfo_1.2.0                                      </span></span>
+<span><span class="co">#&gt;  [99] SummarizedExperiment_1.42.0                        </span></span>
+<span><span class="co">#&gt; [100] stats4_4.6.1                                       </span></span>
+<span><span class="co">#&gt; [101] xfun_0.62                                          </span></span>
+<span><span class="co">#&gt; [102] Biobase_2.72.0                                     </span></span>
+<span><span class="co">#&gt; [103] scrime_1.3.7                                       </span></span>
+<span><span class="co">#&gt; [104] statmod_1.5.2                                      </span></span>
+<span><span class="co">#&gt; [105] matrixStats_1.5.0                                  </span></span>
+<span><span class="co">#&gt; [106] relaimpo_2.2-7                                     </span></span>
+<span><span class="co">#&gt; [107] yaml_2.3.12                                        </span></span>
+<span><span class="co">#&gt; [108] boot_1.3-32                                        </span></span>
+<span><span class="co">#&gt; [109] cigarillo_1.2.1                                    </span></span>
+<span><span class="co">#&gt; [110] evaluate_1.0.5                                     </span></span>
+<span><span class="co">#&gt; [111] codetools_0.2-20                                   </span></span>
+<span><span class="co">#&gt; [112] tibble_3.3.1                                       </span></span>
+<span><span class="co">#&gt; [113] minfi_1.58.0                                       </span></span>
+<span><span class="co">#&gt; [114] BiocManager_1.30.27                                </span></span>
+<span><span class="co">#&gt; [115] cli_3.6.6                                          </span></span>
+<span><span class="co">#&gt; [116] bumphunter_1.54.0                                  </span></span>
+<span><span class="co">#&gt; [117] xtable_1.8-8                                       </span></span>
+<span><span class="co">#&gt; [118] systemfonts_1.3.2                                  </span></span>
+<span><span class="co">#&gt; [119] jquerylib_0.1.4                                    </span></span>
+<span><span class="co">#&gt; [120] Rcpp_1.1.2                                         </span></span>
+<span><span class="co">#&gt; [121] png_0.1-9                                          </span></span>
+<span><span class="co">#&gt; [122] XML_3.99-0.25                                      </span></span>
+<span><span class="co">#&gt; [123] readr_2.2.0                                        </span></span>
+<span><span class="co">#&gt; [124] pkgdown_2.2.1                                      </span></span>
+<span><span class="co">#&gt; [125] blob_1.3.0                                         </span></span>
+<span><span class="co">#&gt; [126] mclust_6.1.3                                       </span></span>
+<span><span class="co">#&gt; [127] sparseMatrixStats_1.24.0                           </span></span>
+<span><span class="co">#&gt; [128] bitops_1.1-0                                       </span></span>
+<span><span class="co">#&gt; [129] scales_1.4.0                                       </span></span>
+<span><span class="co">#&gt; [130] illuminaio_0.54.0                                  </span></span>
+<span><span class="co">#&gt; [131] purrr_1.2.2                                        </span></span>
+<span><span class="co">#&gt; [132] crayon_1.5.3                                       </span></span>
+<span><span class="co">#&gt; [133] rlang_1.3.0                                        </span></span>
+<span><span class="co">#&gt; [134] KEGGREST_1.52.2</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

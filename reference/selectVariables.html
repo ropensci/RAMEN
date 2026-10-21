@@ -11,7 +11,7 @@ using LASSO. See details below for more information."><meta property="og:image" 
 
     <a class="navbar-brand me-2" href="../index.html">RAMEN</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.99.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.99.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -50,8 +50,7 @@ using LASSO. See details below for more information.</p>
 <span>  <span class="va">genotype_matrix</span>,</span>
 <span>  <span class="va">environmental_matrix</span>,</span>
 <span>  covariates <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  <span class="va">summarized_methyl_VML</span>,</span>
-<span>  seed <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  <span class="va">summarized_methyl_VML</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -102,15 +101,6 @@ names of the columns must correspond to the index of said VML, and it must
 match the index of VML_wSNPs$VML_index. The names of the rows must correspond to
 the sample IDs, and must match with the IDs of the other matrices.</p></dd>
 
-
-<dt id="arg-seed">seed<a class="anchor" aria-label="anchor" href="#arg-seed"></a></dt>
-<dd><p>An integer number that initializes a pseudo-random number
-generator. Random numbers in this function are created during the lambda
-cross validation and the LASSO stages. Setting a seed is highly encouraged
-for result reproducibility.
-<strong>The seed is applied for the duration of this call only; the global random
-stream is restored when the function returns</strong>.</p></dd>
-
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -158,11 +148,8 @@ independent models and compared, the overfitting issue of using lambda.min
 does not impose a big concern. After finding the best lambda value, the
 sequence of models is fit by coordinate descent using <em>glmnet()</em>. Random
 numbers in this function are created during the lambda cross validation and
-the LASSO stages. Setting a seed is highly encouraged for result
-reproducibility using the <em>seed</em> argument. The seed is applied for the
-duration of this call only: the random number generator state found on
-entry is restored when the function returns, so a seeded run leaves the
-global random stream untouched.</p>
+the LASSO stages. Calling <em>set.seed()</em> before this function is highly
+recommended, so that its results are reproducible.</p>
 <p>This function supports parallel computing for increased speed. To do so,
 you have to set the parallel back-end in your R session before running the
 function  (e.g., <em>doParallel::registerDoParallel(4)</em>). After that, the
@@ -210,13 +197,14 @@ empty for every VML. A <em>genotype_matrix</em> is always required.</p>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Select relevant genotype and environmental variables</span></span></span>
+<span class="r-in"><span><span class="co">## Setting a seed beforehand makes the variable selection reproducible</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">selected_vars</span> <span class="op">&lt;-</span> <span class="fu">RAMEN</span><span class="fu">::</span><span class="fu">selectVariables</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  VML_wSNPs <span class="op">=</span> <span class="va">VML_with_cis_snps</span>,</span></span>
 <span class="r-in"><span>  genotype_matrix <span class="op">=</span> <span class="fu">RAMEN</span><span class="fu">::</span><span class="va"><a href="test_genotype_matrix.html">test_genotype_matrix</a></span>,</span></span>
 <span class="r-in"><span>  environmental_matrix <span class="op">=</span> <span class="fu">RAMEN</span><span class="fu">::</span><span class="va"><a href="test_environmental_matrix.html">test_environmental_matrix</a></span>,</span></span>
 <span class="r-in"><span>  covariates <span class="op">=</span> <span class="fu">RAMEN</span><span class="fu">::</span><span class="va"><a href="test_covariates.html">test_covariates</a></span>,</span></span>
-<span class="r-in"><span>  summarized_methyl_VML <span class="op">=</span> <span class="va">summarized_methyl_VML</span>,</span></span>
-<span class="r-in"><span>  seed <span class="op">=</span> <span class="fl">1</span></span></span>
+<span class="r-in"><span>  summarized_methyl_VML <span class="op">=</span> <span class="va">summarized_methyl_VML</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>

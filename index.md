@@ -39,19 +39,11 @@ You can install the latest version of RAMEN from
 
 ``` r
 
-## Install dependencies
-# install.packages("BiocManager")
-# BiocManager::install("S4Vectors")
-# BiocManager::install("IRanges")
-# BiocManager::install("GenomicRanges")
-# BiocManager::install("IlluminaHumanMethylationEPICanno.ilm10b4.hg19")
+## Install RAMEN (recommended option)
+if (!require("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install("RAMEN")
 
-## Install if these manifests are used
-# BiocManager::install("IlluminaHumanMethylation450kanno.ilmn12.hg19")
-# BiocManager::install("IlluminaHumanMethylationEPICv2anno.20a1.hg38")
-
-## Install the RAMEN package from R-universe
-install.packages("RAMEN", repos = c('https://ropensci.r-universe.dev', 'https://cloud.r-project.org'))
 ## Alternatively install the RAMEN package from GitHub
 BiocManager::install("ropensci/RAMEN")
 ```
@@ -113,10 +105,10 @@ library(doParallel)
 #> Loading required package: parallel
 
 # Set the parallel backend to use 2 workers
-doParallel::registerDoParallel(2)
+registerDoParallel(2)
 
-VML <- RAMEN::findVML(
-  methylation_data = RAMEN::test_methylation_data,
+VML <- findVML(
+  methylation_data = test_methylation_data,
   array_manifest = "IlluminaHumanMethylationEPICv1",
   cor_threshold = 0,
   var_method = "variance",
@@ -158,7 +150,7 @@ head(VML$VML) # Take a look at the identified VML GRanges object
 
 ``` r
 
-summarized_methyl_VML <- RAMEN::summarizeVML(
+summarized_methyl_VML <- summarizeVML(
   VML = VML$VML,
   methylation_data = test_methylation_data
 )
@@ -178,9 +170,9 @@ summarized_methyl_VML[1:5, 1:5]
 
 ``` r
 
-VML_cis_snps <- RAMEN::findCisSNPs(
+VML_cis_snps <- findCisSNPs(
   VML = VML$VML,
-  genotype_information = RAMEN::test_genotype_information,
+  genotype_information = test_genotype_information,
   distance = 1e+06
 )
 #> Reminder: please make sure that the positions of the VML data frame and the ones in the genotype information are from the same genome build.
@@ -222,16 +214,16 @@ head(VML_cis_snps)
 
 ``` r
 
-selected_variables <- RAMEN::selectVariables(
+set.seed(1)
+selected_variables <- selectVariables(
   VML_wSNPs = VML_cis_snps,
-  genotype_matrix = RAMEN::test_genotype_matrix,
-  environmental_matrix = RAMEN::test_environmental_matrix,
-  covariates = RAMEN::test_covariates,
-  summarized_methyl_VML = summarized_methyl_VML,
-  seed = 1
+  genotype_matrix = test_genotype_matrix,
+  environmental_matrix = test_environmental_matrix,
+  covariates = test_covariates,
+  summarized_methyl_VML = summarized_methyl_VML
 )
 #> Loading required package: Matrix
-#> Loaded glmnet 5.0
+#> Loaded glmnet 5.1
 #> Loading required package: rngtools
 
 head(selected_variables)
@@ -251,12 +243,12 @@ head(selected_variables)
 
 ``` r
 
-lmge_res <- RAMEN::lmGE(
+lmge_res <- lmGE(
   selected_variables = selected_variables,
   summarized_methyl_VML = summarized_methyl_VML,
-  genotype_matrix = RAMEN::test_genotype_matrix,
-  environmental_matrix = RAMEN::test_environmental_matrix,
-  covariates = RAMEN::test_covariates,
+  genotype_matrix = test_genotype_matrix,
+  environmental_matrix = test_environmental_matrix,
+  covariates = test_covariates,
   model_selection = "AIC"
 )
 
@@ -284,14 +276,14 @@ head(lmge_res)
 
 ``` r
 
-null_dist <- RAMEN::nullDistGE(
+set.seed(1)
+null_dist <- nullDistGE(
   VML_wSNPs = VML_cis_snps,
-  genotype_matrix = RAMEN::test_genotype_matrix,
-  environmental_matrix = RAMEN::test_environmental_matrix,
+  genotype_matrix = test_genotype_matrix,
+  environmental_matrix = test_environmental_matrix,
   summarized_methyl_VML = summarized_methyl_VML,
   permutations = 1,
-  covariates = RAMEN::test_covariates,
-  seed = 1,
+  covariates = test_covariates,
   model_selection = "AIC"
 )
 #> Starting permutation 1 of 1
@@ -315,7 +307,7 @@ cutoff_joint <- quantile(
 
 # Get a data frame with the final results
 final_res <- lmge_res %>%
-  dplyr::mutate(
+  mutate(
     r2_difference_basal = tot_r_squared - basal_rsquared,
     # Label if the best explanatory model passes its corresponding threshold
     pass_cutoff_threshold = case_when(
@@ -329,20 +321,20 @@ final_res <- lmge_res %>%
       TRUE ~ "B"
     )
   ) %>%
-  dplyr::select(-pass_cutoff_threshold) # Drop temporary column
+  select(-pass_cutoff_threshold) # Drop temporary column
 
 # Keep only VML that have informative models with out data
 filtered_res <- final_res %>%
-  dplyr::filter(!model_group == "B") # Filter based on the cutoff threshold
+  filter(!model_group == "B") # Filter based on the cutoff threshold
 
 final_res %>%
-  dplyr::group_by(model_group) %>%
-  dplyr::summarise(count = n()) %>%
-  ggplot2::ggplot(aes(x = model_group, y = count)) +
-  ggplot2::geom_col() +
-  ggplot2::xlab("Best explanatory model") +
-  ggplot2::ylab("VML") +
-  ggplot2::theme_classic()
+  group_by(model_group) %>%
+  summarise(count = n()) %>%
+  ggplot(aes(x = model_group, y = count)) +
+  geom_col() +
+  xlab("Best explanatory model") +
+  ylab("VML") +
+  theme_classic()
 ```
 
 ![](reference/figures/README-unnamed-chunk-7-1.png)
