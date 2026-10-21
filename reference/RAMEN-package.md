@@ -1,12 +1,13 @@
 # RAMEN: Regional Association of Methylome variability with the Exposome and geNome
 
 RAMEN is an R package which goal is to identify Variable Methylated Loci
-(VML) in microarray DNA methylation data and then, using genome and
-exposome data, identify which individual genetic (G) or environmental
-(E) or joint (G+E or GxE) model better explains the VML variability.
-This package provides estimates of genetic and environmental
-contribution for each VML, allowing researchers to gain insights into
-the complex interplay between genetics, environment and DNA methylation.
+(VML) in microarray DNA methylation data. Then, using genome and
+exposome data, RAMEN identifies which individual genetic (G) or
+environmental (E) or joint (G+E or GxE) model better explains the VML
+variability. This package provides estimates of genetic and
+environmental contribution for each VML, allowing researchers to gain
+insights into the complex interplay between genetics, environment and
+DNA methylation.
 
 ## See also
 

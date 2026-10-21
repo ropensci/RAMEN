@@ -45,12 +45,12 @@ Biology*, **26**(1), 29.
 
 Navarro-Delgado E, Korthauer K, Kobor M (2025). *RAMEN: Regional
 Association of Methylome variability with the Exposome and geNome*. R
-package version 2.99.2, <https://github.com/ropensci/RAMEN>.
+package version 2.99.3, <https://github.com/ropensci/RAMEN>.
 
     @Manual{RAMEN,
       title = {RAMEN: Regional Association of Methylome variability with the Exposome and geNome},
       author = {Erick I. Navarro-Delgado and Keegan Korthauer and Michael S. Kobor},
-      note = {R package version 2.99.2},
+      note = {R package version 2.99.3},
       year = {2025},
       url = {https://github.com/ropensci/RAMEN},
     }
