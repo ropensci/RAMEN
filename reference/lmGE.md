@@ -241,7 +241,7 @@ selected_vars <- RAMEN::selectVariables(
   summarized_methyl_VML = summarized_methyl_VML
 )
 #> Loading required package: Matrix
-#> Loaded glmnet 5.1
+#> Loaded glmnet 5.2
 #> Loading required package: foreach
 #> Loading required package: rngtools
 

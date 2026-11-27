@@ -589,10 +589,6 @@ VML <- findVML(
   max_distance = 1000
 )
 #> Identifying Highly Variable Probes...
-#> Warning: replacing previous import 'S4Arrays::makeNindexFromArrayViewport' by
-#> 'DelayedArray::makeNindexFromArrayViewport' when loading 'SummarizedExperiment'
-#> Warning: replacing previous import 'S4Arrays::makeNindexFromArrayViewport' by
-#> 'DelayedArray::makeNindexFromArrayViewport' when loading 'HDF5Array'
 #> Setting options('download.file.method.GEOquery'='auto')
 #> Setting options('GEOquery.inmemory.gpl'=FALSE)
 #> Identifying sparse Variable Methylated Probes
@@ -896,7 +892,7 @@ selected_variables <- selectVariables(
 #> The following objects are masked from 'package:tidyr':
 #> 
 #>     expand, pack, unpack
-#> Loaded glmnet 5.1
+#> Loaded glmnet 5.2
 #> Loading required package: rngtools
 ```
 
@@ -1514,13 +1510,13 @@ plan(multisession, workers = 4)
 ``` r
 
 sessionInfo()
-#> R version 4.6.1 (2026-06-24)
+#> R version 4.6.2 (2026-10-29)
 #> Platform: x86_64-pc-linux-gnu
-#> Running under: Ubuntu 24.04.5 LTS
+#> Running under: Ubuntu 26.04.1 LTS
 #> 
 #> Matrix products: default
 #> BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3 
-#> LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.26.so;  LAPACK version 3.12.0
+#> LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.32.so;  LAPACK version 3.12.0
 #> 
 #> locale:
 #>  [1] LC_CTYPE=C.UTF-8       LC_NUMERIC=C           LC_TIME=C.UTF-8       
@@ -1536,9 +1532,9 @@ sessionInfo()
 #> [8] base     
 #> 
 #> other attached packages:
-#>  [1] doRNG_1.8.6.3     rngtools_1.5.2    glmnet_5.1        Matrix_1.7-5     
+#>  [1] doRNG_1.8.6.3     rngtools_1.5.2    glmnet_5.2        Matrix_1.7-6     
 #>  [5] doParallel_1.0.17 iterators_1.0.14  foreach_1.5.2     tidyr_1.3.2      
-#>  [9] ggplot2_4.0.3     dplyr_1.2.1       RAMEN_2.99.4      knitr_1.52       
+#>  [9] ggplot2_4.0.4     dplyr_1.2.1       RAMEN_3.1.0       knitr_1.52       
 #> [13] BiocStyle_2.40.0 
 #> 
 #> loaded via a namespace (and not attached):
@@ -1561,12 +1557,12 @@ sessionInfo()
 #>  [17] askpass_1.2.1                                      
 #>  [18] htmltools_0.5.9                                    
 #>  [19] S4Arrays_1.12.1                                    
-#>  [20] curl_8.1.0                                         
+#>  [20] curl_8.2.0                                         
 #>  [21] survey_4.5                                         
 #>  [22] Rhdf5lib_2.0.0                                     
 #>  [23] SparseArray_1.12.3                                 
 #>  [24] rhdf5_2.56.1                                       
-#>  [25] sass_0.4.10                                        
+#>  [25] sass_0.5.0                                         
 #>  [26] nor1mix_1.3-3                                      
 #>  [27] bslib_0.12.0                                       
 #>  [28] desc_1.4.3                                         
@@ -1584,36 +1580,36 @@ sessionInfo()
 #>  [40] reshape_0.8.10                                     
 #>  [41] AnnotationDbi_1.74.0                               
 #>  [42] S4Vectors_0.50.3                                   
-#>  [43] textshaping_1.0.5                                  
+#>  [43] textshaping_1.1.0                                  
 #>  [44] GenomicRanges_1.64.0                               
 #>  [45] RSQLite_3.53.3                                     
 #>  [46] base64_2.0.2                                       
 #>  [47] labeling_0.4.3                                     
 #>  [48] httr_1.4.9                                         
 #>  [49] abind_1.4-8                                        
-#>  [50] compiler_4.6.1                                     
+#>  [50] compiler_4.6.2                                     
 #>  [51] beanplot_1.3.1                                     
 #>  [52] bit64_4.8.6                                        
 #>  [53] withr_3.0.3                                        
-#>  [54] S7_0.2.2                                           
+#>  [54] S7_1.0.0                                           
 #>  [55] BiocParallel_1.46.0                                
 #>  [56] DBI_1.3.0                                          
 #>  [57] HDF5Array_1.40.0                                   
-#>  [58] MASS_7.3-65                                        
-#>  [59] openssl_2.4.2                                      
+#>  [58] MASS_7.3-66                                        
+#>  [59] openssl_2.6.0                                      
 #>  [60] DelayedArray_0.38.2                                
 #>  [61] rjson_0.2.23                                       
 #>  [62] corpcor_1.6.10                                     
-#>  [63] tools_4.6.1                                        
-#>  [64] otel_0.2.0                                         
+#>  [63] tools_4.6.2                                        
+#>  [64] otel_0.3.0                                         
 #>  [65] rentrez_1.2.4                                      
 #>  [66] quadprog_1.5-8                                     
 #>  [67] glue_1.8.1                                         
 #>  [68] h5mread_1.4.1                                      
 #>  [69] restfulr_0.0.17                                    
-#>  [70] nlme_3.1-169                                       
+#>  [70] nlme_3.1-171                                       
 #>  [71] rhdf5filters_1.24.1                                
-#>  [72] grid_4.6.1                                         
+#>  [72] grid_4.6.2                                         
 #>  [73] generics_0.1.4                                     
 #>  [74] gtable_0.3.6                                       
 #>  [75] tzdb_0.5.0                                         
@@ -1627,12 +1623,12 @@ sessionInfo()
 #>  [83] limma_3.68.5                                       
 #>  [84] genefilter_1.94.0                                  
 #>  [85] mitools_2.7                                        
-#>  [86] splines_4.6.1                                      
-#>  [87] lattice_0.22-9                                     
-#>  [88] survival_3.8-6                                     
+#>  [86] splines_4.6.2                                      
+#>  [87] lattice_0.23-1                                     
+#>  [88] survival_3.8-12                                    
 #>  [89] rtracklayer_1.72.0                                 
 #>  [90] bit_4.6.0                                          
-#>  [91] GEOquery_2.80.0                                    
+#>  [91] GEOquery_2.80.1                                    
 #>  [92] annotate_1.90.0                                    
 #>  [93] tidyselect_1.2.1                                   
 #>  [94] locfit_1.5-9.12                                    
@@ -1641,7 +1637,7 @@ sessionInfo()
 #>  [97] IRanges_2.46.0                                     
 #>  [98] Seqinfo_1.2.0                                      
 #>  [99] SummarizedExperiment_1.42.0                        
-#> [100] stats4_4.6.1                                       
+#> [100] stats4_4.6.2                                       
 #> [101] xfun_0.62                                          
 #> [102] Biobase_2.72.0                                     
 #> [103] scrime_1.3.7                                       
@@ -1659,7 +1655,7 @@ sessionInfo()
 #> [115] cli_3.6.6                                          
 #> [116] bumphunter_1.54.0                                  
 #> [117] xtable_1.8-8                                       
-#> [118] systemfonts_1.3.2                                  
+#> [118] systemfonts_1.3.4                                  
 #> [119] jquerylib_0.1.4                                    
 #> [120] Rcpp_1.1.2                                         
 #> [121] png_0.1-9                                          
@@ -1667,7 +1663,7 @@ sessionInfo()
 #> [123] readr_2.2.0                                        
 #> [124] pkgdown_2.2.1                                      
 #> [125] blob_1.3.0                                         
-#> [126] mclust_6.1.3                                       
+#> [126] mclust_6.1.4                                       
 #> [127] sparseMatrixStats_1.24.0                           
 #> [128] bitops_1.1-0                                       
 #> [129] scales_1.4.0                                       
